@@ -1,0 +1,172 @@
+---
+title: "Módulo 11 — Acceso a datos en línea vía APIs"
+---
+
+**Duración estimada:** 2 h
+
+::: {.callout-warning}
+Este módulo necesita conexión a internet. Los ejemplos usan servicios públicos reales (NCBI, Ensembl, GBIF); si algún campo de una respuesta no coincide exactamente con lo que se muestra aquí, imprime la respuesta completa y compara — las APIs públicas evolucionan con el tiempo.
+:::
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Explicar qué es una API y por qué es útil para obtener datos biológicos sin descargar manualmente desde una web.
+- Hacer peticiones HTTP con `curl` y con la librería `requests` de Python.
+- Interpretar una respuesta en formato JSON como si fuera un diccionario de Python.
+- Comprobar si una petición tuvo éxito, y guardar el resultado en un archivo local.
+
+## ¿Qué es una API?
+
+Hasta ahora has trabajado con archivos que ya tenías en tu ordenador. Pero gran parte de los datos biológicos que necesitarás — secuencias de referencia, anotaciones de genes, registros de biodiversidad — viven en bases de datos públicas enormes, accesibles por internet. Podrías abrir un navegador, buscar a mano y copiar/pegar, pero eso no escala: si necesitas los datos de 500 genes, no vas a hacerlo 500 veces a mano.
+
+Una **API** (interfaz de programación de aplicaciones) es una puerta de entrada pensada para programas, no para personas: le envías una petición a una dirección concreta (un *endpoint*) y te responde con datos en un formato que un programa puede procesar directamente, normalmente **JSON**. Es como pedir un plato por su nombre en vez de entrar a la cocina a buscarlo tú mismo.
+
+## El formato JSON
+
+JSON representa datos con la misma forma que ya conoces de Python: objetos como diccionarios (`{clave: valor}`) y listas (`[...]`). Esta respuesta de ejemplo:
+
+```json
+{
+  "id": "ENSG00000139618",
+  "display_name": "BRCA2",
+  "species": "homo_sapiens",
+  "start": 32315086,
+  "end": 32400268
+}
+```
+
+... se convierte en Python, prácticamente sin cambios, en el diccionario `{"id": "ENSG00000139618", "display_name": "BRCA2", "species": "homo_sapiens", "start": 32315086, "end": 32400268}`. Por eso, en cuanto tengas una respuesta JSON en Python, la tratarás exactamente como los diccionarios del módulo 8: `respuesta["display_name"]`, `respuesta.get(...)`, `for clave, valor in respuesta.items():`.
+
+## Peticiones con `curl`
+
+`curl` hace una petición HTTP desde la terminal. Por defecto imprime la respuesta en pantalla; con `-o archivo` la guarda directamente (parecido a la redirección `>` del módulo 5, pero como opción propia de `curl`):
+
+```
+~$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=fasta&retmode=text&seq_stop=200" -o genoma_ecoli.fasta
+~$ head -3 genoma_ecoli.fasta
+>NC_000913.3 Escherichia coli str. K-12 substr. MG1655, complete genome
+AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGT
+CTGATAGCAGCTTCTGAACTGGTTACCTGCCGTGAGTAAATTAAAATTTTATTGACTTA
+```
+
+La URL tiene dos partes: la dirección base del *endpoint* (`.../efetch.fcgi`) y, tras el `?`, los parámetros separados por `&` — aquí, qué base de datos (`db=nuccore`), qué accession (`id=...`), y en qué formato quieres la respuesta (`rettype=fasta&retmode=text`). `seq_stop=200` limita la descarga a los primeros 200 pares de bases, para no traer un genoma completo en un ejercicio de clase.
+
+## Peticiones con Python: `requests`
+
+`curl` es cómodo para probar rápido, pero para procesar la respuesta necesitas Python. La librería `requests` hace lo mismo con una función:
+
+```python
+import requests
+
+url = "https://rest.ensembl.org/lookup/id/ENSG00000139618?content-type=application/json"
+respuesta = requests.get(url)
+
+print(respuesta.status_code)
+datos = respuesta.json()
+print(datos["display_name"])
+```
+
+```
+200
+BRCA2
+```
+
+`requests.get(url)` hace la petición. `.status_code` es el código de estado HTTP: `200` significa "todo correcto"; `404` significa "no encontrado" (p. ej. un ID mal escrito); hay más códigos, pero estos dos cubren la mayoría de casos en este curso. `.json()` convierte el texto de la respuesta directamente en un diccionario de Python, listo para usar como cualquier otro.
+
+## Comprueba siempre el `status_code`
+
+Antes de asumir que `.json()` va a funcionar, comprueba que la petición salió bien — el mismo hábito de `if`/`else` del módulo 9, aplicado a peticiones de red:
+
+```python
+if respuesta.status_code == 200:
+    datos = respuesta.json()
+    print(datos["display_name"])
+else:
+    print(f"Error {respuesta.status_code}: no se pudo obtener el gen")
+```
+
+Si intentas `.json()` sobre una respuesta de error, el programa puede fallar con una excepción confusa; comprobar `status_code` primero da un mensaje claro sobre qué ha ido mal.
+
+## Guardar la respuesta en un archivo
+
+Ya sabes escribir archivos (módulo 10). Para JSON, en vez de escribir el texto crudo, usa el módulo `json` de la librería estándar, que se encarga del formato correctamente:
+
+```python
+import json
+
+with open(f"gene_{datos['id']}.json", "w") as f:
+    json.dump(datos, f, indent=2)
+```
+
+`json.dump(datos, f, indent=2)` escribe el diccionario `datos` en el archivo `f`, con una indentación de 2 espacios para que sea legible si lo abres con `gedit`.
+
+## Otro ejemplo: ocurrencias de una especie en GBIF
+
+GBIF (*Global Biodiversity Information Facility*) da acceso a millones de registros de observaciones de especies. Su respuesta trae los resultados dentro de una lista, bajo la clave `"results"`, junto con el número total de coincidencias en `"count"`:
+
+```python
+import requests
+
+url = "https://api.gbif.org/v1/occurrence/search"
+parametros = {"scientificName": "Quercus robur", "country": "ES", "limit": 5}
+respuesta = requests.get(url, params=parametros)
+
+if respuesta.status_code == 200:
+    datos = respuesta.json()
+    print(f"Registros totales encontrados: {datos['count']}")
+    for registro in datos["results"]:
+        print(registro.get("locality"), registro.get("eventDate"))
+```
+
+Aquí `requests` construye la URL con parámetros por ti (`params=parametros`), en vez de escribirlos a mano tras un `?` — más legible y menos propenso a errores al combinar varios parámetros.
+
+## Ejercicios
+
+1. Usa `curl` para descargar los primeros 200 pares de bases del genoma de *E. coli* (`NC_000913.3`) desde NCBI, guardándolos en `genoma_ecoli.fasta`.
+2. Escribe un script Python con `requests` que consulte Ensembl para el gen `ENSG00000139618`, compruebe el `status_code`, y muestre su `display_name` y su `species`.
+3. Amplía el script anterior para que guarde la respuesta completa en `gene_ENSG00000139618.json` usando el módulo `json` (con indentación).
+4. Escribe un script que consulte GBIF con `scientificName="Pinus sylvestris"` y `country="ES"`, y muestre cuántos registros totales hay (`datos["count"]`) y la localidad (`"locality"`) de los 5 primeros resultados.
+
+## Soluciones
+
+1.
+   ```
+   ~$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=fasta&retmode=text&seq_stop=200" -o genoma_ecoli.fasta
+   ```
+2.
+   ```python
+   import requests
+
+   url = "https://rest.ensembl.org/lookup/id/ENSG00000139618?content-type=application/json"
+   respuesta = requests.get(url)
+
+   if respuesta.status_code == 200:
+       datos = respuesta.json()
+       print(datos["display_name"], datos["species"])
+   else:
+       print(f"Error {respuesta.status_code}")
+   ```
+3.
+   ```python
+   import json
+
+   if respuesta.status_code == 200:
+       with open(f"gene_{datos['id']}.json", "w") as f:
+           json.dump(datos, f, indent=2)
+   ```
+4.
+   ```python
+   import requests
+
+   url = "https://api.gbif.org/v1/occurrence/search"
+   parametros = {"scientificName": "Pinus sylvestris", "country": "ES", "limit": 5}
+   respuesta = requests.get(url, params=parametros)
+
+   if respuesta.status_code == 200:
+       datos = respuesta.json()
+       print(f"Registros totales encontrados: {datos['count']}")
+       for registro in datos["results"]:
+           print(registro.get("locality"))
+   ```

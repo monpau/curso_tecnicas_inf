@@ -1,0 +1,196 @@
+---
+title: "Módulo 10 — Lectura, modificación y escritura de archivos"
+---
+
+**Duración estimada:** 4 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Abrir un archivo en modo lectura, escritura o añadido con `open()`.
+- Escribir en un archivo nuevo con `.write()`.
+- Usar el módulo `csv` para leer y escribir archivos CSV de forma robusta.
+- Reconocer por qué trocear un CSV a mano con `.split(",")` puede dar resultados incorrectos.
+
+## Materiales
+
+Este módulo usa `species_observations.csv` (ya conocido) y un archivo nuevo, `muestras_con_comas.csv`:
+
+```
+sample_id,especie,notas
+M01,Quercus robur,"Ejemplar sano, sin danos visibles"
+M02,Pinus sylvestris,"Corteza danada, posible plaga"
+M03,Fragaria vesca,"Sin observaciones"
+```
+
+Fíjate en las notas: llevan una coma **dentro** del propio campo de texto, y por eso van entre comillas dobles. Esto es habitual en CSV reales.
+
+## Modos de apertura: lectura, escritura, añadido
+
+`open(ruta, modo)` acepta un segundo argumento que dice qué vas a hacer con el archivo — el mismo concepto que `>` y `>>` de la terminal (módulo 5), ahora dentro de Python:
+
+| Modo | Significa | Equivalente en shell |
+|---|---|---|
+| `"r"` (por defecto) | leer | — |
+| `"w"` | escribir, **sobrescribiendo** si ya existe | `>` |
+| `"a"` | añadir al final, sin borrar lo que había | `>>` |
+
+```python
+with open("species_observations.csv") as f:
+    contenido = f.read()      # todo el archivo como una sola cadena
+print(contenido[:50])         # primeros 50 caracteres
+```
+
+`f.read()` trae el archivo entero de una vez, como cadena; `f.readlines()` (módulo 7) lo trae como una lista de líneas; iterar con `for linea in f:` los lee uno a uno sin cargar el archivo entero en memoria — la opción más segura para archivos grandes.
+
+## Escribir archivos con `.write()`
+
+```python
+with open("species_observations.csv") as f:
+    lineas = f.readlines()
+
+with open("resumen.txt", "w") as f:
+    for linea in lineas[1:]:                 # nos saltamos la cabecera
+        campos = linea.strip().split(",")
+        sample_id, especie, count = campos[0], campos[5], campos[6]
+        f.write(f"{sample_id}: {especie} ({count} individuos)\n")
+```
+
+`.write()`, a diferencia de `print()`, **no** añade un salto de línea automáticamente — por eso el `\n` al final de la f-string es necesario; sin él, todas las líneas quedarían pegadas en una sola.
+
+Para añadir algo más sin borrar lo ya escrito, abre en modo `"a"`:
+
+```python
+with open("resumen.txt", "a") as f:
+    f.write(f"Total de observaciones: {len(lineas) - 1}\n")
+```
+
+## Un problema real: por qué `split(",")` no basta
+
+Ya usas `.split(",")` desde el módulo 8 para trocear una línea CSV. Pruébalo sobre `muestras_con_comas.csv`:
+
+```python
+with open("muestras_con_comas.csv") as f:
+    for linea in f:
+        campos = linea.strip().split(",")
+        print(len(campos), campos)
+```
+
+```
+3 ['sample_id', 'especie', 'notas']
+4 ['M01', 'Quercus robur', '"Ejemplar sano', ' sin danos visibles"']
+4 ['M02', 'Pinus sylvestris', '"Corteza danada', ' posible plaga"']
+3 ['M03', 'Fragaria vesca', '"Sin observaciones"']
+```
+
+Las filas `M01` y `M02` dan **4** campos en vez de 3: `split(",")` no sabe que la coma de `"Ejemplar sano, sin danos visibles"` está protegida por las comillas, y la interpreta como un separador más. El resultado es una lista con el campo de notas partido por la mitad — un error silencioso que desplazaría todos los datos si intentaras acceder a `campos[2]` esperando la nota completa.
+
+La solución es no reinventar el analizador de CSV: Python trae uno en la librería estándar, el módulo `csv`, que sí entiende las comillas:
+
+```python
+import csv
+
+with open("muestras_con_comas.csv") as f:
+    lector = csv.reader(f)
+    for fila in lector:
+        print(len(fila), fila)
+```
+
+```
+3 ['sample_id', 'especie', 'notas']
+3 ['M01', 'Quercus robur', 'Ejemplar sano, sin danos visibles']
+3 ['M02', 'Pinus sylvestris', 'Corteza danada, posible plaga']
+3 ['M03', 'Fragaria vesca', 'Sin observaciones']
+```
+
+Ahora sí: siempre 3 campos, con la coma de la nota intacta dentro del campo, sin comillas de sobra.
+
+## `csv.DictReader` y `csv.DictWriter`
+
+`csv.reader` te da cada fila como una lista (accedes por posición, como con `.split(",")`). `csv.DictReader` va un paso más allá y te da cada fila como un diccionario, usando la cabecera del archivo como claves — conectando con lo que aprendiste en el módulo 8:
+
+```python
+with open("species_observations.csv") as f:
+    lector = csv.DictReader(f)
+    for fila in lector:
+        print(fila["species"])
+```
+
+`csv.DictWriter` hace lo inverso: escribe diccionarios como filas de un CSV nuevo.
+
+```python
+with open("species_observations.csv") as f:
+    lector = csv.DictReader(f)
+    abundantes = [fila for fila in lector if int(fila["count"]) > 3]
+
+with open("solo_abundantes.csv", "w", newline="") as f:
+    escritor = csv.DictWriter(f, fieldnames=abundantes[0].keys())
+    escritor.writeheader()
+    escritor.writerows(abundantes)
+```
+
+`int(fila["count"])` es imprescindible: como viste en el módulo 8, todo lo que sale de un CSV es texto, y `"12" > 3` daría un error en Python (no se puede comparar texto con número). `newline=""` al abrir el archivo de escritura es una recomendación del propio módulo `csv` para evitar líneas en blanco de más en Windows; no hace daño dejarlo siempre.
+
+## Ejercicios
+
+1. Abre `species_observations.csv` en modo lectura y usa `.read()` para imprimir todo su contenido de una vez.
+2. Usa `.readlines()` y un bucle `for` para imprimir solo el `sample_id` (primera columna) de cada fila, saltándote la cabecera.
+3. Escribe un archivo nuevo `resumen.txt` con una línea por observación, con el formato `"<sample_id>: <especie> (<count> individuos)"`.
+4. Añade (modo `"a"`) una línea final a `resumen.txt` con el total de observaciones.
+5. Sobre `muestras_con_comas.csv`, trocea cada línea con `.split(",")` e imprime cuántos campos obtienes por fila. Comprueba que las filas con coma dentro de las notas dan 4 campos en vez de 3.
+6. Repite el ejercicio anterior con `csv.reader` y comprueba que ahora todas las filas dan exactamente 3 campos.
+7. Usa `csv.DictReader` sobre `species_observations.csv` e imprime `fila["species"]` para cada fila.
+8. (Reto) Usa `csv.DictReader` y `csv.DictWriter` para crear `solo_abundantes.csv`, con únicamente las filas de `species_observations.csv` donde `count` sea mayor que 3.
+
+## Soluciones
+
+1.
+   ```python
+   with open("species_observations.csv") as f:
+       print(f.read())
+   ```
+2.
+   ```python
+   with open("species_observations.csv") as f:
+       lineas = f.readlines()
+   for linea in lineas[1:]:
+       print(linea.strip().split(",")[0])
+   ```
+3. Ver la sección "Escribir archivos con `.write()`".
+4. Ver la sección "Escribir archivos con `.write()`" (bloque con modo `"a"`).
+5.
+   ```python
+   with open("muestras_con_comas.csv") as f:
+       for linea in f:
+           campos = linea.strip().split(",")
+           print(len(campos), campos)
+   ```
+6.
+   ```python
+   import csv
+   with open("muestras_con_comas.csv") as f:
+       lector = csv.reader(f)
+       for fila in lector:
+           print(len(fila), fila)
+   ```
+7.
+   ```python
+   import csv
+   with open("species_observations.csv") as f:
+       lector = csv.DictReader(f)
+       for fila in lector:
+           print(fila["species"])
+   ```
+8.
+   ```python
+   import csv
+   with open("species_observations.csv") as f:
+       lector = csv.DictReader(f)
+       abundantes = [fila for fila in lector if int(fila["count"]) > 3]
+
+   with open("solo_abundantes.csv", "w", newline="") as f:
+       escritor = csv.DictWriter(f, fieldnames=abundantes[0].keys())
+       escritor.writeheader()
+       escritor.writerows(abundantes)
+   ```

@@ -1,0 +1,13 @@
+sample_id,fecha,localidad,especie,notas
+S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
+S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
+S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
+S107,2024-04-10,Sierra de Guadarrama,Betula pendula,Hoja amarillenta
+S108,2024-04-10,Sierra de guadarrama,betula Pendula,Cerca del arroyo
+S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
+S110,2024-04-15,Picos de Europa,Fagus sylvatica,Bosque denso
+S111,2024-04-15,picos de europa,Fagus silvatica,Sotobosque humedo
+S112,2024-04-15,Picos De Europa,FAGUS SYLVATICA,Zona protegida

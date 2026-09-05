@@ -1,0 +1,34 @@
+---
+title: "Técnicas informáticas para estudiantes de 4º de Biología"
+---
+
+## A quién va dirigido
+
+Este curso está pensado para estudiantes de 4º de Biología (orientaciones molecular-biosanitaria y naturalista-de campo) sin experiencia previa en Linux ni en programación.
+
+## Enfoque
+
+Cada lección incluye objetivos de aprendizaje, comandos y fragmentos de código listos para copiar/pegar, ejercicios prácticos paso a paso y soluciones. El material **no se ejecuta automáticamente**: los alumnos escriben o pegan el código en `gedit` (u otro editor) y lo ejecutan localmente en su propia terminal.
+
+Varios ejercicios usan datos "sucios" — con inconsistencias de mayúsculas/minúsculas, erratas o espacios extra — porque ese es el estado real en el que suelen llegar los datos de campo o de laboratorio, y aprender a detectarlos y corregirlos es parte del objetivo del curso.
+
+## Requisitos mínimos
+
+- Un equipo con Linux (o WSL/macOS con `bash`) y Python 3 instalado.
+- Un editor de texto: `gedit` u otro similar.
+- Para el módulo 11, conexión a internet.
+
+## Módulos
+
+1. [Introducción a la computación en biología](modulos/01_introduccion.qmd) — 1 h
+2. [Navegación y manejo de directorios en la terminal](modulos/02_terminal.qmd) — 2 h
+3. [Manejo de archivos de texto mediante línea de comandos](modulos/03_texto.qmd) — 4 h
+4. [Expresiones regulares](modulos/04_regex.qmd) — 2 h
+5. [Pipelines y programación en shell](modulos/05_pipelines.qmd) — 2 h
+7. [Introducción a la programación y Python](modulos/07_python_intro.qmd) — 2 h
+8. [Tipos y operadores](modulos/08_tipos_operadores.qmd) — 2 h
+9. [Bucles y condicionales](modulos/09_bucles_condicionales.qmd) — 4 h
+10. [Lectura, modificación y escritura de archivos](modulos/10_lectura_escritura.qmd) — 4 h
+11. [Acceso a datos en línea vía APIs](modulos/11_apis.qmd) — 2 h
+
+Los módulos están pensados para hacerse en orden: cada uno reutiliza herramientas y, a menudo, los mismos archivos de datos de los módulos anteriores (p. ej. `registro_campo_bruto.csv` aparece en los módulos 3, 4 y 5; `sequences.fasta` en los módulos 4, 7 y 9).

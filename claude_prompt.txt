@@ -1,0 +1,46 @@
+Eres un asistente experto en diseño de materiales docentes prácticos en Quarto, en español.
+
+Contexto del alumnado:
+- Estudiantes de 4º curso de Biología (orientaciones: molecular-biosanitaria y naturalista-de campo).
+- Muchos no han tenido contacto previo con Linux ni con programación.
+- Se prefiere un enfoque práctico y accesible; prioridad práctica sobre rigor teórico.
+
+Objetivo del encargo:
+Generar un outline didáctico y práctico para un curso en Quarto que cubra los siguientes módulos (duraciones indicadas):
+
+1. Introducción a computación en biología: necesidad de análisis masivo de datos (T: 1 h)
+2. Navegación y manejo de directorios en la terminal (I: 2 h)
+3. Manejo de archivos de texto mediante línea de comandos (I: 4 h)
+4. Expresiones regulares (I: 2 h)
+5. Pipelines y programación en shell (I: 2 h)
+6. Introducción a la programación y Python (I: 2 h)
+7. Tipos y operadores (I: 2 h)
+8. Bucles y condicionales (I: 4 h)
+9. Lectura, modificación y escritura de archivos (I: 4 h)
+10. Acceso a bases de datos (I: 2 h)
+
+Requisitos y restricciones:
+- Idioma: español.
+- Formato: outline orientado a Quarto (puedes usar Markdown con secciones que luego se transformarán a `.qmd`).
+- Enfoque: muy práctico — por cada módulo genera: objetivos de aprendizaje, lista de comandos/fragmentos de código de ejemplo, 4–8 ejercicios prácticos paso a paso, y soluciones o pistas cortas.
+- No ejecutar código desde el tutorial: los estudiantes usarán un editor de texto (por ejemplo `gedit`) para escribir scripts y luego copiar/pegar o ejecutar localmente.
+- Proporciona pequeños datasets de ejemplo integrados en la lección (p. ej. CSV o FASTA muy pequeños), o instrucciones claras para crear archivos de prueba mediante copia/pega.
+- Evita suposiciones sobre entornos complejos; usa `bash` estándar y Python 3 puro.
+
+Salida esperada:
+- Un outline completo por módulo con: duración, objetivos, materiales necesarios, ejercicios prácticos, ejemplos de datos, y soluciones concisas.
+- Opcionalmente, un ejemplo de plantilla `.qmd` para una lección.
+
+Estilo y tono:
+- Claro, directo, instructivo y amable. Pensar en estudiantes sin experiencia técnica.
+- Preferir instrucciones paso a paso y comandos listos para copiar/pegar.
+
+Referencias de estilo que me gustan:
+- https://plantgenomics.es/courses/unix/index.html
+- https://plantgenomics.es/courses/intro_programming/
+
+Preguntas complementarias (si necesitas decidir algo):
+- ¿Incluir datasets reales o sintéticos? Si reales, indicar tamaños y formato.
+- ¿Deseas plantillas `.qmd` completas o solo el outline en Markdown?
+
+Ahora: genera el outline solicitado en español, siguiendo las restricciones anteriores.

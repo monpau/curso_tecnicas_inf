@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Módulo 4 — Expresiones regulares – Técnicas informáticas para Biología (4º)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../modulos/05_pipelines.html" rel="next">
+<link href="../modulos/03_texto.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-9d4a88dd4850ece8494b0062f62c1b65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulos</a></li><li class="breadcrumb-item"><a href="../modulos/04_regex.html">Módulo 4 — Expresiones regulares</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Técnicas informáticas para Biología (4º)</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Técnicas informáticas para estudiantes de 4º de Biología</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Módulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/01_introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 1 — Introducción a la computación en biología</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/02_terminal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 2 — Navegación y manejo de directorios en la terminal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/03_texto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 3 — Manejo de archivos de texto mediante línea de comandos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/04_regex.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Módulo 4 — Expresiones regulares</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/05_pipelines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 5 — Pipelines y programación en shell</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/07_python_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 7 — Introducción a la programación y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/08_tipos_operadores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 8 — Tipos y operadores</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/09_bucles_condicionales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 9 — Bucles y condicionales</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/10_lectura_escritura.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 10 — Lectura, modificación y escritura de archivos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/11_apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 11 — Acceso a datos en línea vía APIs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#objetivos" id="toc-objetivos" class="nav-link active" data-scroll-target="#objetivos">Objetivos</a></li>
+  <li><a href="#por-qué-expresiones-regulares" id="toc-por-qué-expresiones-regulares" class="nav-link" data-scroll-target="#por-qué-expresiones-regulares">¿Por qué expresiones regulares?</a></li>
+  <li><a href="#qué-son-las-expresiones-regulares" id="toc-qué-son-las-expresiones-regulares" class="nav-link" data-scroll-target="#qué-son-las-expresiones-regulares">¿Qué son las expresiones regulares?</a></li>
+  <li><a href="#diseñar-y-probar-patrones-con-regex101.com" id="toc-diseñar-y-probar-patrones-con-regex101.com" class="nav-link" data-scroll-target="#diseñar-y-probar-patrones-con-regex101.com">Diseñar y probar patrones con regex101.com</a></li>
+  <li><a href="#materiales" id="toc-materiales" class="nav-link" data-scroll-target="#materiales">Materiales</a></li>
+  <li><a href="#patrones-básicos-con-grep" id="toc-patrones-básicos-con-grep" class="nav-link" data-scroll-target="#patrones-básicos-con-grep">Patrones básicos con <code>grep</code></a></li>
+  <li><a href="#contenedores" id="toc-contenedores" class="nav-link" data-scroll-target="#contenedores">Contenedores</a></li>
+  <li><a href="#alternativas-y-anclas-con-grep--e" id="toc-alternativas-y-anclas-con-grep--e" class="nav-link" data-scroll-target="#alternativas-y-anclas-con-grep--e">Alternativas y anclas con <code>grep -E</code></a></li>
+  <li><a href="#cuantificadores" id="toc-cuantificadores" class="nav-link" data-scroll-target="#cuantificadores">Cuantificadores</a></li>
+  <li><a href="#sustituciones-con-sed" id="toc-sustituciones-con-sed" class="nav-link" data-scroll-target="#sustituciones-con-sed">Sustituciones con <code>sed</code></a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a></li>
+  <li><a href="#soluciones" id="toc-soluciones" class="nav-link" data-scroll-target="#soluciones">Soluciones</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulos</a></li><li class="breadcrumb-item"><a href="../modulos/04_regex.html">Módulo 4 — Expresiones regulares</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Módulo 4 — Expresiones regulares</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Duración estimada:</strong> 2 h</p>
+<section id="objetivos" class="level2">
+<h2 class="anchored" data-anchor-id="objetivos">Objetivos</h2>
+<p>Al finalizar este módulo serás capaz de:</p>
+<ul>
+<li>Escribir patrones básicos de expresiones regulares.</li>
+<li>Usar contenedores (clases de caracteres, p.&nbsp;ej. <code>[PR]</code>) para representar “uno de estos caracteres”.</li>
+<li>Usar <code>grep</code>/<code>grep -E</code> para buscar patrones en archivos de texto y FASTA.</li>
+<li>Usar <code>sed</code> para hacer sustituciones sencillas.</li>
+<li>Detectar y corregir inconsistencias típicas de datos reales: mayúsculas/minúsculas mezcladas, erratas y espacios sobrantes.</li>
+</ul>
+</section>
+<section id="por-qué-expresiones-regulares" class="level2">
+<h2 class="anchored" data-anchor-id="por-qué-expresiones-regulares">¿Por qué expresiones regulares?</h2>
+<p>Imagina un listado de muestreos donde cada fila tiene un código de 5 caracteres seguido de la especie encontrada. El código sigue un formato fijo: <strong>localidad</strong> (1 letra) + <strong>tipo de sustrato</strong> (1 letra) + <strong>época</strong> (1 letra) + <strong>altura</strong> (2 dígitos, en cientos de metros):</p>
+<pre><code>PRA18,Erica arborea
+RAB22,Genista florida
+GCB07,Betula pendula
+PSI15,Pinus uncinata
+ESO09,Quercus pyrenaica
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+GAA12,Calluna vulgaris
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+PIO61,Silene ciliata</code></pre>
+<p>Quieres quedarte solo con los muestreos que cumplan <strong>las tres condiciones a la vez</strong>: localidad <code>P</code> o <code>R</code>, cualquier sustrato, época <code>A</code> o <code>B</code>, y una altura mayor que 9 (es decir, un número de dos cifras que no empiece por 0). No hay ninguna cadena de texto fija que buscar — lo que define a las filas que te interesan es una <strong>forma</strong>, no un texto concreto. Podrías revisar el listado a mano, pero con miles de muestreos eso es inviable, y un <code>grep</code> de texto literal no sirve porque no hay ningún texto literal en común entre <code>PRA18</code>, <code>RAB22</code>, <code>PAA31</code>… salvo la forma que siguen.</p>
+<p>Las expresiones regulares resuelven justo este problema: en vez de escribir el texto exacto que buscas, describes un <strong>patrón</strong> que ese texto debe cumplir. En este módulo construirás, pieza a pieza, el patrón que selecciona exactamente estas 5 filas.</p>
+</section>
+<section id="qué-son-las-expresiones-regulares" class="level2">
+<h2 class="anchored" data-anchor-id="qué-son-las-expresiones-regulares">¿Qué son las expresiones regulares?</h2>
+<p>Una expresión regular (<em>regex</em>) es un lenguaje en miniatura para describir patrones de texto: en vez de “busca la cadena exacta X”, permite decir cosas como “busca un código que empiece por P o por R, seguido de cualquier letra, luego A o B, y termine en un número de dos cifras mayor que 9” — el patrón que resuelve el ejemplo anterior. Un <em>motor</em> de expresiones regulares —integrado en herramientas como <code>grep</code>, <code>sed</code> o el módulo <code>re</code> de Python, que usaremos más adelante— lee ese patrón y lo compara contra el texto para decidir si hay coincidencia (y, con <code>sed</code>, para sustituirla).</p>
+<p>Es la misma idea que el buscador avanzado de cualquier editor de texto cuando activas la opción “usar expresión regular”: aquí simplemente aprenderás la sintaxis compacta con la que se escribe ese patrón.</p>
+</section>
+<section id="diseñar-y-probar-patrones-con-regex101.com" class="level2">
+<h2 class="anchored" data-anchor-id="diseñar-y-probar-patrones-con-regex101.com">Diseñar y probar patrones con regex101.com</h2>
+<p>Acertar con un patrón a la primera es difícil incluso con experiencia: es fácil que capture menos —o más— de lo que querías. <a href="https://regex101.com/">regex101.com</a> es una herramienta online gratuita que muestra, mientras escribes, qué partes de un texto coinciden con tu patrón —resaltadas en color— junto con una explicación de cada fragmento.</p>
+<p>Cómo usarla en este módulo:</p>
+<ol type="1">
+<li>Abre <a href="https://regex101.com/" class="uri">https://regex101.com/</a>.</li>
+<li>En el panel izquierdo (“FLAVOR”), selecciona <strong>Python</strong> — es el motor más parecido al que usaremos más adelante en el curso, y comparte casi toda la sintaxis básica con <code>grep -E</code>.</li>
+<li>Pega unas cuantas líneas de tus datos en el cuadro grande (“TEST STRING”), por ejemplo las filas del ejemplo anterior.</li>
+<li>Escribe tu patrón en el cuadro superior (“REGULAR EXPRESSION”) y observa qué se resalta abajo.</li>
+<li>Ajusta el patrón hasta que capture exactamente lo que quieres —ni más ni menos— y luego cópialo a tu terminal.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>regex101 no es idéntico a <code>grep -E</code>/<code>sed</code>: son “dialectos” de expresiones regulares ligeramente distintos (por ejemplo, <code>\d</code> funciona en Python pero no en <code>grep -E</code> estándar). Para los patrones de este módulo —alternativas <code>|</code>, anclas <code>^</code>/<code>$</code>, cuantificadores <code>+</code>/<code>*</code>— el comportamiento es el mismo en ambos, así que puedes probar ahí con confianza y copiar el resultado a la terminal.</p>
+</div>
+</div>
+</section>
+<section id="materiales" class="level2">
+<h2 class="anchored" data-anchor-id="materiales">Materiales</h2>
+<p>Este módulo usa tres archivos de <code>datasets/</code> (cópialos con <code>gedit</code> tal cual aparecen aquí):</p>
+<p><strong><code>codigos_muestreo.csv</code></strong></p>
+<pre><code>codigo,especie
+PRA18,Erica arborea
+RAB22,Genista florida
+GCB07,Betula pendula
+PSI15,Pinus uncinata
+ESO09,Quercus pyrenaica
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+GAA12,Calluna vulgaris
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+PIO61,Silene ciliata</code></pre>
+<p><strong><code>sequences.fasta</code></strong></p>
+<pre><code>&gt;seq1|Arabidopsis_thaliana|rbcL
+ATGTCACCACAAACAGAGACTATCGACTGCTGCTGCTGCTGCTGCTGCTG
+&gt;seq2|Quercus_robur|matK
+ATGGCCTTAGGCTTAGCTAGCTAGGCTAGCTAGCTAGCTAGCTAGCTAA
+&gt;seq3|Pinus_sylvestris|rbcL
+ATGACCATGATTACGCCAAGCTTGGCACTGCTGCTGCTGATGCGT
+&gt;seq4|Fragaria_vesca|trnL
+GATCGATCGATCGATCGATCGATCGATCGATCGA</code></pre>
+<p><strong><code>registro_campo_bruto.csv</code></strong></p>
+<pre><code>sample_id,fecha,localidad,especie,notas
+S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
+S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
+S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
+S107,2024-04-10,Sierra de Guadarrama,Betula pendula,Hoja amarillenta
+S108,2024-04-10,Sierra de guadarrama,betula Pendula,Cerca del arroyo
+S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
+S110,2024-04-15,Picos de Europa,Fagus sylvatica,Bosque denso
+S111,2024-04-15,picos de europa,Fagus silvatica,Sotobosque humedo
+S112,2024-04-15,Picos De Europa,FAGUS SYLVATICA,Zona protegida</code></pre>
+<p>Este segundo archivo es un registro de campo tal como podría llegar de varias personas anotando sobre el terreno: fíjate en <code>Pinus sylvestris</code> frente a <code>Pinus silvestris</code> (errata real y muy común, cambia la “y” por “i”), en <code>Sierra de Gredos</code>/<code>sierra de gredos</code>/<code>Sierra De Gredos</code> (misma localidad, mayúsculas distintas) y en <code>El escorial</code> (con un espacio sobrante al final). Este tipo de inconsistencias es la norma, no la excepción, en datos recogidos a mano.</p>
+</section>
+<section id="patrones-básicos-con-grep" class="level2">
+<h2 class="anchored" data-anchor-id="patrones-básicos-con-grep">Patrones básicos con <code>grep</code></h2>
+<pre><code>~$ grep "Quercus" sequences.fasta
+&gt;seq2|Quercus_robur|matK</code></pre>
+<p><code>grep</code> busca líneas que contienen el patrón indicado. Por defecto distingue mayúsculas de minúsculas; con <code>-i</code> deja de hacerlo:</p>
+<pre><code>~$ grep -i "quercus" sequences.fasta
+&gt;seq2|Quercus_robur|matK</code></pre>
+</section>
+<section id="contenedores" class="level2">
+<h2 class="anchored" data-anchor-id="contenedores">Contenedores</h2>
+<p>Un contenedor, escrito entre corchetes <code>[...]</code>, significa “uno cualquiera de estos caracteres”. <code>[PR]</code> coincide con una <code>P</code> <strong>o</strong> una <code>R</code> (y con nada más) en esa posición:</p>
+<pre><code>~$ grep -E "^[PR]" codigos_muestreo.csv
+PRA18,Erica arborea
+RAB22,Genista florida
+PSI15,Pinus uncinata
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+PIO61,Silene ciliata</code></pre>
+<p>El punto <code>.</code> es distinto: no es un contenedor, sino un <strong>comodín</strong> que coincide con un carácter cualquiera, sea el que sea. Nos sirve para la segunda posición del código (el sustrato), que puede ser cualquier letra:</p>
+<pre><code>~$ grep -E "^[PR]." codigos_muestreo.csv</code></pre>
+<p>Añade ahora un contenedor para la época (<code>A</code> o <code>B</code>) justo después:</p>
+<pre><code>~$ grep -E "^[PR].[AB]" codigos_muestreo.csv
+PRA18,Erica arborea
+RAB22,Genista florida
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica</code></pre>
+<p>Ya solo faltan las dos cifras de la altura, que deben formar un número mayor que 9 — es decir, la primera cifra no puede ser un 0. Un contenedor también admite <strong>rangos</strong>: <code>[1-9]</code> es cualquier dígito del 1 al 9, y <code>[0-9]</code> es cualquier dígito del 0 al 9:</p>
+<pre><code>~$ grep -E "^[PR].[AB][1-9][0-9]" codigos_muestreo.csv
+PRA18,Erica arborea
+RAB22,Genista florida
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+RAA99,Saxifraga pyrenaica</code></pre>
+<p>Exactamente las 5 filas del ejemplo con el que abría el módulo. Cada trozo del patrón <code>^[PR].[AB][1-9][0-9]</code> corresponde a una condición: <code>^</code> ancla al principio de línea, <code>[PR]</code> la localidad, <code>.</code> el sustrato (cualquiera), <code>[AB]</code> la época, y <code>[1-9][0-9]</code> una altura de dos cifras mayor que 9.</p>
+</section>
+<section id="alternativas-y-anclas-con-grep--e" class="level2">
+<h2 class="anchored" data-anchor-id="alternativas-y-anclas-con-grep--e">Alternativas y anclas con <code>grep -E</code></h2>
+<p>El ancla <code>^</code> ya la has usado: marca el principio de línea. Su pareja, <code>$</code>, marca el final. Con <code>-E</code> (expresiones regulares extendidas) tienes además <code>|</code>, que expresa alternativas más generales que un contenedor: mientras que <code>[AB]</code> solo sirve para elegir entre caracteres sueltos, <code>|</code> permite alternar entre palabras o frases enteras, como <code>Quercus_robur|Pinus_sylvestris</code>:</p>
+<pre><code>~$ grep -E "Quercus_robur|Pinus_sylvestris" sequences.fasta
+&gt;seq2|Quercus_robur|matK
+&gt;seq3|Pinus_sylvestris|rbcL
+
+~$ grep -E "^&gt;seq[13]" sequences.fasta
+&gt;seq1|Arabidopsis_thaliana|rbcL
+&gt;seq3|Pinus_sylvestris|rbcL</code></pre>
+<p>Para capturar una errata conocida junto con la forma correcta, se listan ambas como alternativas:</p>
+<pre><code>~$ grep -Ei "sylvestris|silvestris" registro_campo_bruto.csv
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza</code></pre>
+</section>
+<section id="cuantificadores" class="level2">
+<h2 class="anchored" data-anchor-id="cuantificadores">Cuantificadores</h2>
+<p>Un cuantificador indica cuántas veces puede repetirse lo que va justo antes. Los más comunes son <code>*</code> (cero o más veces) y <code>+</code> (una o más veces). Son útiles precisamente para datos sucios, donde no puedes asumir que siempre habrá exactamente un espacio:</p>
+<pre><code>~$ grep -E "Pinus +sylvestris" registro_campo_bruto.csv
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza</code></pre>
+<p><code>Pinus +sylvestris</code> encuentra tanto <code>Pinus sylvestris</code> (un espacio) como <code>Pinus  sylvestris</code> (dos espacios), porque <code>+</code> acepta una o más repeticiones del espacio anterior.</p>
+<p>Un tercer cuantificador, <code>?</code>, marca que lo anterior aparece <strong>cero o una vez</strong> — es decir, es opcional. Es perfecto para erratas de una sola letra que falta, como esta en <code>registro_campo_bruto.csv</code> (fíjate en la fila <code>S109</code>, “Qurcus” en vez de “Quercus”):</p>
+<pre><code>~$ grep -Ei "que?rcus robur" registro_campo_bruto.csv
+S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
+S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
+S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
+S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo</code></pre>
+<p><code>que?rcus</code> significa “q”, “u”, luego una “e” opcional, y luego “rcus”: encuentra tanto “Quercus” (con e) como la errata “Qurcus” (sin e), en las cuatro filas, en una sola búsqueda y sin necesidad de conocer de antemano cada variante.</p>
+</section>
+<section id="sustituciones-con-sed" class="level2">
+<h2 class="anchored" data-anchor-id="sustituciones-con-sed">Sustituciones con <code>sed</code></h2>
+<p><code>sed 's/patrón/reemplazo/'</code> sustituye la primera coincidencia de cada línea; con la bandera <code>g</code> sustituye todas:</p>
+<pre><code>~$ sed 's/silvestris/sylvestris/' registro_campo_bruto.csv
+~$ sed 's/  */ /g' registro_campo_bruto.csv</code></pre>
+<p>La segunda orden colapsa cualquier secuencia de espacios repetidos (<code>*</code> = un espacio seguido de cero o más espacios) en uno solo — útil para limpiar el espacio sobrante en <code>El escorial</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>sed</code> por defecto <strong>no modifica el archivo original</strong>: imprime el resultado por pantalla. Para guardarlo, redirige la salida a un archivo nuevo (<code>sed '...' entrada.csv &gt; salida.csv</code>) — nunca redirijas al mismo archivo de entrada en la misma orden, lo dejarías vacío.</p>
+</div>
+</div>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Si te atascas con un patrón, prototípalo primero en <a href="https://regex101.com/">regex101.com</a> (flavor Python) pegando las líneas relevantes del archivo, y cuando funcione cópialo a la terminal.</p>
+<ol type="1">
+<li>En <code>codigos_muestreo.csv</code>, escribe un patrón con un contenedor que seleccione los códigos cuya localidad sea <code>P</code> o <code>R</code>.</li>
+<li>Amplía el patrón anterior con otro contenedor para exigir además que la época (la tercera letra) sea <code>A</code> o <code>B</code>.</li>
+<li>Completa el patrón anterior para quedarte solo con los códigos cuya altura (las dos últimas cifras) sea un número mayor que 9. Debe darte exactamente 5 filas.</li>
+<li>En <code>sequences.fasta</code>, usando <code>grep -E</code> con alternancia, selecciona en una sola orden las cabeceras de <code>Quercus_robur</code> y <code>Fragaria_vesca</code>.</li>
+<li>Escribe un patrón <code>grep -E</code> que capture tanto <code>Pinus sylvestris</code> (forma correcta) como la errata <code>Pinus silvestris</code> en <code>registro_campo_bruto.csv</code>, sin importar mayúsculas/minúsculas ni si hay uno o dos espacios entre las dos palabras.</li>
+<li>En <code>registro_campo_bruto.csv</code>, cuenta cuántas filas mencionan la localidad “Sierra de Gredos” en cualquier combinación de mayúsculas/minúsculas.</li>
+<li>Usa <code>sed</code> para generar una versión de <code>registro_campo_bruto.csv</code> en la que todas las apariciones de <code>silvestris</code> estén corregidas a <code>sylvestris</code>, guardando el resultado en <code>registro_campo_limpio.csv</code>.</li>
+<li>(Reto) Encadena <code>grep</code> y <code>sed</code> con una tubería (<code>|</code>) para, en una sola línea, quedarte solo con las filas de <code>Betula pendula</code> (en cualquier combinación de mayúsculas/minúsculas) y normalizar esas filas a minúsculas.</li>
+</ol>
+</section>
+<section id="soluciones" class="level2">
+<h2 class="anchored" data-anchor-id="soluciones">Soluciones</h2>
+<ol type="1">
+<li><code>grep -E "^[PR]" codigos_muestreo.csv</code></li>
+<li><code>grep -E "^[PR].[AB]" codigos_muestreo.csv</code></li>
+<li><code>grep -E "^[PR].[AB][1-9][0-9]" codigos_muestreo.csv</code> → <code>PRA18</code>, <code>RAB22</code>, <code>PAA31</code>, <code>RSB44</code>, <code>RAA99</code></li>
+<li><code>grep -E "Quercus_robur|Fragaria_vesca" sequences.fasta</code></li>
+<li><code>grep -Ei "pinus +(sylvestris|silvestris)" registro_campo_bruto.csv</code> (el cuantificador <code>+</code> es necesario porque <code>S106</code> tiene dos espacios entre <code>Pinus</code> y <code>sylvestris</code>)</li>
+<li><code>grep -ci "sierra de gredos" registro_campo_bruto.csv</code> → <code>4</code> (filas <code>S101</code>, <code>S102</code>, <code>S103</code> y <code>S109</code>)</li>
+<li><code>sed 's/silvestris/sylvestris/' registro_campo_bruto.csv &gt; registro_campo_limpio.csv</code></li>
+<li><code>grep -i "betula pendula" registro_campo_bruto.csv | tr '[:upper:]' '[:lower:]'</code></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../modulos/03_texto.html" class="pagination-link" aria-label="Módulo 3 — Manejo de archivos de texto mediante línea de comandos">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Módulo 3 — Manejo de archivos de texto mediante línea de comandos</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../modulos/05_pipelines.html" class="pagination-link" aria-label="Módulo 5 — Pipelines y programación en shell">
+        <span class="nav-page-text">Módulo 5 — Pipelines y programación en shell</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

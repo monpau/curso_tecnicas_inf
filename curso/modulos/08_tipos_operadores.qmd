@@ -1,0 +1,141 @@
+---
+title: "Módulo 8 — Tipos y operadores"
+---
+
+**Duración estimada:** 2 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Distinguir los tipos básicos de Python: `str`, `int`, `float`, `list`, `dict`.
+- Usar los operadores esenciales sobre cada tipo.
+- Reconocer y evitar un error muy común: tratar un número leído de un archivo como si fuera texto.
+
+## Un problema real: todo lo que lees de un archivo es texto
+
+Recupera la línea de `species_observations.csv` que viste en el módulo anterior, y divídela por comas con `.split(",")`:
+
+```python
+linea = "S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino"
+campos = linea.split(",")
+print(campos)
+```
+
+```
+['S001', '2024-05-12', 'SiteA', '40.123', '-3.456', 'Quercus_robur', '3', 'Adultos en borde de camino']
+```
+
+`campos` es una **lista** (`list`): una colección ordenada de valores, donde accedes a cada uno por su posición (empezando en 0) con corchetes: `campos[5]` es `'Quercus_robur'`.
+
+Ahora fíjate en `campos[6]`, el número de individuos observados: es el texto `'3'`, no el número `3`. Python los distingue con el tipo `str` (cadena de texto) frente a `int` (entero). La función `type()` te dice el tipo de cualquier valor. Esto tiene una consecuencia peligrosa:
+
+```python
+count = campos[6]
+print(type(count), count * 2)
+```
+
+```
+<class 'str'> 33
+```
+
+`count * 2` no calcula "3 por 2" — repite el texto `'3'` dos veces seguidas, dando `'33'`. No hay ningún error, ningún aviso: el programa sigue funcionando y produce un resultado incorrecto en silencio. Este es exactamente el tipo de fallo que puede colarse en un análisis real sin que nadie se dé cuenta. La solución es convertir explícitamente el texto a número con `int()` (o `float()` si tiene decimales) antes de operar con él:
+
+```python
+count = int(count)
+print(type(count), count * 2)
+```
+
+```
+<class 'int'> 6
+```
+
+Cada vez que leas un valor de un CSV, un FASTA o cualquier archivo de texto, recuerda: **llega como `str`, y tú decides si convertirlo**.
+
+## Tipos básicos
+
+| Tipo | Ejemplo | Uso típico en este curso |
+|---|---|---|
+| `str` | `"Quercus_robur"` | nombres de especie, localidades, secuencias |
+| `int` | `3` | número de individuos, posiciones |
+| `float` | `40.123` | coordenadas, medidas |
+| `list` | `["Quercus_robur", "Pinus_sylvestris"]` | varias observaciones o secuencias juntas |
+| `dict` | `{"SiteA": "Bosque mixto"}` | traducir un código a su significado |
+
+## Operadores esenciales
+
+Con números, los operadores aritméticos habituales: `+ - * /` (división con decimales), `//` (división entera), `%` (resto), `**` (potencia). Con cadenas, `+` concatena y `*` repite (como acabas de ver, a veces por accidente). Los operadores de comparación (`== != < > <= >=`) funcionan igual en ambos y devuelven `True`/`False` — los usarás mucho en el módulo siguiente para condicionales.
+
+## Listas: colecciones ordenadas
+
+```python
+especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"]
+especies.append("Betula_pendula")   # añade al final
+print(especies[2])                  # Fragaria_vesca (índice 2 = tercer elemento)
+print(especies[:2])                 # ['Quercus_robur', 'Pinus_sylvestris'] — los dos primeros
+```
+
+`especies[:2]` es *slicing*: `[inicio:fin]` extrae un tramo de la lista, sin incluir el índice `fin`. Omitir `inicio` significa "desde el principio".
+
+## Diccionarios: de clave a valor
+
+Un diccionario asocia claves con valores — útil para traducir un código a su significado:
+
+```python
+sitios = {"SiteA": "Bosque mixto", "SiteB": "Claro de bosque", "SiteC": "Parcela experimental"}
+print(sitios.get("SiteB"))          # Claro de bosque
+
+for codigo, nombre in sitios.items():
+    print(f"{codigo}: {nombre}")
+```
+
+```
+Claro de bosque
+SiteA: Bosque mixto
+SiteB: Claro de bosque
+SiteC: Parcela experimental
+```
+
+`.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
+
+## Ejercicios
+
+1. A partir de `linea = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"`, usa `.split(",")` y accede al campo de la especie por índice.
+2. Extrae el campo del número de individuos, e imprime `type()` antes y después de convertirlo con `int()`.
+3. Crea una lista `especies` con al menos 3 nombres de especie, añade una cuarta con `.append()`, e imprime el elemento en la posición 1.
+4. Usa slicing para obtener, de esa misma lista, todos los elementos excepto el primero.
+5. Crea un diccionario que traduzca los códigos `SiteA`, `SiteB`, `SiteC` a una descripción del hábitat, y usa `.get()` para consultar uno.
+6. (Reto) Recorre el diccionario del ejercicio anterior con `.items()` en un bucle `for`, e imprime cada par como `"<código> -> <descripción>"`.
+
+## Soluciones
+
+1.
+   ```python
+   linea = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
+   campos = linea.split(",")
+   print(campos[5])
+   ```
+2.
+   ```python
+   count = campos[6]
+   print(type(count))
+   count = int(count)
+   print(type(count))
+   ```
+3.
+   ```python
+   especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"]
+   especies.append("Betula_pendula")
+   print(especies[1])
+   ```
+4. `print(especies[1:])` — omitir el `fin` significa "hasta el final".
+5.
+   ```python
+   habitats = {"SiteA": "Bosque mixto", "SiteB": "Claro de bosque", "SiteC": "Parcela experimental"}
+   print(habitats.get("SiteA"))
+   ```
+6.
+   ```python
+   for codigo, descripcion in habitats.items():
+       print(f"{codigo} -> {descripcion}")
+   ```

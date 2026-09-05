@@ -1,0 +1,136 @@
+---
+title: "Módulo 5 — Pipelines y programación en shell"
+---
+
+**Duración estimada:** 2 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Encadenar comandos con `|` para construir pipelines.
+- Guardar y añadir la salida de un comando a un archivo con `>` y `>>`, y alimentar un comando desde un archivo con `<`.
+- Convertir una lista de resultados en argumentos de otro comando con `xargs`.
+- Escribir un script de shell reutilizable y ejecutarlo.
+
+## Materiales
+
+Este módulo reutiliza tres archivos de `datasets/` que ya conoces: `sequences.fasta`, `species_observations.csv` y `registro_campo_bruto.csv`.
+
+## Ya has usado pipelines
+
+Si has hecho los módulos 3 y 4, ya has escrito pipelines sin llamarlos así. Por ejemplo, esto del módulo 3:
+
+```
+~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
+```
+
+Un **pipeline** es una cadena de comandos unidos por `|` (la tubería), donde la salida de cada comando se convierte en la entrada del siguiente: `cut` extrae una columna, `tail` descarta la cabecera, `tr` normaliza mayúsculas, `sed` limpia espacios, `sort` ordena, y `uniq -c` cuenta. Cada comando hace una cosa pequeña; encadenarlos es lo que construye algo útil. Es la misma filosofía que ya viste en el módulo 3 con `cut`/`paste`: herramientas simples que se combinan, en vez de un único comando gigante que lo haga todo.
+
+## Redirecciones: `>`, `>>`, `<`
+
+Hasta ahora, la salida de tus comandos siempre iba a la pantalla. Puedes redirigirla a un archivo en su lugar:
+
+- `>` guarda la salida en un archivo, **sobrescribiéndolo** si ya existe.
+- `>>` añade la salida al final del archivo, sin borrar lo que ya había.
+
+```
+~$ echo "Numero de secuencias en sequences.fasta:" > informe.txt
+~$ grep -c "^>" sequences.fasta >> informe.txt
+~$ cat informe.txt
+Numero de secuencias en sequences.fasta:
+4
+```
+
+Si hubieras usado `>` en la segunda línea en vez de `>>`, el informe se habría quedado solo con el `4`, borrando la primera línea.
+
+`<` hace lo contrario: en vez de que un comando reciba un nombre de archivo como argumento, le entrega el contenido del archivo como si lo estuvieras escribiendo tú por teclado (entrada estándar). La diferencia se nota, por ejemplo, en `wc`:
+
+```
+~$ wc -l species_observations.csv
+6 species_observations.csv
+~$ wc -l < species_observations.csv
+6
+```
+
+Con el nombre como argumento, `wc` sabe qué archivo está contando y lo indica. Con `<`, `wc` solo ve un flujo de texto sin nombre, así que no puede mostrarlo — solo el número.
+
+## `xargs`: de una lista a argumentos
+
+Muchos comandos (`grep`, `sort`, `cut`...) leen texto de la entrada estándar. Pero otros, como `mkdir`, esperan sus argumentos escritos directamente en la línea de órdenes, no por tubería. `xargs` es el puente entre ambos mundos: toma lo que le llega por `|` y lo convierte en argumentos del comando que le sigues.
+
+Por ejemplo, quieres crear un directorio por cada `site` distinto de `species_observations.csv`, sin escribirlos a mano uno a uno:
+
+```
+~$ cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u | xargs mkdir -p
+~$ ls -d Site*
+SiteA  SiteB  SiteC
+```
+
+`sort -u` (única + ordenada) produce la lista `SiteA`, `SiteB`, `SiteC`; `xargs mkdir -p` toma esa lista y ejecuta `mkdir -p SiteA SiteB SiteC` por ti. Sin `xargs`, `mkdir` habría interpretado toda la lista como un único nombre de directorio raro con saltos de línea dentro.
+
+## Scripts de shell
+
+Un pipeline útil merece guardarse para no volver a teclearlo. Un script de shell es un archivo de texto con una secuencia de comandos, más una primera línea especial (la *shebang*, `#!/bin/bash`) que le dice al sistema con qué programa ejecutarlo:
+
+```bash
+#!/bin/bash
+grep -c "^>" "$1"
+```
+
+`$1` es el primer argumento que le pases al script al ejecutarlo — así el script funciona con cualquier archivo FASTA, no solo con `sequences.fasta`. Guarda esto como `contar_secuencias.sh`, dale permiso de ejecución, y ejecútalo:
+
+```
+~$ chmod +x contar_secuencias.sh
+~$ ./contar_secuencias.sh sequences.fasta
+4
+```
+
+`chmod +x` es necesario porque, igual que viste en el módulo 2, un archivo nuevo no es ejecutable por defecto. `./` delante del nombre le dice a la terminal "ejecuta el script que está en este directorio" (sin la `./`, buscaría un comando llamado `contar_secuencias.sh` entre los comandos del sistema, y no lo encontraría).
+
+::: {.callout-note}
+Las comillas dobles alrededor de `"$1"` no son decoración: si el argumento tuviera espacios (como los nombres de archivo mal escritos que viste en el módulo 2, del tipo `"Muestra 01.fastq"`), sin comillas el script lo trocearía en varios argumentos. Poner siempre `"$1"` entre comillas es un hábito que te evitará errores difíciles de depurar.
+:::
+
+## Ejercicios
+
+1. Construye un pipeline que cuente cuántas secuencias hay en `sequences.fasta` (pista: cabeceras que empiezan por `>`).
+2. Guarda el resultado del ejercicio anterior en un archivo `informe.txt`, precedido por una línea de texto que describa qué es ese número (usa `>` y `>>`).
+3. Usa `wc -l <` (con redirección de entrada) para contar las líneas de `species_observations.csv` sin que el nombre del archivo aparezca en la salida.
+4. Usa `cut`, `sort -u` y `xargs mkdir -p` para crear, en una sola línea, un directorio por cada localidad distinta (ya normalizada a minúsculas y sin espacios sobrantes) de `registro_campo_bruto.csv`.
+5. Escribe un script `contar_secuencias.sh` que reciba un archivo FASTA como argumento (`$1`) y muestre cuántas secuencias contiene. Dale permisos de ejecución y pruébalo con `sequences.fasta`.
+6. (Reto) Escribe un script `limpiar_localidades.sh` que reciba un CSV como argumento y aplique el pipeline completo de limpieza de localidades del módulo 3 (minúsculas, sin espacios sobrantes, ordenado y contado). Pruébalo con `registro_campo_bruto.csv`.
+
+## Soluciones
+
+1. `grep -c "^>" sequences.fasta`
+2.
+   ```
+   ~$ echo "Numero de secuencias en sequences.fasta:" > informe.txt
+   ~$ grep -c "^>" sequences.fasta >> informe.txt
+   ```
+3. `wc -l < species_observations.csv`
+4. `cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort -u | xargs mkdir -p`
+5.
+   ```bash
+   #!/bin/bash
+   grep -c "^>" "$1"
+   ```
+   ```
+   ~$ chmod +x contar_secuencias.sh
+   ~$ ./contar_secuencias.sh sequences.fasta
+   4
+   ```
+6.
+   ```bash
+   #!/bin/bash
+   cut -d',' -f3 "$1" | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
+   ```
+   ```
+   ~$ chmod +x limpiar_localidades.sh
+   ~$ ./limpiar_localidades.sh registro_campo_bruto.csv
+         3 el escorial
+         3 picos de europa
+         4 sierra de gredos
+         2 sierra de guadarrama
+   ```

@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Módulo 1 — Introducción a la computación en biología – Técnicas informáticas para Biología (4º)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../modulos/02_terminal.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-9d4a88dd4850ece8494b0062f62c1b65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulos</a></li><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulo 1 — Introducción a la computación en biología</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Técnicas informáticas para Biología (4º)</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Técnicas informáticas para estudiantes de 4º de Biología</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Módulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/01_introduccion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Módulo 1 — Introducción a la computación en biología</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/02_terminal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 2 — Navegación y manejo de directorios en la terminal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/03_texto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 3 — Manejo de archivos de texto mediante línea de comandos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/04_regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 4 — Expresiones regulares</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/05_pipelines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 5 — Pipelines y programación en shell</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/07_python_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 7 — Introducción a la programación y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/08_tipos_operadores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 8 — Tipos y operadores</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/09_bucles_condicionales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 9 — Bucles y condicionales</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/10_lectura_escritura.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 10 — Lectura, modificación y escritura de archivos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/11_apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 11 — Acceso a datos en línea vía APIs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-pregunta-ya-no-es-solo-biológica" id="toc-la-pregunta-ya-no-es-solo-biológica" class="nav-link active" data-scroll-target="#la-pregunta-ya-no-es-solo-biológica">La pregunta ya no es solo biológica</a></li>
+  <li><a href="#qué-aporta-la-informática" id="toc-qué-aporta-la-informática" class="nav-link" data-scroll-target="#qué-aporta-la-informática">¿Qué aporta la informática?</a></li>
+  <li><a href="#sistemas-abiertos-por-qué-importan" id="toc-sistemas-abiertos-por-qué-importan" class="nav-link" data-scroll-target="#sistemas-abiertos-por-qué-importan">Sistemas abiertos: por qué importan</a></li>
+  <li><a href="#archivos-de-texto-bien-hechos" id="toc-archivos-de-texto-bien-hechos" class="nav-link" data-scroll-target="#archivos-de-texto-bien-hechos">Archivos de texto bien hechos</a>
+  <ul class="collapse">
+  <li><a href="#características-esenciales" id="toc-características-esenciales" class="nav-link" data-scroll-target="#características-esenciales">Características esenciales</a></li>
+  <li><a href="#un-ejemplo-problemático" id="toc-un-ejemplo-problemático" class="nav-link" data-scroll-target="#un-ejemplo-problemático">Un ejemplo problemático</a></li>
+  </ul></li>
+  <li><a href="#formatos-estándar-en-biología" id="toc-formatos-estándar-en-biología" class="nav-link" data-scroll-target="#formatos-estándar-en-biología">Formatos estándar en biología</a>
+  <ul class="collapse">
+  <li><a href="#csv-y-tsv-tablas-de-datos" id="toc-csv-y-tsv-tablas-de-datos" class="nav-link" data-scroll-target="#csv-y-tsv-tablas-de-datos">CSV y TSV: tablas de datos</a></li>
+  <li><a href="#fasta-secuencias" id="toc-fasta-secuencias" class="nav-link" data-scroll-target="#fasta-secuencias">FASTA: secuencias</a></li>
+  <li><a href="#fastq-lecturas-y-calidad" id="toc-fastq-lecturas-y-calidad" class="nav-link" data-scroll-target="#fastq-lecturas-y-calidad">FASTQ: lecturas y calidad</a></li>
+  <li><a href="#gff3-anotaciones-de-un-genoma" id="toc-gff3-anotaciones-de-un-genoma" class="nav-link" data-scroll-target="#gff3-anotaciones-de-un-genoma">GFF3: anotaciones de un genoma</a></li>
+  <li><a href="#vcf-variantes-genéticas" id="toc-vcf-variantes-genéticas" class="nav-link" data-scroll-target="#vcf-variantes-genéticas">VCF: variantes genéticas</a></li>
+  </ul></li>
+  <li><a href="#rtfm-y-rtfe" id="toc-rtfm-y-rtfe" class="nav-link" data-scroll-target="#rtfm-y-rtfe">RTFM y RTFE</a></li>
+  <li><a href="#los-mensajes-de-error-contienen-información" id="toc-los-mensajes-de-error-contienen-información" class="nav-link" data-scroll-target="#los-mensajes-de-error-contienen-información">Los mensajes de error contienen información</a></li>
+  <li><a href="#buenas-prácticas-nombres-que-no-dan-problemas" id="toc-buenas-prácticas-nombres-que-no-dan-problemas" class="nav-link" data-scroll-target="#buenas-prácticas-nombres-que-no-dan-problemas">Buenas prácticas: nombres que no dan problemas</a>
+  <ul class="collapse">
+  <li><a href="#nombres-de-archivos-y-carpetas" id="toc-nombres-de-archivos-y-carpetas" class="nav-link" data-scroll-target="#nombres-de-archivos-y-carpetas">Nombres de archivos y carpetas</a></li>
+  <li><a href="#por-qué-evitar-espacios-y-acentos" id="toc-por-qué-evitar-espacios-y-acentos" class="nav-link" data-scroll-target="#por-qué-evitar-espacios-y-acentos">¿Por qué evitar espacios y acentos?</a></li>
+  <li><a href="#nombres-informativos" id="toc-nombres-informativos" class="nav-link" data-scroll-target="#nombres-informativos">Nombres informativos</a></li>
+  <li><a href="#nombres-de-variables-en-python" id="toc-nombres-de-variables-en-python" class="nav-link" data-scroll-target="#nombres-de-variables-en-python">Nombres de variables en Python</a></li>
+  <li><a href="#evita-nombres-ambiguos" id="toc-evita-nombres-ambiguos" class="nav-link" data-scroll-target="#evita-nombres-ambiguos">Evita nombres ambiguos</a></li>
+  <li><a href="#la-prueba-de-los-seis-meses" id="toc-la-prueba-de-los-seis-meses" class="nav-link" data-scroll-target="#la-prueba-de-los-seis-meses">La prueba de los seis meses</a></li>
+  </ul></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
+  <ul class="collapse">
+  <li><a href="#ejercicio-1-por-qué-automatizar" id="toc-ejercicio-1-por-qué-automatizar" class="nav-link" data-scroll-target="#ejercicio-1-por-qué-automatizar">Ejercicio 1 — ¿Por qué automatizar?</a></li>
+  <li><a href="#ejercicio-2-detecta-los-problemas" id="toc-ejercicio-2-detecta-los-problemas" class="nav-link" data-scroll-target="#ejercicio-2-detecta-los-problemas">Ejercicio 2 — Detecta los problemas</a></li>
+  <li><a href="#ejercicio-3-mejora-el-archivo" id="toc-ejercicio-3-mejora-el-archivo" class="nav-link" data-scroll-target="#ejercicio-3-mejora-el-archivo">Ejercicio 3 — Mejora el archivo</a></li>
+  <li><a href="#ejercicio-4-reconoce-formatos" id="toc-ejercicio-4-reconoce-formatos" class="nav-link" data-scroll-target="#ejercicio-4-reconoce-formatos">Ejercicio 4 — Reconoce formatos</a></li>
+  <li><a href="#ejercicio-5-lee-el-error" id="toc-ejercicio-5-lee-el-error" class="nav-link" data-scroll-target="#ejercicio-5-lee-el-error">Ejercicio 5 — Lee el error</a></li>
+  <li><a href="#ejercicio-6-es-reproducible" id="toc-ejercicio-6-es-reproducible" class="nav-link" data-scroll-target="#ejercicio-6-es-reproducible">Ejercicio 6 — ¿Es reproducible?</a></li>
+  </ul></li>
+  <li><a href="#soluciones-y-pistas" id="toc-soluciones-y-pistas" class="nav-link" data-scroll-target="#soluciones-y-pistas">Soluciones y pistas</a>
+  <ul class="collapse">
+  <li><a href="#solución-1" id="toc-solución-1" class="nav-link" data-scroll-target="#solución-1">Solución 1</a></li>
+  <li><a href="#solución-2" id="toc-solución-2" class="nav-link" data-scroll-target="#solución-2">Solución 2</a></li>
+  <li><a href="#solución-3" id="toc-solución-3" class="nav-link" data-scroll-target="#solución-3">Solución 3</a></li>
+  <li><a href="#solución-4" id="toc-solución-4" class="nav-link" data-scroll-target="#solución-4">Solución 4</a></li>
+  <li><a href="#solución-5" id="toc-solución-5" class="nav-link" data-scroll-target="#solución-5">Solución 5</a></li>
+  <li><a href="#solución-6" id="toc-solución-6" class="nav-link" data-scroll-target="#solución-6">Solución 6</a></li>
+  </ul></li>
+  <li><a href="#ideas-clave" id="toc-ideas-clave" class="nav-link" data-scroll-target="#ideas-clave">Ideas clave</a></li>
+  <li><a href="#por-qué-la-biología-necesita-informática" id="toc-por-qué-la-biología-necesita-informática" class="nav-link" data-scroll-target="#por-qué-la-biología-necesita-informática">¿Por qué la biología necesita informática?</a></li>
+  <li><a href="#formatos-de-datos-comunes-en-biología" id="toc-formatos-de-datos-comunes-en-biología" class="nav-link" data-scroll-target="#formatos-de-datos-comunes-en-biología">Formatos de datos comunes en biología</a></li>
+  <li><a href="#ejercicios-1" id="toc-ejercicios-1" class="nav-link" data-scroll-target="#ejercicios-1">Ejercicios</a></li>
+  <li><a href="#soluciones" id="toc-soluciones" class="nav-link" data-scroll-target="#soluciones">Soluciones</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulos</a></li><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulo 1 — Introducción a la computación en biología</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Módulo 1 — Introducción a la computación en biología</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="la-pregunta-ya-no-es-solo-biológica" class="level2">
+<h2 class="anchored" data-anchor-id="la-pregunta-ya-no-es-solo-biológica">La pregunta ya no es solo biológica</h2>
+<p>La biología sigue empezando con preguntas biológicas:</p>
+<ul>
+<li>¿Qué especies están sufriendo cambios de rango de distribución debido al cambio global?</li>
+<li>¿Qué genes se expresan en una condición experimental?</li>
+<li>¿Qué variantes distinguen dos poblaciones?</li>
+<li>¿Cómo cambia una comunidad microbiana entre muestras?</li>
+<li>¿Qué regiones del genoma están metiladas?</li>
+</ul>
+<p>Pero, en muchos proyectos actuales, responder estas preguntas exige trabajar con una cantidad de datos que requieren del uso de herrmientas informáticas.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/comparacion_caracteres.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Comparación caracteres</figcaption>
+</figure>
+</div>
+<p>Necesitamos maneras automatizadas para:</p>
+<ul>
+<li>Leer miles o millones de registros.</li>
+<li>Seleccionar y filtrar datos.</li>
+<li>Contar, resumir y calcular estadísticas.</li>
+<li>Comparar muestras, poblaciones o tratamientos.</li>
+<li>Registrar exactamente qué pasos se han aplicado.</li>
+</ul>
+</section>
+<section id="qué-aporta-la-informática" class="level2">
+<h2 class="anchored" data-anchor-id="qué-aporta-la-informática">¿Qué aporta la informática?</h2>
+<p>La informática no decide por ti la hipótesis, el diseño experimental o la interpretación biológica. Sí permite aplicar un procedimiento definido muchas veces, rápido y con menos errores manuales.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tarea</th>
+<th>A mano</th>
+<th>Con comandos o un script</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contar observaciones por especie</td>
+<td>Posible con pocas filas</td>
+<td>Rápido con miles o millones de filas</td>
+</tr>
+<tr class="even">
+<td>Seleccionar lecturas largas</td>
+<td>Imposible a escala real</td>
+<td>Un criterio aplicado a todas las lecturas</td>
+</tr>
+<tr class="odd">
+<td>Comparar muestras</td>
+<td>Difícil de repetir exactamente</td>
+<td>Repetible y documentable</td>
+</tr>
+<tr class="even">
+<td>Corregir un criterio de filtrado</td>
+<td>Hay que repetir pasos manuales</td>
+<td>Se cambia una instrucción y se vuelve a ejecutar</td>
+</tr>
+<tr class="odd">
+<td>Explicar qué se hizo</td>
+<td>Depende de notas y memoria</td>
+<td>El código conserva el procedimiento</td>
+</tr>
+</tbody>
+</table>
+<p>La idea central del curso es la siguiente:</p>
+<blockquote class="blockquote">
+<p>Si puedes expresar una tarea como una secuencia clara de instrucciones, puedes pedir al ordenador que la ejecute sobre todos los datos.</p>
+</blockquote>
+<p>Durante el curso aprenderás dos formas complementarias de hacerlo:</p>
+<ul>
+<li><strong>Línea de comandos:</strong> instrucciones breves para inspeccionar, buscar, filtrar, combinar y transformar archivos.</li>
+<li><strong>Python:</strong> programas más flexibles para automatizar análisis y crear resultados a partir de datos.</li>
+</ul>
+</section>
+<section id="sistemas-abiertos-por-qué-importan" class="level2">
+<h2 class="anchored" data-anchor-id="sistemas-abiertos-por-qué-importan">Sistemas abiertos: por qué importan</h2>
+<p>En este curso utilizaremos herramientas abiertas o basadas en estándares abiertos: Linux, <code>bash</code>, Python y formatos de texto habituales en biología.</p>
+<p>Un sistema abierto no significa necesariamente que todo sea gratuito o que cualquier dato deba ser público. Significa, sobre todo, que las reglas de funcionamiento y los formatos son accesibles, documentados y utilizables por distintas personas y programas.</p>
+<p>Esto tiene ventajas prácticas importantes.</p>
+<ul>
+<li><strong>Transparencia.</strong> Puedes inspeccionar qué contiene un archivo y qué hacen las instrucciones que ejecutas.</li>
+<li><strong>Reproducibilidad.</strong> Otra persona puede repetir el mismo análisis con los mismos datos y las mismas instrucciones.</li>
+<li><strong>Interoperabilidad.</strong> Un archivo FASTA, VCF o GFF3 puede ser leído por muchas herramientas diferentes, no solo por el programa que lo creó.</li>
+<li><strong>Durabilidad.</strong> Un archivo de texto documentado suele seguir siendo interpretable años después, incluso aunque cambie el programa original.</li>
+<li><strong>Automatización.</strong> Los formatos bien definidos permiten conectar pasos en un análisis: la salida de una herramienta puede ser la entrada de otra.</li>
+<li><strong>Comunidad.</strong> Las herramientas abiertas permiten detectar errores, compartir mejoras, crear tutoriales y aprovechar trabajo previo.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled" title="FAIR no equivale exactamente a abierto">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>FAIR no equivale exactamente a abierto
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>En investigación se utilizan con frecuencia los principios FAIR:</p>
+<ul>
+<li><strong>F — Findable:</strong> localizable.</li>
+<li><strong>A — Accessible:</strong> accesible mediante reglas claras.</li>
+<li><strong>I — Interoperable:</strong> compatible con otros datos y herramientas.</li>
+<li><strong>R — Reusable:</strong> reutilizable gracias a documentación, metadatos, procedencia y condiciones de uso.</li>
+</ul>
+<p>Un conjunto de datos sensible, por ejemplo datos clínicos, puede no ser público y seguir aspirando a ser FAIR: sus metadatos y condiciones de acceso pueden estar documentados, y sus formatos pueden seguir estándares.</p>
+</div>
+</div>
+</section>
+<section id="archivos-de-texto-bien-hechos" class="level2">
+<h2 class="anchored" data-anchor-id="archivos-de-texto-bien-hechos">Archivos de texto bien hechos</h2>
+<p>Un archivo de texto es un archivo que contiene caracteres legibles: letras, números, tabuladores, comas y saltos de línea. Se puede abrir con un editor de texto, pero su mayor ventaja es que también puede ser leído por programas.</p>
+<p>No basta con que un archivo se vea ordenado. Para que sea fácil de analizar debe tener una estructura clara y consistente.</p>
+<section id="características-esenciales" class="level3">
+<h3 class="anchored" data-anchor-id="características-esenciales">Características esenciales</h3>
+<p>Un buen archivo de texto para análisis suele cumplir estas reglas:</p>
+<ol type="1">
+<li><strong>Una observación o registro por línea</strong>, cuando el formato lo permite.</li>
+<li><strong>Una estructura repetida y predecible.</strong> Todas las filas de una tabla tienen las mismas columnas; todos los registros FASTQ tienen cuatro líneas.</li>
+<li><strong>Separadores claros y constantes.</strong> Comas, tabuladores o un formato formalmente definido.</li>
+<li><strong>Cabeceras informativas.</strong> Los nombres de las columnas explican qué representa cada valor.</li>
+<li><strong>Identificadores únicos y estables.</strong> Por ejemplo, <code>sample_id</code>, <code>read_id</code> o <code>gene_id</code>.</li>
+<li><strong>Datos atómicos.</strong> Una celda o campo debe contener una sola clase de información.</li>
+<li><strong>Valores ausentes definidos.</strong> Por ejemplo, usar <code>NA</code> o un campo vacío de manera consistente, no una mezcla de <code>-</code>, <code>?</code>, <code>sin dato</code> y celdas vacías.</li>
+<li><strong>Unidades y convenciones explícitas.</strong> Por ejemplo, <code>temperature_C</code> en lugar de <code>temperatura</code>, o <code>latitude_decimal_degrees</code> en lugar de <code>latitud</code>.</li>
+<li><strong>Codificación de caracteres conocida.</strong> Preferiblemente UTF-8.</li>
+<li><strong>Sin formato visual oculto.</strong> Un archivo de texto no depende de negritas, colores, celdas combinadas o fórmulas invisibles.</li>
+<li><strong>Metadatos y documentación.</strong> Debe ser posible saber quién generó el archivo, qué representa cada campo y con qué procedimiento se obtuvieron los datos.</li>
+</ol>
+</section>
+<section id="un-ejemplo-problemático" class="level3">
+<h3 class="anchored" data-anchor-id="un-ejemplo-problemático">Un ejemplo problemático</h3>
+<p>Este archivo puede parecer útil para una persona:</p>
+<pre class="text"><code>Muestra;Lugar;Fecha;Temperatura;Observaciones
+1;Albufera;12/5;22,5;muchos individuos
+dos;albufera;12 mayo 2024;caluroso;-
+M-03;P.N. Albufera;;23 C;No se tomó medida de abundancia</code></pre>
+<p>Pero es difícil de analizar automáticamente:</p>
+<ul>
+<li>La fecha tiene varios formatos.</li>
+<li>La muestra se identifica de formas distintas.</li>
+<li>La temperatura contiene números, texto, comas decimales y unidades mezcladas.</li>
+<li>Los valores ausentes se indican de varias maneras.</li>
+<li>El separador es <code>;</code>, pero no se declara ni se documenta.</li>
+<li>No sabemos qué significa “muchos individuos”.</li>
+</ul>
+<p>Una versión más útil sería:</p>
+<pre class="text"><code>sample_id   site    sampling_date   temperature_C   individual_count    notes
+S001    Albufera    2024-05-12  22.5    35  abundancia estimada visualmente
+S002    Albufera    2024-05-12  NA  NA  sin medición de temperatura ni abundancia
+S003    Albufera    2024-05-12  23.0    NA  sin medición de abundancia</code></pre>
+<p>Aquí:</p>
+<ul>
+<li>Todas las fechas usan el formato ISO <code>AAAA-MM-DD</code>.</li>
+<li>La temperatura se expresa siempre en grados Celsius y solo contiene números.</li>
+<li>Los datos ausentes se representan siempre con <code>NA</code>.</li>
+<li>Cada columna contiene un único tipo de dato.</li>
+<li>Las unidades aparecen en el nombre de la columna.</li>
+<li>Las columnas están separadas por tabuladores.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Regla práctica">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Regla práctica
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Diseña tus archivos para que los pueda entender una persona que no estaba en el proyecto —incluida tu versión de dentro de seis meses— y para que un programa pueda leerlos sin adivinar nada.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="formatos-estándar-en-biología" class="level2">
+<h2 class="anchored" data-anchor-id="formatos-estándar-en-biología">Formatos estándar en biología</h2>
+<p>En vez de inventar un formato propio para cada proyecto, la biología usa formatos estandarizados. Cada formato describe una clase concreta de datos y tiene reglas que las herramientas pueden reconocer.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Formato</th>
+<th>Contenido habitual</th>
+<th>Pista visual</th>
+<th>Ejemplo de uso</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CSV o TSV</td>
+<td>Tablas</td>
+<td>Cabecera y columnas separadas por comas o tabuladores</td>
+<td>Datos de campo, metadatos de muestras, resultados</td>
+</tr>
+<tr class="even">
+<td>FASTA</td>
+<td>Secuencias de ADN, ARN o proteína</td>
+<td>Cabecera que empieza por <code>&gt;</code></td>
+<td>Secuencia de un gen o genoma de referencia</td>
+</tr>
+<tr class="odd">
+<td>FASTQ</td>
+<td>Lecturas crudas y sus calidades</td>
+<td>Registros de cuatro líneas; primera línea empieza por <code>@</code></td>
+<td>Salida de un secuenciador</td>
+</tr>
+<tr class="even">
+<td>GFF3</td>
+<td>Anotaciones sobre una secuencia</td>
+<td>Nueve columnas separadas por tabuladores</td>
+<td>Genes, exones, CDS y otras regiones</td>
+</tr>
+<tr class="odd">
+<td>VCF</td>
+<td>Variantes genéticas</td>
+<td>Cabeceras que empiezan por <code>##</code> y <code>#CHROM</code></td>
+<td>SNPs e indels entre muestras</td>
+</tr>
+<tr class="even">
+<td>Newick</td>
+<td>Árboles filogenéticos</td>
+<td>Paréntesis, comas y punto y coma final</td>
+<td>Filogenias y dendrogramas</td>
+</tr>
+</tbody>
+</table>
+<section id="csv-y-tsv-tablas-de-datos" class="level3">
+<h3 class="anchored" data-anchor-id="csv-y-tsv-tablas-de-datos">CSV y TSV: tablas de datos</h3>
+<p>CSV significa <em>comma-separated values</em>; TSV significa <em>tab-separated values</em>. Ambos son formatos de tabla. Cada fila representa una observación y cada columna una variable.</p>
+<pre class="text"><code>sample_id,site,sampling_date,species,individual_count
+S001,Albufera,2024-05-12,Ardea_cinerea,3
+S002,Albufera,2024-05-12,Egretta_garzetta,7
+S003,Pego-Oliva,2024-05-14,Ardea_cinerea,1</code></pre>
+<p>En la práctica bioinformática, TSV suele ser especialmente cómodo porque los nombres, las anotaciones o las observaciones pueden contener comas sin romper la tabla.</p>
+</section>
+<section id="fasta-secuencias" class="level3">
+<h3 class="anchored" data-anchor-id="fasta-secuencias">FASTA: secuencias</h3>
+<p>Un archivo FASTA contiene secuencias de ADN, ARN o proteína. Cada secuencia comienza con una cabecera que empieza por <code>&gt;</code>.</p>
+<pre class="text"><code>&gt;gene_001|Arabidopsis_thaliana|rbcL
+ATGTCACCACAAACAGAGACTATCGACTGCTGCTGCTGCTGCTGCTGCTG
+&gt;gene_002|Pinus_sylvestris|rbcL
+ATGACCATGATTACGCCAAGCTTGGCACTGCTGCTGCTGATGCGT</code></pre>
+<p>La cabecera funciona como identificador y puede incluir información adicional. La secuencia puede ocupar una o varias líneas, según el archivo.</p>
+</section>
+<section id="fastq-lecturas-y-calidad" class="level3">
+<h3 class="anchored" data-anchor-id="fastq-lecturas-y-calidad">FASTQ: lecturas y calidad</h3>
+<p>FASTQ almacena lecturas producidas por un secuenciador. Cada lectura ocupa exactamente cuatro líneas:</p>
+<pre class="text"><code>@read_0001
+GATTACAGATTACAGATTACA
++
+IIIIIIIIIIIIIIIIIIIII</code></pre>
+<p>Las cuatro líneas son:</p>
+<ol type="1">
+<li>Identificador de la lectura.</li>
+<li>Secuencia de nucleótidos.</li>
+<li>Separador, normalmente <code>+</code>.</li>
+<li>Calidad de cada base, codificada mediante caracteres.</li>
+</ol>
+<p>La cuarta línea tiene la misma longitud que la secuencia: cada carácter corresponde a una base. Por eso FASTQ es más grande que FASTA, pero conserva información esencial para evaluar la calidad de los datos.</p>
+</section>
+<section id="gff3-anotaciones-de-un-genoma" class="level3">
+<h3 class="anchored" data-anchor-id="gff3-anotaciones-de-un-genoma">GFF3: anotaciones de un genoma</h3>
+<p>GFF3 se usa para indicar dónde están las regiones anotadas de una secuencia: genes, exones, intrones, CDS, repeticiones, etc. Cada registro tiene nueve columnas separadas por tabuladores.</p>
+<pre class="text"><code>##gff-version 3
+chr1    annotation  gene    1001    5000    .   +   .   ID=gene001;Name=RBCS1
+chr1    annotation  mRNA    1001    5000    .   +   .   ID=transcript001;Parent=gene001
+chr1    annotation  exon    1001    1200    .   +   .   Parent=transcript001</code></pre>
+<p>La ventaja de una estructura fija es que un programa puede saber, sin ambigüedad, qué columna contiene el cromosoma, las coordenadas, el tipo de región o la información adicional.</p>
+</section>
+<section id="vcf-variantes-genéticas" class="level3">
+<h3 class="anchored" data-anchor-id="vcf-variantes-genéticas">VCF: variantes genéticas</h3>
+<p>VCF significa <em>Variant Call Format</em>. Se usa para representar variantes respecto a un genoma de referencia.</p>
+<pre class="text"><code>##fileformat=VCFv4.2
+#CHROM  POS ID  REF ALT QUAL    FILTER  INFO
+chr1    14370   rs123   G   A   29  PASS    DP=14</code></pre>
+<p>En este ejemplo, en la posición 14370 del cromosoma 1, la base de referencia es <code>G</code>, la alternativa detectada es <code>A</code>, y <code>DP=14</code> indica una profundidad de lectura de 14.</p>
+</section>
+</section>
+<section id="rtfm-y-rtfe" class="level2">
+<h2 class="anchored" data-anchor-id="rtfm-y-rtfe">RTFM y RTFE</h2>
+<p>En informática encontrarás herramientas nuevas continuamente. Nadie memoriza todos los comandos, opciones y formatos. Trabajar bien no consiste en recordarlo todo: consiste en saber localizar información fiable y comprobar lo que haces.</p>
+<p>La frase tradicional es:</p>
+<blockquote class="blockquote">
+<p><strong>RTFM — Read The Fucking Manual</strong></p>
+</blockquote>
+<p>En un curso y en un entorno profesional podemos traducirla de manera útil como:</p>
+<blockquote class="blockquote">
+<p><strong>Lee la documentación antes de adivinar.</strong></p>
+</blockquote>
+<p>La documentación suele responder preguntas como:</p>
+<ul>
+<li>¿Qué hace exactamente este programa?</li>
+<li>¿Qué formato de entrada espera?</li>
+<li>¿Qué columnas o campos son obligatorios?</li>
+<li>¿Qué significan las opciones disponibles?</li>
+<li>¿Qué archivo genera como salida?</li>
+<li>¿Qué versión del programa se ha usado?</li>
+<li>¿Qué limitaciones o supuestos tiene el método?</li>
+</ul>
+<p>En la terminal, muchos programas ofrecen una ayuda rápida:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">comando</span> <span class="at">--help</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>o bien:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> comando</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>No necesitas entender todo el manual de una vez. Busca primero:</p>
+<ol type="1">
+<li>Qué problema resuelve la herramienta.</li>
+<li>Qué archivo espera como entrada.</li>
+<li>Qué salida produce.</li>
+<li>Un ejemplo mínimo de uso.</li>
+<li>El significado del error que aparece.</li>
+</ol>
+</section>
+<section id="los-mensajes-de-error-contienen-información" class="level2">
+<h2 class="anchored" data-anchor-id="los-mensajes-de-error-contienen-información">Los mensajes de error contienen información</h2>
+<p>La segunda frase que debes recordar es:</p>
+<blockquote class="blockquote">
+<p><strong>RTFE — Read The Fucking Error</strong></p>
+</blockquote>
+<p>Traducido de forma útil:</p>
+<blockquote class="blockquote">
+<p><strong>Lee el mensaje de error completo antes de probar soluciones al azar.</strong></p>
+</blockquote>
+<p>Un error no es una prueba de que “no sirves para programar”. Es información sobre la diferencia entre lo que el programa esperaba y lo que recibió.</p>
+<p>Por ejemplo:</p>
+<pre class="text"><code>FileNotFoundError: [Errno 2] No such file or directory: 'muestras.csv'</code></pre>
+<p>Esto no significa “Python está roto”. Significa que Python no encuentra un archivo llamado <code>muestras.csv</code> en la ubicación desde la que se ejecutó el programa.</p>
+<p>Comprueba, en este orden:</p>
+<ol type="1">
+<li>¿Existe realmente el archivo?</li>
+<li>¿Está escrito exactamente igual, incluidas mayúsculas y minúsculas?</li>
+<li>¿Estás trabajando en el directorio correcto?</li>
+<li>¿Tiene una extensión inesperada, por ejemplo <code>muestras.csv.txt</code>?</li>
+<li>¿La ruta indicada es correcta?</li>
+</ol>
+<p>Otro ejemplo:</p>
+<pre class="text"><code>ValueError: could not convert string to float: '23 C'</code></pre>
+<p>El programa intentó convertir un texto a número, pero encontró <code>23 C</code>. El archivo mezcla el valor numérico con su unidad. Una solución es guardar <code>23.0</code> en una columna llamada <code>temperature_C</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Evita el ensayo y error sin registro">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Evita el ensayo y error sin registro
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No copies comandos de Internet ni opciones de una IA sin saber, al menos de forma general, qué hacen y sobre qué archivos van a actuar.</p>
+<p>Antes de ejecutar una instrucción, pregúntate:</p>
+<ul>
+<li>¿Qué archivo leerá?</li>
+<li>¿Qué archivo modificará o creará?</li>
+<li>¿Qué espero obtener?</li>
+<li>¿Puedo probar primero con una copia pequeña de los datos?</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="buenas-prácticas-nombres-que-no-dan-problemas" class="level2">
+<h2 class="anchored" data-anchor-id="buenas-prácticas-nombres-que-no-dan-problemas">Buenas prácticas: nombres que no dan problemas</h2>
+<p>Los archivos, carpetas y variables también forman parte de un análisis reproducible. Un nombre poco claro puede hacer que ejecutes un comando sobre el archivo equivocado, que no encuentres tus resultados semanas después o que otra persona no entienda qué representan tus datos.</p>
+<p>La regla principal es sencilla:</p>
+<blockquote class="blockquote">
+<p>Usa nombres simples para el ordenador y descriptivos para las personas.</p>
+</blockquote>
+<section id="nombres-de-archivos-y-carpetas" class="level3">
+<h3 class="anchored" data-anchor-id="nombres-de-archivos-y-carpetas">Nombres de archivos y carpetas</h3>
+<p>Para archivos y directorios, utiliza preferiblemente:</p>
+<ul>
+<li>Letras minúsculas: <code>muestras.csv</code>, no <code>Muestras.CSV</code>.</li>
+<li>Números cuando ayuden a ordenar o identificar: <code>muestra_001.fastq</code>.</li>
+<li>Guion bajo (<code>_</code>) para separar palabras: <code>datos_muestreo_2026.csv</code>.</li>
+<li>Una extensión coherente con el formato: <code>.csv</code>, <code>.tsv</code>, <code>.fasta</code>, <code>.fastq</code>, <code>.vcf</code>, <code>.gff3</code> o <code>.txt</code>.</li>
+<li>Fechas en formato <code>AAAA-MM-DD</code> o <code>AAAAMMDD</code>, para que se ordenen correctamente: <code>2026-09-04_muestras_albufera.tsv</code>.</li>
+</ul>
+<p>Evita en nombres de archivos y carpetas:</p>
+<ul>
+<li>Espacios: <code>datos de campo.csv</code>.</li>
+<li>Acentos y caracteres especiales: <code>muestras_ñandú.csv</code>, <code>temperatura_máxima.csv</code>.</li>
+<li>Símbolos con significado especial en la terminal: <code>*</code>, <code>?</code>, <code>!</code>, <code>$</code>, <code>&amp;</code>, <code>;</code>, <code>|</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code> o comillas.</li>
+<li>Nombres genéricos: <code>datos.csv</code>, <code>final.csv</code>, <code>final_final.csv</code>, <code>cosas_buenas.csv</code>.</li>
+<li>Extensiones engañosas: <code>muestras.csv.txt</code> o <code>secuencias_finales</code>.</li>
+</ul>
+</section>
+<section id="por-qué-evitar-espacios-y-acentos" class="level3">
+<h3 class="anchored" data-anchor-id="por-qué-evitar-espacios-y-acentos">¿Por qué evitar espacios y acentos?</h3>
+<p>La terminal separa normalmente los argumentos mediante espacios. Por eso este nombre:</p>
+<pre class="text"><code>datos de campo.csv</code></pre>
+<p>puede ser interpretado como tres elementos distintos: <code>datos</code>, <code>de</code> y <code>campo.csv</code>.</p>
+<p>Es posible trabajar con espacios usando comillas:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="st">"datos de campo.csv"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Pero obligan a recordar las comillas en cada comando y aumentan la posibilidad de errores. Es más sencillo usar desde el principio:</p>
+<pre class="text"><code>datos_de_campo.csv</code></pre>
+<p>Los acentos, <code>ñ</code> y otros caracteres Unicode funcionan en muchos sistemas modernos, pero pueden ocasionar problemas al mover archivos entre ordenadores, servidores, programas o configuraciones regionales distintas. Para scripts y análisis reproducibles, la opción más robusta es usar caracteres ASCII simples:</p>
+<pre class="text"><code>temperatura_maxima.csv
+muestras_aranas_2026.tsv
+secuencias_pinus_sylvestris.fasta</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled" title="Regla práctica para nombres de archivos">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Regla práctica para nombres de archivos
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Usa solo letras minúsculas sin acentos (<code>a-z</code>), números (<code>0-9</code>), guion bajo (<code>_</code>), guion medio (<code>-</code>) y punto (<code>.</code>) antes de la extensión.</p>
+<p>Por ejemplo:</p>
+<pre class="text"><code>2026-05-12_albufera_muestras.tsv
+quercus_robur_rnaseq_r1.fastq.gz
+muestras_filtradas_calidad30.csv</code></pre>
+</div>
+</div>
+</section>
+<section id="nombres-informativos" class="level3">
+<h3 class="anchored" data-anchor-id="nombres-informativos">Nombres informativos</h3>
+<p>Un buen nombre debería permitir responder, sin abrir el archivo, a preguntas como:</p>
+<ul>
+<li>¿Qué contiene?</li>
+<li>¿De qué experimento, muestra, especie o lugar procede?</li>
+<li>¿Qué transformación se ha aplicado?</li>
+<li>¿Cuándo se generó, si la fecha es relevante?</li>
+<li>¿Qué versión del resultado es?</li>
+</ul>
+<p>Por ejemplo:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Poco informativo</th>
+<th>Mejor alternativa</th>
+<th>Qué comunica</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datos.csv</code></td>
+<td><code>2026-05-12_albufera_aves.tsv</code></td>
+<td>Fecha, lugar, organismo y formato</td>
+</tr>
+<tr class="even">
+<td><code>final.fasta</code></td>
+<td><code>pinus_sylvestris_rbcl_alineado.fasta</code></td>
+<td>Especie, marcador y procesamiento</td>
+</tr>
+<tr class="odd">
+<td><code>archivo1.fastq</code></td>
+<td><code>muestra_s003_r1.fastq.gz</code></td>
+<td>Identificador de muestra y lectura 1</td>
+</tr>
+<tr class="even">
+<td><code>resultado.txt</code></td>
+<td><code>conteo_especies_por_parcela.tsv</code></td>
+<td>Contenido del resultado</td>
+</tr>
+<tr class="odd">
+<td><code>final_final_v2.csv</code></td>
+<td><code>muestras_filtradas_calidad30.csv</code></td>
+<td>Criterio aplicado al archivo</td>
+</tr>
+<tr class="even">
+<td><code>script.py</code></td>
+<td><code>contar_lecturas_fastq.py</code></td>
+<td>Qué hace el programa</td>
+</tr>
+</tbody>
+</table>
+<p>No hace falta que los nombres sean interminables. Deben contener la información mínima que permita distinguir archivos y comprender su propósito.</p>
+</section>
+<section id="nombres-de-variables-en-python" class="level3">
+<h3 class="anchored" data-anchor-id="nombres-de-variables-en-python">Nombres de variables en Python</h3>
+<p>Una variable guarda un valor al que queremos referirnos en un programa. Igual que un archivo, su nombre debe indicar qué representa.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">22.5</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">150</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="st">"Albufera"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Estas variables son válidas, pero no explican por sí mismas qué contienen. Una versión más clara sería:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>temperatura_c <span class="op">=</span> <span class="fl">22.5</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>numero_lecturas <span class="op">=</span> <span class="dv">150</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sitio_muestreo <span class="op">=</span> <span class="st">"Albufera"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>En Python utilizaremos normalmente la convención <code>snake_case</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>numero_muestras <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>secuencia_referencia <span class="op">=</span> <span class="st">"ATGCGATCG"</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>calidad_media <span class="op">=</span> <span class="fl">31.8</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>archivo_entrada <span class="op">=</span> <span class="st">"muestras_filtradas.tsv"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>snake_case</code> significa:</p>
+<ul>
+<li>Usar letras minúsculas.</li>
+<li>Separar palabras con guiones bajos.</li>
+<li>Elegir nombres que describan el contenido, no solo el tipo de dato.</li>
+</ul>
+<p>PEP 8, la guía de estilo de Python, recomienda esta convención para variables y funciones. <span class="citation" data-cites="pep8">[@pep8]</span></p>
+</section>
+<section id="evita-nombres-ambiguos" class="level3">
+<h3 class="anchored" data-anchor-id="evita-nombres-ambiguos">Evita nombres ambiguos</h3>
+<p>No uses nombres como estos salvo en ejemplos matemáticos muy breves:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">36</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="st">"S001"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [...]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> ...</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Prefiere:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>profundidad_lectura <span class="op">=</span> <span class="dv">36</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>identificador_muestra <span class="op">=</span> <span class="st">"S001"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>lecturas_filtradas <span class="op">=</span> [...]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>porcentaje_gc <span class="op">=</span> ...</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>También evita utilizar <code>l</code> (ele minúscula), <code>O</code> (o mayúscula) o <code>I</code> (i mayúscula) como nombres de variables: se parecen demasiado a <code>1</code> y <code>0</code> en algunas tipografías.</p>
+</section>
+<section id="la-prueba-de-los-seis-meses" class="level3">
+<h3 class="anchored" data-anchor-id="la-prueba-de-los-seis-meses">La prueba de los seis meses</h3>
+<p>Antes de guardar un archivo o elegir una variable, hazte esta pregunta:</p>
+<blockquote class="blockquote">
+<p>¿Entendería este nombre dentro de seis meses sin tener que abrir el archivo o leer todo el programa?</p>
+</blockquote>
+<p>Si la respuesta es no, mejora el nombre antes de continuar.</p>
+</section>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<section id="ejercicio-1-por-qué-automatizar" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicio-1-por-qué-automatizar">Ejercicio 1 — ¿Por qué automatizar?</h3>
+<p>Relaciona cada situación con la estrategia más razonable:</p>
+<p>A. Revisar 20 medidas de longitud de hojas.<br>
+B. Contar 80 millones de lecturas de un archivo FASTQ.<br>
+C. Elegir visualmente tres fotografías representativas de una especie.<br>
+D. Calcular el número de observaciones por especie en 50 000 registros de campo.</p>
+<p>Opciones:</p>
+<ol type="1">
+<li>Revisión visual o manual.</li>
+<li>Hoja de cálculo o análisis estadístico sencillo.</li>
+<li>Comandos o script automatizado.</li>
+</ol>
+</section>
+<section id="ejercicio-2-detecta-los-problemas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicio-2-detecta-los-problemas">Ejercicio 2 — Detecta los problemas</h3>
+<p>Examina esta tabla:</p>
+<pre class="text"><code>ID,fecha,temperatura,especie,individuos
+1,12/5/24,22.5,Quercus robur,3
+2,2024-05-12,23 C,Q. robur,muchos
+03,12 mayo,NA,Quercus_robur,-</code></pre>
+<p>Identifica al menos cuatro problemas que dificultarían su análisis automático.</p>
+</section>
+<section id="ejercicio-3-mejora-el-archivo" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicio-3-mejora-el-archivo">Ejercicio 3 — Mejora el archivo</h3>
+<p>Reescribe las tres filas anteriores en un formato coherente. Usa estas reglas:</p>
+<ul>
+<li>Identificadores con el patrón <code>S001</code>, <code>S002</code>, <code>S003</code>.</li>
+<li>Fecha con el formato <code>AAAA-MM-DD</code>.</li>
+<li>Temperatura como número en grados Celsius.</li>
+<li>Nombre científico como <code>Quercus_robur</code>.</li>
+<li>Un número entero para la abundancia.</li>
+<li><code>NA</code> para los datos que no se conocen.</li>
+</ul>
+</section>
+<section id="ejercicio-4-reconoce-formatos" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicio-4-reconoce-formatos">Ejercicio 4 — Reconoce formatos</h3>
+<p>Indica el formato más probable de cada fragmento y señala la pista que te permite identificarlo.</p>
+<p><strong>Fragmento A</strong></p>
+<pre class="text"><code>&gt;seq_01
+ATGCGATCGATCGATCGATCG</code></pre>
+<p><strong>Fragmento B</strong></p>
+<pre class="text"><code>@read_01
+ATGCGATCGATCG
++
+IIIIIIIIIIIII</code></pre>
+<p><strong>Fragmento C</strong></p>
+<pre class="text"><code>#CHROM  POS ID  REF ALT QUAL    FILTER  INFO
+chr2    451 .   C   T   60  PASS    DP=22</code></pre>
+<p><strong>Fragmento D</strong></p>
+<pre class="text"><code>((Quercus_robur,Quercus_petraea),Fagus_sylvatica);</code></pre>
+</section>
+<section id="ejercicio-5-lee-el-error" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicio-5-lee-el-error">Ejercicio 5 — Lee el error</h3>
+<p>Una estudiante ejecuta un programa y obtiene:</p>
+<pre class="text"><code>FileNotFoundError: [Errno 2] No such file or directory: 'datos_muestreo.csv'</code></pre>
+<p>Ha comprobado que en su carpeta existe un archivo llamado:</p>
+<pre class="text"><code>datos_muestreo.csv.txt</code></pre>
+<ul>
+<li>¿Cuál es el problema?</li>
+<li>¿Qué dos soluciones posibles tiene?</li>
+<li>¿Qué comando aprenderás en el siguiente módulo para listar los archivos de una carpeta y comprobar sus nombres?</li>
+</ul>
+</section>
+<section id="ejercicio-6-es-reproducible" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicio-6-es-reproducible">Ejercicio 6 — ¿Es reproducible?</h3>
+<p>Dos estudiantes procesan el mismo archivo de lecturas.</p>
+<ul>
+<li>La estudiante A abre el archivo, elimina manualmente algunas líneas que “parecen malas” y guarda una copia.</li>
+<li>El estudiante B utiliza una herramienta que filtra las lecturas con calidad inferior a un umbral definido y guarda el comando ejecutado.</li>
+</ul>
+<p>¿Quién ha realizado un procedimiento más reproducible? Explica por qué en dos o tres frases.</p>
+</section>
+</section>
+<section id="soluciones-y-pistas" class="level2">
+<h2 class="anchored" data-anchor-id="soluciones-y-pistas">Soluciones y pistas</h2>
+<section id="solución-1" class="level3">
+<h3 class="anchored" data-anchor-id="solución-1">Solución 1</h3>
+<ul>
+<li>A → 1 o 2, según la pregunta.</li>
+<li>B → 3.</li>
+<li>C → 1.</li>
+<li>D → 2 o 3; para 50 000 registros, un procedimiento automático es preferible.</li>
+</ul>
+<p>La clave es distinguir entre tareas interpretativas, con pocas observaciones, y tareas repetitivas que deben aplicarse a todos los registros.</p>
+</section>
+<section id="solución-2" class="level3">
+<h3 class="anchored" data-anchor-id="solución-2">Solución 2</h3>
+<p>Posibles problemas:</p>
+<ul>
+<li>Fechas con formatos distintos.</li>
+<li>Temperatura con número, unidad mezclada y valor ausente.</li>
+<li>Nombre científico expresado de dos maneras distintas.</li>
+<li>Abundancia expresada como número, texto y símbolo.</li>
+<li>Identificadores inconsistentes: <code>1</code>, <code>2</code> y <code>03</code>.</li>
+<li>No se especifican las unidades de temperatura en el nombre de la columna.</li>
+</ul>
+</section>
+<section id="solución-3" class="level3">
+<h3 class="anchored" data-anchor-id="solución-3">Solución 3</h3>
+<p>Una posible solución es:</p>
+<pre class="text"><code>sample_id,sampling_date,temperature_C,species,individual_count
+S001,2024-05-12,22.5,Quercus_robur,3
+S002,2024-05-12,23.0,Quercus_robur,NA
+S003,NA,NA,Quercus_robur,NA</code></pre>
+<p>Observa que no se inventa información: si la fecha o la abundancia no se conocen, se utiliza <code>NA</code>.</p>
+</section>
+<section id="solución-4" class="level3">
+<h3 class="anchored" data-anchor-id="solución-4">Solución 4</h3>
+<ul>
+<li>A → FASTA. La cabecera empieza por <code>&gt;</code>.</li>
+<li>B → FASTQ. Tiene cuatro líneas y la primera empieza por <code>@</code>.</li>
+<li>C → VCF. La cabecera contiene los campos <code>#CHROM</code>, <code>POS</code>, <code>REF</code> y <code>ALT</code>.</li>
+<li>D → Newick. Usa paréntesis para representar agrupaciones y termina en <code>;</code>.</li>
+</ul>
+</section>
+<section id="solución-5" class="level3">
+<h3 class="anchored" data-anchor-id="solución-5">Solución 5</h3>
+<p>El programa busca <code>datos_muestreo.csv</code>, pero el archivo se llama realmente <code>datos_muestreo.csv.txt</code>.</p>
+<p>Dos soluciones posibles:</p>
+<ul>
+<li>Renombrar correctamente el archivo para que termine en <code>.csv</code>.</li>
+<li>Modificar el programa para que use el nombre real del archivo, aunque no es recomendable conservar una extensión engañosa.</li>
+</ul>
+<p>En el siguiente módulo aprenderás a usar <code>ls</code> para listar los archivos de una carpeta.</p>
+</section>
+<section id="solución-6" class="level3">
+<h3 class="anchored" data-anchor-id="solución-6">Solución 6</h3>
+<p>El procedimiento B es más reproducible. El criterio de filtrado está definido y el comando puede guardarse, revisarse y ejecutarse de nuevo sobre los mismos datos o sobre otros datos equivalentes. En el procedimiento A, la decisión depende de una inspección manual difícil de reconstruir exactamente.</p>
+</section>
+</section>
+<section id="ideas-clave" class="level2">
+<h2 class="anchored" data-anchor-id="ideas-clave">Ideas clave</h2>
+<ul>
+<li>La biología actual genera conjuntos de datos demasiado grandes para ser revisados registro a registro.</li>
+<li>La informática automatiza tareas repetitivas; no sustituye la pregunta ni la interpretación biológica.</li>
+<li>Los formatos de texto estructurados permiten que personas y programas entiendan los datos.</li>
+<li>Los estándares abiertos favorecen interoperabilidad, colaboración y reproducibilidad.</li>
+<li>Diseña los archivos de modo que no obliguen a adivinar qué contiene cada campo.</li>
+<li>La documentación y los mensajes de error son herramientas de trabajo: léelos antes de probar soluciones al azar.</li>
+</ul>
+</section>
+<section id="por-qué-la-biología-necesita-informática" class="level2">
+<h2 class="anchored" data-anchor-id="por-qué-la-biología-necesita-informática">¿Por qué la biología necesita informática?</h2>
+<p>Hace treinta años, un estudio típico de biología generaba datos que cabían en un cuaderno de laboratorio: unas pocas decenas de mediciones, revisables a mano. Hoy, tres áreas muy distintas de la biología comparten el mismo problema — generan más datos de los que una persona puede examinar uno a uno:</p>
+<ul>
+<li><strong>Genómica y transcriptómica</strong>: secuenciar un solo genoma humano produce cientos de millones de fragmentos de lectura (<em>reads</em>); un experimento de expresión génica (RNA-seq) puede generar decenas de gigabytes de datos por muestra, y un estudio compara docenas de muestras a la vez.</li>
+<li><strong>Ecología de comunidades</strong>: una red de cámaras trampa o de sensores de campo puede generar miles de observaciones al mes; un muestreo de biodiversidad con secuenciación ambiental (metabarcoding) identifica cientos de especies en una sola muestra de suelo o agua.</li>
+<li><strong>Bioinformática clínica y epidemiológica</strong>: analizar un solo panel genético de un paciente implica comparar su secuencia contra bases de datos de millones de variantes conocidas.</li>
+</ul>
+<p>En los tres casos, el “verlo directamente” deja de ser viable, y la pregunta pasa de “¿qué observo?” a “¿qué herramienta escribo para que el ordenador lo resuma, filtre o compare por mí?”. Ese es el problema que aborda este curso.</p>
+</section>
+<section id="formatos-de-datos-comunes-en-biología" class="level2">
+<h2 class="anchored" data-anchor-id="formatos-de-datos-comunes-en-biología">Formatos de datos comunes en biología</h2>
+<p>Distintos tipos de datos biológicos se guardan en formatos de texto con una estructura reconocible. Aprender a identificarlos a simple vista es el primer paso para saber qué herramienta usar con cada uno.</p>
+<p><strong>CSV</strong> (<em>comma-separated values</em>) — tablas de datos, una fila por observación, columnas separadas por comas. Es el formato más general, y lo usarás en varios módulos de este curso:</p>
+<pre><code>sample_id,date,site,latitude,longitude,species,count,notes
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino</code></pre>
+<p><strong>FASTA</strong> — secuencias biológicas (ADN, ARN o proteína). Cada secuencia ocupa dos partes: una línea de cabecera que empieza por <code>&gt;</code> con un identificador y, opcionalmente, una descripción, y una o más líneas siguientes con la secuencia:</p>
+<pre><code>&gt;seq1|Arabidopsis_thaliana|rbcL
+ATGTCACCACAAACAGAGACTATCGACTGCTGCTGCTGCTGCTGCTGCTG</code></pre>
+<p><strong>FASTQ</strong> — lecturas crudas de un secuenciador (antes de cualquier análisis). Se parece a FASTA, pero cada lectura ocupa exactamente 4 líneas: identificador (empieza por <code>@</code>), secuencia, un separador (<code>+</code>), y una línea de la misma longitud con la <strong>calidad</strong> de cada base leída (cuánto se fía el secuenciador de haber leído bien esa posición):</p>
+<pre><code>@read1
+GATTACAGATTACAGATTACA
++
+IIIIIIIIIIIIIIIIIIIII</code></pre>
+<p><strong>VCF</strong> (<em>variant call format</em>) — variantes genéticas encontradas al comparar una secuencia contra un genoma de referencia (p.&nbsp;ej. mutaciones puntuales). Cada línea es una posición del genoma con la base de referencia, la base alternativa encontrada, y metadatos de confianza:</p>
+<pre><code>##fileformat=VCFv4.2
+#CHROM  POS    ID     REF  ALT  QUAL  FILTER  INFO
+1       14370  rs123  G    A    29    PASS    DP=14</code></pre>
+<p>Un archivo FASTQ real de una sola muestra de secuenciación puede tener varios gigabytes y millones de líneas: abrirlo con un editor de texto normal, o revisarlo “a ojo”, no es una opción. Necesitas comandos y scripts que lo procesen por ti — la línea de comandos y Python, que verás en los módulos siguientes.</p>
+</section>
+<section id="ejercicios-1" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios-1">Ejercicios</h2>
+<ol type="1">
+<li><p>Empareja cada formato con su uso típico: CSV, FASTA, FASTQ, VCF ↔︎ tabla de observaciones de campo, secuencia de referencia de un gen, lecturas crudas de un secuenciador, lista de variantes genéticas encontradas.</p></li>
+<li><p>Se te da este fragmento, sin decirte de qué formato es:</p>
+<pre><code>&gt;seq3|Pinus_sylvestris|rbcL
+ATGACCATGATTACGCCAAGCTTGGCACTGCTGCTGCTGATGCGT</code></pre>
+<p>¿Qué formato es? ¿Qué detalle del texto te lo dice?</p></li>
+<li><p>¿Por qué no tiene sentido abrir un archivo FASTQ de varios gigabytes con un editor de texto normal y leerlo línea a línea? Relaciónalo con lo explicado sobre la necesidad de herramientas automatizadas.</p></li>
+</ol>
+</section>
+<section id="soluciones" class="level2">
+<h2 class="anchored" data-anchor-id="soluciones">Soluciones</h2>
+<ol type="1">
+<li>CSV → tabla de observaciones de campo. FASTA → secuencia de referencia de un gen. FASTQ → lecturas crudas de un secuenciador. VCF → lista de variantes genéticas.</li>
+<li>Es FASTA: la línea empieza por <code>&gt;</code> seguida de un identificador (aquí con formato <code>id|especie|gen</code>), y la línea siguiente es una secuencia de nucleótidos.</li>
+<li>Porque un archivo de varios gigabytes tiene millones de líneas — ni cabe cómodamente en la memoria de un editor de texto normal, ni una persona podría revisarlas todas a simple vista en un tiempo razonable. Hacen falta programas que lean el archivo por partes y apliquen automáticamente el filtro, resumen o cálculo que se necesite; eso es exactamente lo que aprenderás a construir con la línea de comandos y Python.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Técnicas informáticas para estudiantes de 4º de Biología">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Técnicas informáticas para estudiantes de 4º de Biología</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../modulos/02_terminal.html" class="pagination-link" aria-label="Módulo 2 — Navegación y manejo de directorios en la terminal">
+        <span class="nav-page-text">Módulo 2 — Navegación y manejo de directorios en la terminal</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

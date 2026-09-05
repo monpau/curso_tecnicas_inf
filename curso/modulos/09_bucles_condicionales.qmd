@@ -1,0 +1,211 @@
+---
+title: "Módulo 9 — Bucles y condicionales"
+---
+
+**Duración estimada:** 4 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Tomar decisiones en un programa con `if`/`elif`/`else`.
+- Repetir una acción un número conocido de veces con `for`, y un número desconocido de veces con `while`.
+- Parsear un archivo FASTA a mano, línea a línea, con un bucle.
+- Filtrar secuencias por longitud y contar bases, y reconocer un error típico al hacerlo.
+
+## Condicionales: `if` / `elif` / `else`
+
+```python
+count = 12
+
+if count > 10:
+    categoria = "abundante"
+elif count > 3:
+    categoria = "frecuente"
+else:
+    categoria = "escaso"
+
+print(categoria)
+```
+
+```
+abundante
+```
+
+Python evalúa las condiciones en orden: si `count > 10` es verdadero, usa esa rama y se salta el resto; si no, prueba `elif count > 3`; si ninguna se cumple, usa `else`. Solo se ejecuta **una** de las ramas.
+
+## Bucles `for`: repetir un número conocido de veces
+
+Ya usaste `for linea in f:` en el módulo 7 para recorrer un archivo, y `for id_seq, seq in secuencias.items():` en el módulo 8 para recorrer un diccionario. `for` también recorre directamente los caracteres de una cadena:
+
+```python
+secuencia = "ATGC"
+for base in secuencia:
+    print(base)
+```
+
+## Bucles `while`: repetir hasta que se cumpla una condición
+
+A diferencia de `for`, con `while` no sabes de antemano cuántas vueltas dará — sigue repitiendo mientras la condición sea verdadera. Es la herramienta correcta cuando buscas *algo* sin saber dónde está, por ejemplo la posición del codón de inicio `ATG` en una secuencia:
+
+```python
+secuencia = "GGGATGCCTTAA"
+i = 0
+while i < len(secuencia) and secuencia[i:i+3] != "ATG":
+    i += 1
+
+print(f"Codon de inicio encontrado en la posicion {i}")
+```
+
+```
+Codon de inicio encontrado en la posicion 3
+```
+
+En cada vuelta, `i += 1` avanza una posición (es la forma corta de escribir `i = i + 1`), y `secuencia[i:i+3]` mira los 3 caracteres a partir de esa posición. El bucle para en cuanto encuentra `"ATG"`, o si llega al final de la secuencia sin encontrarlo (por eso la condición comprueba primero `i < len(secuencia)`: sin ese límite, si `"ATG"` no apareciera nunca, el bucle no terminaría jamás).
+
+## Parsear un FASTA a mano
+
+Con `for`, `if` y un diccionario (módulo 8), ya tienes todo lo necesario para convertir un archivo FASTA en una estructura de datos que puedas consultar: un diccionario que asocie cada identificador con su secuencia completa.
+
+```python
+secuencias = {}
+id_actual = None
+
+with open("sequences.fasta") as f:
+    for linea in f:
+        linea = linea.strip()
+        if linea.startswith(">"):
+            id_actual = linea[1:]
+            secuencias[id_actual] = ""
+        else:
+            secuencias[id_actual] += linea
+
+for id_seq, seq in secuencias.items():
+    print(id_seq, len(seq))
+```
+
+```
+seq1|Arabidopsis_thaliana|rbcL 50
+seq2|Quercus_robur|matK 49
+seq3|Pinus_sylvestris|rbcL 45
+seq4|Fragaria_vesca|trnL 34
+```
+
+`linea.strip()` elimina el salto de línea del final (si no lo hicieras, se colaría dentro de tus secuencias). Cuando la línea es una cabecera, `linea[1:]` se queda con todo menos el primer carácter (el `>`), y abre una entrada nueva en el diccionario con secuencia vacía. Cuando no es cabecera, es una línea de secuencia, y se añade (`+=`) a la entrada que se abrió más recientemente.
+
+## Filtrar por longitud
+
+Con el diccionario ya construido, filtrar es solo un `for` con un `if` dentro:
+
+```python
+for id_seq, seq in secuencias.items():
+    if len(seq) > 40:
+        print(f"{id_seq}: secuencia larga ({len(seq)} bases)")
+    else:
+        print(f"{id_seq}: secuencia corta ({len(seq)} bases)")
+```
+
+## Contar bases — y un error típico al hacerlo
+
+Quieres contar cuántas veces aparece cada base en una secuencia:
+
+```python
+secuencia_mixta = "ATGccTAGgtA"
+
+conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
+for base in secuencia_mixta:
+    if base in conteo:
+        conteo[base] = conteo[base] + 1
+
+print(conteo)
+print(sum(conteo.values()), "de", len(secuencia_mixta), "caracteres")
+```
+
+```
+{'A': 3, 'C': 0, 'G': 2, 'T': 2}
+7 de 11 caracteres
+```
+
+Solo se han contado 7 de las 11 bases, y sin ningún error ni aviso — el mismo tipo de fallo silencioso que viste en el módulo 8. La causa: muchos archivos reales de secuencias usan minúsculas para marcar regiones de baja confianza o repetitivas (*soft-masking*), y `"c"` no es igual que `"C"` para Python, así que `if base in conteo` los descarta sin más. La solución es normalizar cada base con `.upper()` antes de comprobarla:
+
+```python
+conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
+for base in secuencia_mixta:
+    base = base.upper()
+    if base in conteo:
+        conteo[base] = conteo[base] + 1
+
+print(conteo)
+print(sum(conteo.values()), "de", len(secuencia_mixta), "caracteres")
+```
+
+```
+{'A': 3, 'C': 2, 'G': 3, 'T': 3}
+11 de 11 caracteres
+```
+
+## Ejercicios
+
+1. Dado `count = 7`, usa `if`/`elif`/`else` para clasificarlo como `"abundante"` (>10), `"frecuente"` (>3) o `"escaso"`, e imprime el resultado.
+2. Usa un bucle `while` para encontrar la posición del primer codón de parada `"TAA"` en la secuencia `"ATGCGTATCTAAGGC"`.
+3. Recorre con `for` la secuencia `"ATGCGT"` e imprime cada base junto con su posición (pista: usa `enumerate(secuencia)`, que en cada vuelta te da `(indice, base)`).
+4. Parsea `sequences.fasta` a mano con el patrón visto (`for` + `if` + diccionario), guardando el resultado en una variable `secuencias`.
+5. A partir del diccionario `secuencias` del ejercicio anterior, imprime solo las secuencias con más de 40 bases.
+6. Cuenta las bases A/C/G/T de `secuencias["seq2|Quercus_robur|matK"]`.
+7. Repite el conteo de bases sobre la cadena `"atgCCGgtNa"` **sin** normalizar mayúsculas/minúsculas. Comprueba que la suma de tu conteo no coincide con la longitud total de la cadena.
+8. (Reto) Corrige el ejercicio anterior normalizando cada base con `.upper()`. ¿Sigue sin coincidir la suma con la longitud? ¿Por qué (pista: `"N"` es una base ambigua, no A/C/G/T)?
+
+## Soluciones
+
+1.
+   ```python
+   count = 7
+   if count > 10:
+       categoria = "abundante"
+   elif count > 3:
+       categoria = "frecuente"
+   else:
+       categoria = "escaso"
+   print(categoria)
+   ```
+2.
+   ```python
+   secuencia = "ATGCGTATCTAAGGC"
+   i = 0
+   while i < len(secuencia) and secuencia[i:i+3] != "TAA":
+       i += 1
+   print(i)
+   ```
+3.
+   ```python
+   secuencia = "ATGCGT"
+   for i, base in enumerate(secuencia):
+       print(i, base)
+   ```
+4. Igual que el ejemplo de la sección "Parsear un FASTA a mano".
+5.
+   ```python
+   for id_seq, seq in secuencias.items():
+       if len(seq) > 40:
+           print(id_seq, len(seq))
+   ```
+6.
+   ```python
+   secuencia = secuencias["seq2|Quercus_robur|matK"]
+   conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
+   for base in secuencia:
+       if base in conteo:
+           conteo[base] = conteo[base] + 1
+   print(conteo)
+   ```
+7.
+   ```python
+   secuencia_mixta = "atgCCGgtNa"
+   conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
+   for base in secuencia_mixta:
+       if base in conteo:
+           conteo[base] = conteo[base] + 1
+   print(sum(conteo.values()), "de", len(secuencia_mixta))
+   ```
+   La suma es mucho menor que la longitud: casi todo se descarta por estar en minúsculas.
+8. Añadiendo `base = base.upper()` dentro del bucle, antes del `if`, la suma sigue sin coincidir del todo, porque `"N"` (base ambigua, "podría ser cualquiera") no es ninguna de las cuatro claves del diccionario — y eso es correcto: `N` no es A, C, G ni T, así que no debe contarse como ninguna de ellas.

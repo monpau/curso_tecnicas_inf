@@ -1,0 +1,122 @@
+---
+title: "Módulo 7 — Introducción a la programación y Python"
+---
+
+**Duración estimada:** 2 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Explicar qué es una variable y crear variables en Python.
+- Escribir un script `.py` con `gedit` y ejecutarlo desde la terminal con `python3`.
+- Leer un archivo y contar sus líneas con un script sencillo.
+
+## De la terminal a Python
+
+Hasta ahora le has dado órdenes a la terminal una a una (o encadenadas en pipelines). Python es distinto: en vez de comandos sueltos, escribes un **programa** — una secuencia de instrucciones guardada en un archivo — y se la entregas entera al intérprete de Python para que la ejecute de arriba a abajo.
+
+## Tu primer script
+
+Abre `gedit`, escribe esto, y guárdalo como `hola.py`:
+
+```python
+print("Hola, bióloga/o")
+```
+
+Ejecútalo desde la terminal, en el mismo directorio donde lo guardaste:
+
+```
+~$ python3 hola.py
+Hola, bióloga/o
+```
+
+`print(...)` muestra un texto por pantalla. `python3 hola.py` le dice a la terminal: "ejecuta el intérprete de Python 3 sobre este archivo" — el mismo patrón que `./script.sh` del módulo anterior, pero para Python en vez de para `bash`.
+
+## Variables
+
+Una variable es un nombre que apunta a un valor. En Python no hace falta declarar de antemano qué tipo de dato guardará — se lo asignas directamente con `=`:
+
+```python
+nombre = "Alicia"
+especie_favorita = "Quercus robur"
+altura_m = 1.68
+
+print(nombre)
+print(f"A {nombre} le gusta {especie_favorita}")
+```
+
+```
+~$ python3 saludo.py
+Alicia
+A Alicia le gusta Quercus robur
+```
+
+`f"..."` es una **f-string**: una cadena de texto donde `{variable}` se sustituye por el valor de esa variable. Es la forma más cómoda de construir un mensaje combinando texto fijo con datos.
+
+## Comentarios
+
+Cualquier línea que empiece por `#` es un comentario: Python la ignora por completo. Se usa para explicar el porqué de una decisión, no el qué (el código ya dice el qué):
+
+```python
+# la altura se guarda en metros, no en centímetros
+altura_m = 1.68
+```
+
+## Un script real: contar líneas de un archivo
+
+Vas a escribir un script que abra `species_observations.csv` y cuente cuántas líneas tiene — el equivalente en Python de `wc -l` del módulo 3:
+
+```python
+with open("species_observations.csv") as f:
+    lineas = f.readlines()
+
+print(f"El archivo tiene {len(lineas)} lineas.")
+```
+
+```
+~$ python3 contar_lineas.py
+El archivo tiene 6 lineas.
+```
+
+`open("...")` abre el archivo; `with ... as f:` es una construcción que además se encarga de cerrarlo automáticamente al salir del bloque indentado, aunque ocurra un error a mitad de la lectura (volverás sobre `open` con más detalle en el módulo 10). `f.readlines()` devuelve una lista con una línea de texto por elemento, y `len(...)` cuenta cuántos elementos tiene esa lista.
+
+::: {.callout-note}
+Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espacios porque está **dentro** del bloque `with`. En Python la indentación no es un detalle de estilo — es la sintaxis que marca qué instrucciones pertenecen a cada bloque. Usa siempre 4 espacios (no tabulaciones) y sé consistente.
+:::
+
+## Ejercicios
+
+1. Escribe y ejecuta un script `hola.py` que muestre "Hola, bióloga/o" (o un saludo con tu propio nombre).
+2. Crea dos variables, `nombre` y `especie_favorita`, e imprime un mensaje que las combine usando una f-string.
+3. Escribe un script `contar_lineas.py` que abra `species_observations.csv` y muestre cuántas líneas tiene.
+4. Escribe un script que cuente cuántas secuencias hay en `sequences.fasta`, recorriendo el archivo línea a línea con un bucle `for linea in f:` y comprobando si cada línea empieza por `>` con `linea.startswith(">")`. Compara el resultado con el que obtuviste en el módulo 5 usando `grep -c "^>"`.
+
+## Soluciones
+
+1.
+   ```python
+   print("Hola, bióloga/o")
+   ```
+2.
+   ```python
+   nombre = "Alicia"
+   especie_favorita = "Quercus robur"
+   print(f"A {nombre} le gusta {especie_favorita}")
+   ```
+3.
+   ```python
+   with open("species_observations.csv") as f:
+       lineas = f.readlines()
+   print(f"El archivo tiene {len(lineas)} lineas.")
+   ```
+4.
+   ```python
+   contador = 0
+   with open("sequences.fasta") as f:
+       for linea in f:
+           if linea.startswith(">"):
+               contador = contador + 1
+   print(f"Numero de secuencias: {contador}")
+   ```
+   Debe coincidir con el `4` que obtuviste antes con `grep -c "^>" sequences.fasta`.

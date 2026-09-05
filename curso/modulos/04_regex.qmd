@@ -1,0 +1,264 @@
+---
+title: "Módulo 4 — Expresiones regulares"
+---
+
+**Duración estimada:** 2 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Escribir patrones básicos de expresiones regulares.
+- Usar contenedores (clases de caracteres, p. ej. `[PR]`) para representar "uno de estos caracteres".
+- Usar `grep`/`grep -E` para buscar patrones en archivos de texto y FASTA.
+- Usar `sed` para hacer sustituciones sencillas.
+- Detectar y corregir inconsistencias típicas de datos reales: mayúsculas/minúsculas mezcladas, erratas y espacios sobrantes.
+
+## ¿Por qué expresiones regulares?
+
+Imagina un listado de muestreos donde cada fila tiene un código de 5 caracteres seguido de la especie encontrada. El código sigue un formato fijo: **localidad** (1 letra) + **tipo de sustrato** (1 letra) + **época** (1 letra) + **altura** (2 dígitos, en cientos de metros):
+
+```
+PRA18,Erica arborea
+RAB22,Genista florida
+GCB07,Betula pendula
+PSI15,Pinus uncinata
+ESO09,Quercus pyrenaica
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+GAA12,Calluna vulgaris
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+PIO61,Silene ciliata
+```
+
+Quieres quedarte solo con los muestreos que cumplan **las tres condiciones a la vez**: localidad `P` o `R`, cualquier sustrato, época `A` o `B`, y una altura mayor que 9 (es decir, un número de dos cifras que no empiece por 0). No hay ninguna cadena de texto fija que buscar — lo que define a las filas que te interesan es una **forma**, no un texto concreto. Podrías revisar el listado a mano, pero con miles de muestreos eso es inviable, y un `grep` de texto literal no sirve porque no hay ningún texto literal en común entre `PRA18`, `RAB22`, `PAA31`... salvo la forma que siguen.
+
+Las expresiones regulares resuelven justo este problema: en vez de escribir el texto exacto que buscas, describes un **patrón** que ese texto debe cumplir. En este módulo construirás, pieza a pieza, el patrón que selecciona exactamente estas 5 filas.
+
+## ¿Qué son las expresiones regulares?
+
+Una expresión regular (*regex*) es un lenguaje en miniatura para describir patrones de texto: en vez de "busca la cadena exacta X", permite decir cosas como "busca un código que empiece por P o por R, seguido de cualquier letra, luego A o B, y termine en un número de dos cifras mayor que 9" — el patrón que resuelve el ejemplo anterior. Un *motor* de expresiones regulares —integrado en herramientas como `grep`, `sed` o el módulo `re` de Python, que usaremos más adelante— lee ese patrón y lo compara contra el texto para decidir si hay coincidencia (y, con `sed`, para sustituirla).
+
+Es la misma idea que el buscador avanzado de cualquier editor de texto cuando activas la opción "usar expresión regular": aquí simplemente aprenderás la sintaxis compacta con la que se escribe ese patrón.
+
+## Diseñar y probar patrones con regex101.com
+
+Acertar con un patrón a la primera es difícil incluso con experiencia: es fácil que capture menos —o más— de lo que querías. [regex101.com](https://regex101.com/) es una herramienta online gratuita que muestra, mientras escribes, qué partes de un texto coinciden con tu patrón —resaltadas en color— junto con una explicación de cada fragmento.
+
+Cómo usarla en este módulo:
+
+1. Abre <https://regex101.com/>.
+2. En el panel izquierdo ("FLAVOR"), selecciona **Python** — es el motor más parecido al que usaremos más adelante en el curso, y comparte casi toda la sintaxis básica con `grep -E`.
+3. Pega unas cuantas líneas de tus datos en el cuadro grande ("TEST STRING"), por ejemplo las filas del ejemplo anterior.
+4. Escribe tu patrón en el cuadro superior ("REGULAR EXPRESSION") y observa qué se resalta abajo.
+5. Ajusta el patrón hasta que capture exactamente lo que quieres —ni más ni menos— y luego cópialo a tu terminal.
+
+::: {.callout-note}
+regex101 no es idéntico a `grep -E`/`sed`: son "dialectos" de expresiones regulares ligeramente distintos (por ejemplo, `\d` funciona en Python pero no en `grep -E` estándar). Para los patrones de este módulo —alternativas `|`, anclas `^`/`$`, cuantificadores `+`/`*`— el comportamiento es el mismo en ambos, así que puedes probar ahí con confianza y copiar el resultado a la terminal.
+:::
+
+## Materiales
+
+Este módulo usa tres archivos de `datasets/` (cópialos con `gedit` tal cual aparecen aquí):
+
+**`codigos_muestreo.csv`**
+
+```
+codigo,especie
+PRA18,Erica arborea
+RAB22,Genista florida
+GCB07,Betula pendula
+PSI15,Pinus uncinata
+ESO09,Quercus pyrenaica
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+GAA12,Calluna vulgaris
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+PIO61,Silene ciliata
+```
+
+**`sequences.fasta`**
+
+```
+>seq1|Arabidopsis_thaliana|rbcL
+ATGTCACCACAAACAGAGACTATCGACTGCTGCTGCTGCTGCTGCTGCTG
+>seq2|Quercus_robur|matK
+ATGGCCTTAGGCTTAGCTAGCTAGGCTAGCTAGCTAGCTAGCTAGCTAA
+>seq3|Pinus_sylvestris|rbcL
+ATGACCATGATTACGCCAAGCTTGGCACTGCTGCTGCTGATGCGT
+>seq4|Fragaria_vesca|trnL
+GATCGATCGATCGATCGATCGATCGATCGATCGA
+```
+
+**`registro_campo_bruto.csv`**
+
+```
+sample_id,fecha,localidad,especie,notas
+S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
+S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
+S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
+S107,2024-04-10,Sierra de Guadarrama,Betula pendula,Hoja amarillenta
+S108,2024-04-10,Sierra de guadarrama,betula Pendula,Cerca del arroyo
+S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
+S110,2024-04-15,Picos de Europa,Fagus sylvatica,Bosque denso
+S111,2024-04-15,picos de europa,Fagus silvatica,Sotobosque humedo
+S112,2024-04-15,Picos De Europa,FAGUS SYLVATICA,Zona protegida
+```
+
+Este segundo archivo es un registro de campo tal como podría llegar de varias personas anotando sobre el terreno: fíjate en `Pinus sylvestris` frente a `Pinus silvestris` (errata real y muy común, cambia la "y" por "i"), en `Sierra de Gredos`/`sierra de gredos`/`Sierra De Gredos` (misma localidad, mayúsculas distintas) y en `El escorial ` (con un espacio sobrante al final). Este tipo de inconsistencias es la norma, no la excepción, en datos recogidos a mano.
+
+## Patrones básicos con `grep`
+
+```
+~$ grep "Quercus" sequences.fasta
+>seq2|Quercus_robur|matK
+```
+
+`grep` busca líneas que contienen el patrón indicado. Por defecto distingue mayúsculas de minúsculas; con `-i` deja de hacerlo:
+
+```
+~$ grep -i "quercus" sequences.fasta
+>seq2|Quercus_robur|matK
+```
+
+## Contenedores
+
+Un contenedor, escrito entre corchetes `[...]`, significa "uno cualquiera de estos caracteres". `[PR]` coincide con una `P` **o** una `R` (y con nada más) en esa posición:
+
+```
+~$ grep -E "^[PR]" codigos_muestreo.csv
+PRA18,Erica arborea
+RAB22,Genista florida
+PSI15,Pinus uncinata
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+PIO61,Silene ciliata
+```
+
+El punto `.` es distinto: no es un contenedor, sino un **comodín** que coincide con un carácter cualquiera, sea el que sea. Nos sirve para la segunda posición del código (el sustrato), que puede ser cualquier letra:
+
+```
+~$ grep -E "^[PR]." codigos_muestreo.csv
+```
+
+Añade ahora un contenedor para la época (`A` o `B`) justo después:
+
+```
+~$ grep -E "^[PR].[AB]" codigos_muestreo.csv
+PRA18,Erica arborea
+RAB22,Genista florida
+RCA05,Juniperus communis
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+PRB08,Arctostaphylos uva-ursi
+RAA99,Saxifraga pyrenaica
+```
+
+Ya solo faltan las dos cifras de la altura, que deben formar un número mayor que 9 — es decir, la primera cifra no puede ser un 0. Un contenedor también admite **rangos**: `[1-9]` es cualquier dígito del 1 al 9, y `[0-9]` es cualquier dígito del 0 al 9:
+
+```
+~$ grep -E "^[PR].[AB][1-9][0-9]" codigos_muestreo.csv
+PRA18,Erica arborea
+RAB22,Genista florida
+PAA31,Rhododendron ferrugineum
+RSB44,Vaccinium myrtillus
+RAA99,Saxifraga pyrenaica
+```
+
+Exactamente las 5 filas del ejemplo con el que abría el módulo. Cada trozo del patrón `^[PR].[AB][1-9][0-9]` corresponde a una condición: `^` ancla al principio de línea, `[PR]` la localidad, `.` el sustrato (cualquiera), `[AB]` la época, y `[1-9][0-9]` una altura de dos cifras mayor que 9.
+
+## Alternativas y anclas con `grep -E`
+
+El ancla `^` ya la has usado: marca el principio de línea. Su pareja, `$`, marca el final. Con `-E` (expresiones regulares extendidas) tienes además `|`, que expresa alternativas más generales que un contenedor: mientras que `[AB]` solo sirve para elegir entre caracteres sueltos, `|` permite alternar entre palabras o frases enteras, como `Quercus_robur|Pinus_sylvestris`:
+
+```
+~$ grep -E "Quercus_robur|Pinus_sylvestris" sequences.fasta
+>seq2|Quercus_robur|matK
+>seq3|Pinus_sylvestris|rbcL
+
+~$ grep -E "^>seq[13]" sequences.fasta
+>seq1|Arabidopsis_thaliana|rbcL
+>seq3|Pinus_sylvestris|rbcL
+```
+
+Para capturar una errata conocida junto con la forma correcta, se listan ambas como alternativas:
+
+```
+~$ grep -Ei "sylvestris|silvestris" registro_campo_bruto.csv
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
+```
+
+## Cuantificadores
+
+Un cuantificador indica cuántas veces puede repetirse lo que va justo antes. Los más comunes son `*` (cero o más veces) y `+` (una o más veces). Son útiles precisamente para datos sucios, donde no puedes asumir que siempre habrá exactamente un espacio:
+
+```
+~$ grep -E "Pinus +sylvestris" registro_campo_bruto.csv
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
+```
+
+`Pinus +sylvestris` encuentra tanto `Pinus sylvestris` (un espacio) como `Pinus  sylvestris` (dos espacios), porque `+` acepta una o más repeticiones del espacio anterior.
+
+Un tercer cuantificador, `?`, marca que lo anterior aparece **cero o una vez** — es decir, es opcional. Es perfecto para erratas de una sola letra que falta, como esta en `registro_campo_bruto.csv` (fíjate en la fila `S109`, "Qurcus" en vez de "Quercus"):
+
+```
+~$ grep -Ei "que?rcus robur" registro_campo_bruto.csv
+S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
+S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
+S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
+S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
+```
+
+`que?rcus` significa "q", "u", luego una "e" opcional, y luego "rcus": encuentra tanto "Quercus" (con e) como la errata "Qurcus" (sin e), en las cuatro filas, en una sola búsqueda y sin necesidad de conocer de antemano cada variante.
+
+## Sustituciones con `sed`
+
+`sed 's/patrón/reemplazo/'` sustituye la primera coincidencia de cada línea; con la bandera `g` sustituye todas:
+
+```
+~$ sed 's/silvestris/sylvestris/' registro_campo_bruto.csv
+~$ sed 's/  */ /g' registro_campo_bruto.csv
+```
+
+La segunda orden colapsa cualquier secuencia de espacios repetidos (`  *` = un espacio seguido de cero o más espacios) en uno solo — útil para limpiar el espacio sobrante en `El escorial `.
+
+::: {.callout-note}
+`sed` por defecto **no modifica el archivo original**: imprime el resultado por pantalla. Para guardarlo, redirige la salida a un archivo nuevo (`sed '...' entrada.csv > salida.csv`) — nunca redirijas al mismo archivo de entrada en la misma orden, lo dejarías vacío.
+:::
+
+## Ejercicios
+
+Si te atascas con un patrón, prototípalo primero en [regex101.com](https://regex101.com/) (flavor Python) pegando las líneas relevantes del archivo, y cuando funcione cópialo a la terminal.
+
+1. En `codigos_muestreo.csv`, escribe un patrón con un contenedor que seleccione los códigos cuya localidad sea `P` o `R`.
+2. Amplía el patrón anterior con otro contenedor para exigir además que la época (la tercera letra) sea `A` o `B`.
+3. Completa el patrón anterior para quedarte solo con los códigos cuya altura (las dos últimas cifras) sea un número mayor que 9. Debe darte exactamente 5 filas.
+4. En `sequences.fasta`, usando `grep -E` con alternancia, selecciona en una sola orden las cabeceras de `Quercus_robur` y `Fragaria_vesca`.
+5. Escribe un patrón `grep -E` que capture tanto `Pinus sylvestris` (forma correcta) como la errata `Pinus silvestris` en `registro_campo_bruto.csv`, sin importar mayúsculas/minúsculas ni si hay uno o dos espacios entre las dos palabras.
+6. En `registro_campo_bruto.csv`, cuenta cuántas filas mencionan la localidad "Sierra de Gredos" en cualquier combinación de mayúsculas/minúsculas.
+7. Usa `sed` para generar una versión de `registro_campo_bruto.csv` en la que todas las apariciones de `silvestris` estén corregidas a `sylvestris`, guardando el resultado en `registro_campo_limpio.csv`.
+8. (Reto) Encadena `grep` y `sed` con una tubería (`|`) para, en una sola línea, quedarte solo con las filas de `Betula pendula` (en cualquier combinación de mayúsculas/minúsculas) y normalizar esas filas a minúsculas.
+
+## Soluciones
+
+1. `grep -E "^[PR]" codigos_muestreo.csv`
+2. `grep -E "^[PR].[AB]" codigos_muestreo.csv`
+3. `grep -E "^[PR].[AB][1-9][0-9]" codigos_muestreo.csv` → `PRA18`, `RAB22`, `PAA31`, `RSB44`, `RAA99`
+4. `grep -E "Quercus_robur|Fragaria_vesca" sequences.fasta`
+5. `grep -Ei "pinus +(sylvestris|silvestris)" registro_campo_bruto.csv` (el cuantificador `+` es necesario porque `S106` tiene dos espacios entre `Pinus` y `sylvestris`)
+6. `grep -ci "sierra de gredos" registro_campo_bruto.csv` → `4` (filas `S101`, `S102`, `S103` y `S109`)
+7. `sed 's/silvestris/sylvestris/' registro_campo_bruto.csv > registro_campo_limpio.csv`
+8. `grep -i "betula pendula" registro_campo_bruto.csv | tr '[:upper:]' '[:lower:]'`

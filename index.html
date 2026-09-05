@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Técnicas informáticas para Biología</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --uv-azul: #013952;      /* azul institucional UV */
+    --uv-azul-claro: #016ba9;
+    --uv-arena: #e6e3d2;     /* tono arena secundario UV */
+    --uv-texto: #3f3c35;
+    --uv-gris: #666;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Lato', Arial, sans-serif;
+    color: var(--uv-texto);
+    background: #fff;
+    line-height: 1.5;
+  }
+
+  header {
+    background: var(--uv-azul);
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  header .logo-row {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header img.uv-logo {
+    height: 34px;
+    display: block;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .hero {
+    padding: 3.5rem 0 3rem;
+    border-bottom: 4px solid var(--uv-arena);
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--uv-azul-claro);
+    margin: 0 0 .6rem;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+    font-weight: 900;
+    color: var(--uv-azul);
+    margin: 0 0 1rem;
+    line-height: 1.15;
+  }
+
+  .lead {
+    font-size: 1.15rem;
+    color: var(--uv-texto);
+    max-width: 60ch;
+    margin: 0 0 2rem;
+  }
+
+  .cta {
+    display: inline-block;
+    background: var(--uv-azul-claro);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    padding: .9rem 1.8rem;
+    border-radius: 3px;
+    transition: background .15s ease;
+  }
+
+  .cta:hover { background: var(--uv-azul); }
+
+  .cta::after {
+    content: " →";
+  }
+
+  section.detalles {
+    padding: 2.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+  }
+
+  @media (max-width: 640px) {
+    section.detalles { grid-template-columns: 1fr; }
+    h1 { font-size: 1.8rem; }
+  }
+
+  section.detalles h2 {
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--uv-gris);
+    margin: 0 0 .4rem;
+  }
+
+  section.detalles p {
+    margin: 0;
+    font-size: .98rem;
+  }
+
+  footer {
+    background: var(--uv-arena);
+    margin-top: 2rem;
+    padding: 2rem 1.5rem;
+  }
+
+  footer .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: .9rem;
+    color: var(--uv-texto);
+  }
+
+  footer .footer-inner strong { color: var(--uv-azul); }
+
+  footer a { color: var(--uv-azul-claro); }
+
+  footer .institucion {
+    margin-top: .3rem;
+    color: var(--uv-gris);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-row">
+    <img class="uv-logo" src="https://www.uv.es/recursos/fatwirepub/ccurl/299/304/cap_uv.svg" alt="Universitat de València">
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="eyebrow">Material docente</p>
+    <h1>Técnicas informáticas para Biología</h1>
+    <p class="lead">
+      Un curso práctico de introducción a Linux, la línea de comandos y Python,
+      pensado para estudiantes de 4º de Biología sin experiencia previa en programación.
+    </p>
+    <a class="cta" href="curso/index.html">Entrar al curso</a>
+  </div>
+
+  <section class="detalles">
+    <div>
+      <h2>Contenidos</h2>
+      <p>11 módulos: terminal, expresiones regulares, pipelines de shell y programación en Python aplicada a datos biológicos.</p>
+    </div>
+    <div>
+      <h2>Enfoque</h2>
+      <p>Ejercicios prácticos paso a paso con datos reales de biología, listos para copiar y ejecutar localmente.</p>
+    </div>
+    <div>
+      <h2>Requisitos</h2>
+      <p>Un equipo con Linux, macOS o WSL, Python 3, y un editor de texto como <code>gedit</code>.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong>Javier Montero Pau</strong> — Profesor Titular de Ecología</div>
+    <div>Departament de Microbiologia i Ecologia · Institut Cavanilles de Biodiversitat i Biologia Evolutiva</div>
+    <div class="institucion">
+      <a href="https://www.uv.es/">Universitat de València</a> ·
+      <a href="mailto:javier.montero@uv.es">javier.montero@uv.es</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

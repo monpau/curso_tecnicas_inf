@@ -1,0 +1,35 @@
+{
+  "index.qmd": {
+    "index.html": "63855425"
+  },
+  "modulos/02_terminal.qmd": {
+    "02_terminal.html": "a6ba640a"
+  },
+  "modulos/04_regex.qmd": {
+    "04_regex.html": "54ab0ca1"
+  },
+  "modulos/03_texto.qmd": {
+    "03_texto.html": "f9489df9"
+  },
+  "modulos/07_python_intro.qmd": {
+    "07_python_intro.html": "5f5e03a5"
+  },
+  "modulos/10_lectura_escritura.qmd": {
+    "10_lectura_escritura.html": "4e878d36"
+  },
+  "modulos/09_bucles_condicionales.qmd": {
+    "09_bucles_condicionales.html": "00863abb"
+  },
+  "modulos/05_pipelines.qmd": {
+    "05_pipelines.html": "dff997e4"
+  },
+  "modulos/08_tipos_operadores.qmd": {
+    "08_tipos_operadores.html": "c0be2d52"
+  },
+  "modulos/01_introduccion.qmd": {
+    "01_introduccion.html": "f86155c2"
+  },
+  "modulos/11_apis.qmd": {
+    "11_apis.html": "52a8b48f"
+  }
+}

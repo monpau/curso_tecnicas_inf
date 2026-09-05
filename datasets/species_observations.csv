@@ -1,0 +1,6 @@
+sample_id,date,site,latitude,longitude,species,count,notes
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
+S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
+S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
+S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes

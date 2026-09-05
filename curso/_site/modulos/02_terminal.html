@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Módulo 2 — Navegación y manejo de directorios en la terminal – Técnicas informáticas para Biología (4º)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../modulos/03_texto.html" rel="next">
+<link href="../modulos/01_introduccion.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-9d4a88dd4850ece8494b0062f62c1b65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulos</a></li><li class="breadcrumb-item"><a href="../modulos/02_terminal.html">Módulo 2 — Navegación y manejo de directorios en la terminal</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Técnicas informáticas para Biología (4º)</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Técnicas informáticas para estudiantes de 4º de Biología</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Módulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/01_introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 1 — Introducción a la computación en biología</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/02_terminal.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Módulo 2 — Navegación y manejo de directorios en la terminal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/03_texto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 3 — Manejo de archivos de texto mediante línea de comandos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/04_regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 4 — Expresiones regulares</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/05_pipelines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 5 — Pipelines y programación en shell</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/07_python_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 7 — Introducción a la programación y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/08_tipos_operadores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 8 — Tipos y operadores</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/09_bucles_condicionales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 9 — Bucles y condicionales</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/10_lectura_escritura.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 10 — Lectura, modificación y escritura de archivos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modulos/11_apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 11 — Acceso a datos en línea vía APIs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#objetivos" id="toc-objetivos" class="nav-link active" data-scroll-target="#objetivos">Objetivos</a></li>
+  <li><a href="#el-sistema-de-ficheros-una-jerarquía-en-árbol" id="toc-el-sistema-de-ficheros-una-jerarquía-en-árbol" class="nav-link" data-scroll-target="#el-sistema-de-ficheros-una-jerarquía-en-árbol">El sistema de ficheros: una jerarquía en árbol</a>
+  <ul class="collapse">
+  <li><a href="#rutas-absolutas-y-relativas" id="toc-rutas-absolutas-y-relativas" class="nav-link" data-scroll-target="#rutas-absolutas-y-relativas">Rutas absolutas y relativas</a></li>
+  </ul></li>
+  <li><a href="#dónde-estoy-pwd-y-ls" id="toc-dónde-estoy-pwd-y-ls" class="nav-link" data-scroll-target="#dónde-estoy-pwd-y-ls">¿Dónde estoy? — <code>pwd</code> y <code>ls</code></a></li>
+  <li><a href="#moverte-entre-directorios-cd" id="toc-moverte-entre-directorios-cd" class="nav-link" data-scroll-target="#moverte-entre-directorios-cd">Moverte entre directorios — <code>cd</code></a></li>
+  <li><a href="#crear-y-eliminar-directorios-mkdir-rmdir-rm--r" id="toc-crear-y-eliminar-directorios-mkdir-rmdir-rm--r" class="nav-link" data-scroll-target="#crear-y-eliminar-directorios-mkdir-rmdir-rm--r">Crear y eliminar directorios — <code>mkdir</code>, <code>rmdir</code>, <code>rm -r</code></a></li>
+  <li><a href="#copiar-y-mover-cp-mv" id="toc-copiar-y-mover-cp-mv" class="nav-link" data-scroll-target="#copiar-y-mover-cp-mv">Copiar y mover — <code>cp</code>, <code>mv</code></a></li>
+  <li><a href="#permisos-básicos-chmod" id="toc-permisos-básicos-chmod" class="nav-link" data-scroll-target="#permisos-básicos-chmod">Permisos básicos — <code>chmod</code></a></li>
+  <li><a href="#un-problema-real-nombres-de-archivo-inconsistentes" id="toc-un-problema-real-nombres-de-archivo-inconsistentes" class="nav-link" data-scroll-target="#un-problema-real-nombres-de-archivo-inconsistentes">Un problema real: nombres de archivo inconsistentes</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a></li>
+  <li><a href="#soluciones" id="toc-soluciones" class="nav-link" data-scroll-target="#soluciones">Soluciones</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../modulos/01_introduccion.html">Módulos</a></li><li class="breadcrumb-item"><a href="../modulos/02_terminal.html">Módulo 2 — Navegación y manejo de directorios en la terminal</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Módulo 2 — Navegación y manejo de directorios en la terminal</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Duración estimada:</strong> 2 h</p>
+<section id="objetivos" class="level2">
+<h2 class="anchored" data-anchor-id="objetivos">Objetivos</h2>
+<p>Al finalizar este módulo serás capaz de:</p>
+<ul>
+<li>Moverte por el sistema de archivos desde la terminal (<code>pwd</code>, <code>ls</code>, <code>cd</code>).</li>
+<li>Crear y eliminar directorios (<code>mkdir</code>, <code>rmdir</code>, <code>rm -r</code>).</li>
+<li>Copiar y mover archivos y directorios (<code>cp</code>, <code>mv</code>).</li>
+<li>Cambiar permisos básicos de archivos (<code>chmod</code>).</li>
+<li>Reconocer y corregir nombres de archivo inconsistentes, un problema muy habitual en proyectos reales de datos biológicos.</li>
+</ul>
+</section>
+<section id="el-sistema-de-ficheros-una-jerarquía-en-árbol" class="level2">
+<h2 class="anchored" data-anchor-id="el-sistema-de-ficheros-una-jerarquía-en-árbol">El sistema de ficheros: una jerarquía en árbol</h2>
+<p>En Linux, todos los archivos y directorios cuelgan de un único directorio raíz, escrito como <code>/</code>. Cualquier otro directorio es, directa o indirectamente, un subdirectorio de la raíz. Por ejemplo, <code>/home</code> es un subdirectorio de <code>/</code>, y dentro de <code>/home</code> cada usuario tiene el suyo propio: <code>/home/alicia</code>, <code>/home/juan</code>, etc. Esa estructura en forma de árbol es la misma idea que las carpetas anidadas de cualquier gestor de archivos gráfico — la terminal simplemente te obliga a nombrar el camino explícitamente en vez de hacer doble clic.</p>
+<pre><code>/
+├── home
+│   ├── alicia
+│   │   └── documentos
+│   └── juan
+└── etc</code></pre>
+<section id="rutas-absolutas-y-relativas" class="level3">
+<h3 class="anchored" data-anchor-id="rutas-absolutas-y-relativas">Rutas absolutas y relativas</h3>
+<p>Hay dos formas de indicar dónde está un archivo:</p>
+<ul>
+<li><strong>Ruta absoluta</strong>: describe el camino completo desde la raíz, y siempre empieza por <code>/</code>. Por ejemplo, <code>/home/alicia/documentos/tesis.md</code> identifica ese archivo sin importar en qué directorio te encuentres al escribirla.</li>
+<li><strong>Ruta relativa</strong>: describe el camino desde tu directorio de trabajo actual, y <strong>no</strong> empieza por <code>/</code>. Si <code>pwd</code> te dice que estás en <code>/home/alicia</code>, entonces <code>documentos/tesis.md</code> es una ruta relativa equivalente a la absoluta anterior.</li>
+</ul>
+<p>La regla práctica es simple: <strong>si empieza por <code>/</code>, es absoluta; si no, es relativa</strong> (y se interpreta a partir de donde estés en ese momento — el mismo <code>documentos/tesis.md</code> apunta a un archivo distinto según cuál sea tu directorio de trabajo).</p>
+<p>Tres atajos de notación que verás constantemente:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Símbolo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>.</code></td>
+<td>el directorio actual</td>
+</tr>
+<tr class="even">
+<td><code>..</code></td>
+<td>el directorio padre (un nivel por encima)</td>
+</tr>
+<tr class="odd">
+<td><code>~</code></td>
+<td>tu directorio personal (<code>$HOME</code>, p.&nbsp;ej. <code>/home/alicia</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Esto es lo que hace que <code>cd ..</code> funcione: <code>..</code> es una ruta relativa que siempre significa “un nivel arriba en el árbol”, sin importar en qué rama del árbol estés.</p>
+</section>
+</section>
+<section id="dónde-estoy-pwd-y-ls" class="level2">
+<h2 class="anchored" data-anchor-id="dónde-estoy-pwd-y-ls">¿Dónde estoy? — <code>pwd</code> y <code>ls</code></h2>
+<p><code>pwd</code> (<em>print working directory</em>) muestra el directorio en el que te encuentras. <code>ls</code> lista su contenido.</p>
+<pre><code>~$ pwd
+/home/alumno
+~$ ls
+Desktop  Documents  Downloads
+~$ ls -la
+total 24
+drwxr-xr-x  5 alumno alumno 4096 abr  2 10:00 .
+drwxr-xr-x  3 root   root   4096 abr  1 09:00 ..
+drwxr-xr-x  2 alumno alumno 4096 abr  2 10:00 Desktop</code></pre>
+<p><code>-l</code> muestra el listado en formato largo (permisos, tamaño, fecha); <code>-a</code> incluye los archivos ocultos (los que empiezan por <code>.</code>).</p>
+</section>
+<section id="moverte-entre-directorios-cd" class="level2">
+<h2 class="anchored" data-anchor-id="moverte-entre-directorios-cd">Moverte entre directorios — <code>cd</code></h2>
+<pre><code>~$ cd Documents
+~/Documents$ cd ..
+~$ cd /home/alumno/Desktop
+~/Desktop$ cd ~
+~$</code></pre>
+<p>Cada una de estas órdenes usa uno de los conceptos de la sección anterior:</p>
+<ul>
+<li><code>cd Documents</code> — ruta relativa: baja a <code>Documents</code> dentro del directorio en el que estabas.</li>
+<li><code>cd ..</code> — sube un nivel usando el atajo <code>..</code> (el padre del directorio actual).</li>
+<li><code>cd /home/alumno/Desktop</code> — ruta absoluta: te lleva ahí sin importar dónde estuvieras antes, porque empieza por <code>/</code>.</li>
+<li><code>cd ~</code> (o <code>cd</code> sin argumentos) — te lleva a tu directorio personal.</li>
+</ul>
+</section>
+<section id="crear-y-eliminar-directorios-mkdir-rmdir-rm--r" class="level2">
+<h2 class="anchored" data-anchor-id="crear-y-eliminar-directorios-mkdir-rmdir-rm--r">Crear y eliminar directorios — <code>mkdir</code>, <code>rmdir</code>, <code>rm -r</code></h2>
+<pre><code>~$ mkdir proyecto_secuenciacion
+~$ mkdir proyecto_secuenciacion/raw_data proyecto_secuenciacion/scripts proyecto_secuenciacion/results proyecto_secuenciacion/docs
+~$ ls proyecto_secuenciacion
+docs  raw_data  results  scripts</code></pre>
+<p><code>rmdir</code> solo elimina directorios <strong>vacíos</strong>:</p>
+<pre><code>~$ rmdir proyecto_secuenciacion/docs</code></pre>
+<p>Para eliminar un directorio con contenido hace falta <code>rm -r</code> (recursivo):</p>
+<pre><code>~$ rm -r proyecto_secuenciacion/results</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Advertencia
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>rm -r</code> <strong>no tiene papelera</strong>: lo que borras con <code>rm</code> desaparece de forma permanente. Antes de usarlo con <code>*</code> o rutas amplias, comprueba con <code>ls</code> que estás en el directorio correcto y que la ruta es exactamente la que quieres borrar.</p>
+</div>
+</div>
+</section>
+<section id="copiar-y-mover-cp-mv" class="level2">
+<h2 class="anchored" data-anchor-id="copiar-y-mover-cp-mv">Copiar y mover — <code>cp</code>, <code>mv</code></h2>
+<pre><code>~$ cp raw_data/muestra_01.fastq results/muestra_01_backup.fastq
+~$ cp -r raw_data raw_data_backup
+~$ mv muestra_02.fastq raw_data/
+~$ mv raw_data/muestra_01.fastq raw_data/muestra_01_v2.fastq</code></pre>
+<p><code>cp</code> copia (<code>-r</code> para copiar un directorio completo con su contenido); <code>mv</code> mueve <strong>o</strong> renombra, según si el destino es una ruta distinta o solo un nombre nuevo.</p>
+</section>
+<section id="permisos-básicos-chmod" class="level2">
+<h2 class="anchored" data-anchor-id="permisos-básicos-chmod">Permisos básicos — <code>chmod</code></h2>
+<pre><code>~$ ls -l raw_data/muestra_01_v2.fastq
+-rw-r--r-- 1 alumno alumno 2048 abr  2 10:15 raw_data/muestra_01_v2.fastq
+~$ chmod 444 raw_data/muestra_01_v2.fastq
+~$ ls -l raw_data/muestra_01_v2.fastq
+-r--r--r-- 1 alumno alumno 2048 abr  2 10:15 raw_data/muestra_01_v2.fastq</code></pre>
+<p><code>chmod 444</code> deja el archivo en solo lectura para todo el mundo — útil para proteger datos crudos (<code>raw_data</code>) de modificaciones accidentales. <code>chmod 644</code> restaura la lectura/escritura para el propietario.</p>
+</section>
+<section id="un-problema-real-nombres-de-archivo-inconsistentes" class="level2">
+<h2 class="anchored" data-anchor-id="un-problema-real-nombres-de-archivo-inconsistentes">Un problema real: nombres de archivo inconsistentes</h2>
+<p>En proyectos reales es muy frecuente que distintas personas (o el mismo instrumento en días distintos) generen archivos con nombres que no siguen ninguna convención común. Por ejemplo:</p>
+<pre><code>~$ ls raw_data
+Muestra 01.fastq
+muestra_02.FASTQ
+MUESTRA-03.fastq
+muestra_4.fastq</code></pre>
+<p>Estas inconsistencias (espacios, mayúsculas/minúsculas mezcladas, separadores distintos) parecen un detalle menor, pero rompen scripts que esperan un patrón de nombre fijo, y dificultan mucho automatizar el procesado de docenas o cientos de archivos. La convención más robusta es: minúsculas, sin espacios ni acentos, separador <code>_</code> consistente, ceros a la izquierda si hay muchas muestras (<code>muestra_01.fastq</code>, <code>muestra_02.fastq</code>, …).</p>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<ol type="1">
+<li>Crea la estructura de directorios <code>proyecto_campo/{raw_data,scripts,results}</code> con una sola línea de <code>mkdir</code>.</li>
+<li>Sitúate dentro de <code>proyecto_campo/raw_data</code> (ruta relativa) y comprueba con <code>pwd</code> que estás en el sitio correcto. Anota la ruta absoluta que te devuelve. Después, sin salir de la terminal, muévete a <code>proyecto_campo/scripts</code> usando <code>..</code> (ruta relativa), y por último vuelve a <code>raw_data</code> pero esta vez escribiendo la ruta absoluta completa que anotaste antes.</li>
+<li>Dentro de <code>raw_data</code>, crea estos cuatro archivos vacíos con <code>touch</code>, tal cual están escritos (son un ejemplo real de nombres inconsistentes):
+<ul>
+<li><code>Muestra 01.fastq</code></li>
+<li><code>muestra_02.FASTQ</code></li>
+<li><code>MUESTRA-03.fastq</code></li>
+<li><code>muestra_4.fastq</code></li>
+</ul></li>
+<li>Lista el contenido de <code>raw_data</code> con <code>ls -l</code> y anota qué tres cosas distintas varían entre estos nombres (pista: mayúsculas, separador, ceros a la izquierda).</li>
+<li>Renombra los cuatro archivos con <code>mv</code> para que sigan la convención <code>muestra_01.fastq</code>, <code>muestra_02.fastq</code>, <code>muestra_03.fastq</code>, <code>muestra_04.fastq</code>.</li>
+<li>Crea una copia de seguridad de todo <code>raw_data</code> llamada <code>raw_data_backup</code> con <code>cp -r</code>.</li>
+<li>Deja <code>raw_data</code> en modo solo lectura para evitar modificaciones accidentales, y comprueba con <code>ls -l</code> que el cambio se aplicó.</li>
+<li>Intenta borrar <code>raw_data_backup</code> primero con <code>rmdir</code> (fallará porque no está vacío) y después con el comando correcto.</li>
+</ol>
+</section>
+<section id="soluciones" class="level2">
+<h2 class="anchored" data-anchor-id="soluciones">Soluciones</h2>
+<ol type="1">
+<li><code>mkdir -p proyecto_campo/{raw_data,scripts,results}</code></li>
+<li><pre><code>~$ cd proyecto_campo/raw_data
+~$ pwd
+/home/alumno/proyecto_campo/raw_data
+~$ cd ../scripts
+~$ pwd
+/home/alumno/proyecto_campo/scripts
+~$ cd /home/alumno/proyecto_campo/raw_data</code></pre>
+(la ruta absoluta exacta depende de tu usuario y de dónde creaste <code>proyecto_campo</code> — usa la que te devolvió tu propio <code>pwd</code>).</li>
+<li><pre><code>~$ touch "Muestra 01.fastq" muestra_02.FASTQ MUESTRA-03.fastq muestra_4.fastq</code></pre>
+(las comillas son necesarias porque el nombre contiene un espacio).</li>
+<li><code>ls -l</code> — varían: el uso de mayúsculas/minúsculas (<code>Muestra</code>/<code>muestra</code>/<code>MUESTRA</code>), el separador (espacio, <code>_</code>, <code>-</code>) y si el número lleva cero a la izquierda (<code>01</code> frente a <code>4</code>).</li>
+<li><pre><code>~$ mv "Muestra 01.fastq" muestra_01.fastq
+~$ mv muestra_02.FASTQ muestra_02.fastq
+~$ mv MUESTRA-03.fastq muestra_03.fastq
+~$ mv muestra_4.fastq muestra_04.fastq</code></pre></li>
+<li><code>cp -r raw_data raw_data_backup</code> (ejecutado desde <code>proyecto_campo</code>).</li>
+<li><code>chmod 444 raw_data/*</code> y después <code>ls -l raw_data</code> para comprobar que los permisos empiezan por <code>-r--r--r--</code>.</li>
+<li><code>rmdir raw_data_backup</code> da error (“Directory not empty”); el comando correcto es <code>rm -r raw_data_backup</code>.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../modulos/01_introduccion.html" class="pagination-link" aria-label="Módulo 1 — Introducción a la computación en biología">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Módulo 1 — Introducción a la computación en biología</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../modulos/03_texto.html" class="pagination-link" aria-label="Módulo 3 — Manejo de archivos de texto mediante línea de comandos">
+        <span class="nav-page-text">Módulo 3 — Manejo de archivos de texto mediante línea de comandos</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

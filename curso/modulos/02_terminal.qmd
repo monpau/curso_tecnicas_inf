@@ -1,0 +1,190 @@
+---
+title: "Módulo 2 — Navegación y manejo de directorios en la terminal"
+---
+
+**Duración estimada:** 2 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Moverte por el sistema de archivos desde la terminal (`pwd`, `ls`, `cd`).
+- Crear y eliminar directorios (`mkdir`, `rmdir`, `rm -r`).
+- Copiar y mover archivos y directorios (`cp`, `mv`).
+- Cambiar permisos básicos de archivos (`chmod`).
+- Reconocer y corregir nombres de archivo inconsistentes, un problema muy habitual en proyectos reales de datos biológicos.
+
+## El sistema de ficheros: una jerarquía en árbol
+
+En Linux, todos los archivos y directorios cuelgan de un único directorio raíz, escrito como `/`. Cualquier otro directorio es, directa o indirectamente, un subdirectorio de la raíz. Por ejemplo, `/home` es un subdirectorio de `/`, y dentro de `/home` cada usuario tiene el suyo propio: `/home/alicia`, `/home/juan`, etc. Esa estructura en forma de árbol es la misma idea que las carpetas anidadas de cualquier gestor de archivos gráfico — la terminal simplemente te obliga a nombrar el camino explícitamente en vez de hacer doble clic.
+
+```
+/
+├── home
+│   ├── alicia
+│   │   └── documentos
+│   └── juan
+└── etc
+```
+
+### Rutas absolutas y relativas
+
+Hay dos formas de indicar dónde está un archivo:
+
+- **Ruta absoluta**: describe el camino completo desde la raíz, y siempre empieza por `/`. Por ejemplo, `/home/alicia/documentos/tesis.md` identifica ese archivo sin importar en qué directorio te encuentres al escribirla.
+- **Ruta relativa**: describe el camino desde tu directorio de trabajo actual, y **no** empieza por `/`. Si `pwd` te dice que estás en `/home/alicia`, entonces `documentos/tesis.md` es una ruta relativa equivalente a la absoluta anterior.
+
+La regla práctica es simple: **si empieza por `/`, es absoluta; si no, es relativa** (y se interpreta a partir de donde estés en ese momento — el mismo `documentos/tesis.md` apunta a un archivo distinto según cuál sea tu directorio de trabajo).
+
+Tres atajos de notación que verás constantemente:
+
+| Símbolo | Significado |
+|---|---|
+| `.` | el directorio actual |
+| `..` | el directorio padre (un nivel por encima) |
+| `~` | tu directorio personal (`$HOME`, p. ej. `/home/alicia`) |
+
+Esto es lo que hace que `cd ..` funcione: `..` es una ruta relativa que siempre significa "un nivel arriba en el árbol", sin importar en qué rama del árbol estés.
+
+## ¿Dónde estoy? — `pwd` y `ls`
+
+`pwd` (*print working directory*) muestra el directorio en el que te encuentras. `ls` lista su contenido.
+
+```
+~$ pwd
+/home/alumno
+~$ ls
+Desktop  Documents  Downloads
+~$ ls -la
+total 24
+drwxr-xr-x  5 alumno alumno 4096 abr  2 10:00 .
+drwxr-xr-x  3 root   root   4096 abr  1 09:00 ..
+drwxr-xr-x  2 alumno alumno 4096 abr  2 10:00 Desktop
+```
+
+`-l` muestra el listado en formato largo (permisos, tamaño, fecha); `-a` incluye los archivos ocultos (los que empiezan por `.`).
+
+## Moverte entre directorios — `cd`
+
+```
+~$ cd Documents
+~/Documents$ cd ..
+~$ cd /home/alumno/Desktop
+~/Desktop$ cd ~
+~$
+```
+
+Cada una de estas órdenes usa uno de los conceptos de la sección anterior:
+
+- `cd Documents` — ruta relativa: baja a `Documents` dentro del directorio en el que estabas.
+- `cd ..` — sube un nivel usando el atajo `..` (el padre del directorio actual).
+- `cd /home/alumno/Desktop` — ruta absoluta: te lleva ahí sin importar dónde estuvieras antes, porque empieza por `/`.
+- `cd ~` (o `cd` sin argumentos) — te lleva a tu directorio personal.
+
+## Crear y eliminar directorios — `mkdir`, `rmdir`, `rm -r`
+
+```
+~$ mkdir proyecto_secuenciacion
+~$ mkdir proyecto_secuenciacion/raw_data proyecto_secuenciacion/scripts proyecto_secuenciacion/results proyecto_secuenciacion/docs
+~$ ls proyecto_secuenciacion
+docs  raw_data  results  scripts
+```
+
+`rmdir` solo elimina directorios **vacíos**:
+
+```
+~$ rmdir proyecto_secuenciacion/docs
+```
+
+Para eliminar un directorio con contenido hace falta `rm -r` (recursivo):
+
+```
+~$ rm -r proyecto_secuenciacion/results
+```
+
+::: {.callout-warning}
+`rm -r` **no tiene papelera**: lo que borras con `rm` desaparece de forma permanente. Antes de usarlo con `*` o rutas amplias, comprueba con `ls` que estás en el directorio correcto y que la ruta es exactamente la que quieres borrar.
+:::
+
+## Copiar y mover — `cp`, `mv`
+
+```
+~$ cp raw_data/muestra_01.fastq results/muestra_01_backup.fastq
+~$ cp -r raw_data raw_data_backup
+~$ mv muestra_02.fastq raw_data/
+~$ mv raw_data/muestra_01.fastq raw_data/muestra_01_v2.fastq
+```
+
+`cp` copia (`-r` para copiar un directorio completo con su contenido); `mv` mueve **o** renombra, según si el destino es una ruta distinta o solo un nombre nuevo.
+
+## Permisos básicos — `chmod`
+
+```
+~$ ls -l raw_data/muestra_01_v2.fastq
+-rw-r--r-- 1 alumno alumno 2048 abr  2 10:15 raw_data/muestra_01_v2.fastq
+~$ chmod 444 raw_data/muestra_01_v2.fastq
+~$ ls -l raw_data/muestra_01_v2.fastq
+-r--r--r-- 1 alumno alumno 2048 abr  2 10:15 raw_data/muestra_01_v2.fastq
+```
+
+`chmod 444` deja el archivo en solo lectura para todo el mundo — útil para proteger datos crudos (`raw_data`) de modificaciones accidentales. `chmod 644` restaura la lectura/escritura para el propietario.
+
+## Un problema real: nombres de archivo inconsistentes
+
+En proyectos reales es muy frecuente que distintas personas (o el mismo instrumento en días distintos) generen archivos con nombres que no siguen ninguna convención común. Por ejemplo:
+
+```
+~$ ls raw_data
+Muestra 01.fastq
+muestra_02.FASTQ
+MUESTRA-03.fastq
+muestra_4.fastq
+```
+
+Estas inconsistencias (espacios, mayúsculas/minúsculas mezcladas, separadores distintos) parecen un detalle menor, pero rompen scripts que esperan un patrón de nombre fijo, y dificultan mucho automatizar el procesado de docenas o cientos de archivos. La convención más robusta es: minúsculas, sin espacios ni acentos, separador `_` consistente, ceros a la izquierda si hay muchas muestras (`muestra_01.fastq`, `muestra_02.fastq`, ...).
+
+## Ejercicios
+
+1. Crea la estructura de directorios `proyecto_campo/{raw_data,scripts,results}` con una sola línea de `mkdir`.
+2. Sitúate dentro de `proyecto_campo/raw_data` (ruta relativa) y comprueba con `pwd` que estás en el sitio correcto. Anota la ruta absoluta que te devuelve. Después, sin salir de la terminal, muévete a `proyecto_campo/scripts` usando `..` (ruta relativa), y por último vuelve a `raw_data` pero esta vez escribiendo la ruta absoluta completa que anotaste antes.
+3. Dentro de `raw_data`, crea estos cuatro archivos vacíos con `touch`, tal cual están escritos (son un ejemplo real de nombres inconsistentes):
+   - `Muestra 01.fastq`
+   - `muestra_02.FASTQ`
+   - `MUESTRA-03.fastq`
+   - `muestra_4.fastq`
+4. Lista el contenido de `raw_data` con `ls -l` y anota qué tres cosas distintas varían entre estos nombres (pista: mayúsculas, separador, ceros a la izquierda).
+5. Renombra los cuatro archivos con `mv` para que sigan la convención `muestra_01.fastq`, `muestra_02.fastq`, `muestra_03.fastq`, `muestra_04.fastq`.
+6. Crea una copia de seguridad de todo `raw_data` llamada `raw_data_backup` con `cp -r`.
+7. Deja `raw_data` en modo solo lectura para evitar modificaciones accidentales, y comprueba con `ls -l` que el cambio se aplicó.
+8. Intenta borrar `raw_data_backup` primero con `rmdir` (fallará porque no está vacío) y después con el comando correcto.
+
+## Soluciones
+
+1. `mkdir -p proyecto_campo/{raw_data,scripts,results}`
+2.
+   ```
+   ~$ cd proyecto_campo/raw_data
+   ~$ pwd
+   /home/alumno/proyecto_campo/raw_data
+   ~$ cd ../scripts
+   ~$ pwd
+   /home/alumno/proyecto_campo/scripts
+   ~$ cd /home/alumno/proyecto_campo/raw_data
+   ```
+   (la ruta absoluta exacta depende de tu usuario y de dónde creaste `proyecto_campo` — usa la que te devolvió tu propio `pwd`).
+3.
+   ```
+   ~$ touch "Muestra 01.fastq" muestra_02.FASTQ MUESTRA-03.fastq muestra_4.fastq
+   ```
+   (las comillas son necesarias porque el nombre contiene un espacio).
+4. `ls -l` — varían: el uso de mayúsculas/minúsculas (`Muestra`/`muestra`/`MUESTRA`), el separador (espacio, `_`, `-`) y si el número lleva cero a la izquierda (`01` frente a `4`).
+5.
+   ```
+   ~$ mv "Muestra 01.fastq" muestra_01.fastq
+   ~$ mv muestra_02.FASTQ muestra_02.fastq
+   ~$ mv MUESTRA-03.fastq muestra_03.fastq
+   ~$ mv muestra_4.fastq muestra_04.fastq
+   ```
+6. `cp -r raw_data raw_data_backup` (ejecutado desde `proyecto_campo`).
+7. `chmod 444 raw_data/*` y después `ls -l raw_data` para comprobar que los permisos empiezan por `-r--r--r--`.
+8. `rmdir raw_data_backup` da error ("Directory not empty"); el comando correcto es `rm -r raw_data_backup`.

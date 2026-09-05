@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: _site
+
+lang: es
+
+website:
+  title: "Técnicas informáticas para Biología (4º)"
+  page-navigation: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "Módulos"
+        contents:
+          - modulos/01_introduccion.qmd
+          - modulos/02_terminal.qmd
+          - modulos/03_texto.qmd
+          - modulos/04_regex.qmd
+          - modulos/05_pipelines.qmd
+          - modulos/07_python_intro.qmd
+          - modulos/08_tipos_operadores.qmd
+          - modulos/09_bucles_condicionales.qmd
+          - modulos/10_lectura_escritura.qmd
+          - modulos/11_apis.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    highlight-style: github

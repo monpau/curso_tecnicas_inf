@@ -1,0 +1,215 @@
+---
+title: "Módulo 3 — Manejo de archivos de texto mediante línea de comandos"
+---
+
+**Duración estimada:** 4 h
+
+## Objetivos
+
+Al finalizar este módulo serás capaz de:
+
+- Ver el contenido de un archivo de texto de varias formas (`cat`, `less`, `head`, `tail`).
+- Contar líneas, palabras y caracteres con `wc`.
+- Extraer columnas de un archivo delimitado con `cut`, y combinarlas con `paste`.
+- Ordenar líneas con `sort` y eliminar duplicados con `uniq`.
+- Transformar texto (mayúsculas/minúsculas, eliminar caracteres) con `tr`.
+- Encadenar estas herramientas para responder preguntas reales sobre un archivo, incluso cuando los datos tienen inconsistencias.
+
+## Materiales
+
+Este módulo usa dos archivos de `datasets/`:
+
+**`species_observations.csv`**
+
+```
+sample_id,date,site,latitude,longitude,species,count,notes
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
+S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
+S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
+S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
+```
+
+**`registro_campo_bruto.csv`** (ya lo usaste en el módulo de expresiones regulares — es un registro de campo con mayúsculas/minúsculas inconsistentes y espacios sobrantes, tal como llega en la vida real):
+
+```
+sample_id,fecha,localidad,especie,notas
+S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
+S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
+S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
+S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
+S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
+S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
+S107,2024-04-10,Sierra de Guadarrama,Betula pendula,Hoja amarillenta
+S108,2024-04-10,Sierra de guadarrama,betula Pendula,Cerca del arroyo
+S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
+S110,2024-04-15,Picos de Europa,Fagus sylvatica,Bosque denso
+S111,2024-04-15,picos de europa,Fagus silvatica,Sotobosque humedo
+S112,2024-04-15,Picos De Europa,FAGUS SYLVATICA,Zona protegida
+```
+
+## Ver el contenido de un archivo: `cat`, `less`, `head`, `tail`
+
+`cat` vuelca el archivo entero en la terminal, de golpe:
+
+```
+~$ cat species_observations.csv
+sample_id,date,site,latitude,longitude,species,count,notes
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
+...
+```
+
+Para un archivo de miles de líneas, `cat` no es práctico: el texto se desplaza fuera de la pantalla antes de que puedas leerlo. `less` abre el archivo en un visor paginado — puedes bajar con las flechas o `Espacio`, subir con `b`, buscar con `/palabra`, y salir con `q` — sin cargar nunca todo el archivo en memoria de golpe.
+
+`head` y `tail` muestran solo el principio o el final. Por defecto son 10 líneas; con `-N` eliges cuántas:
+
+```
+~$ head -4 species_observations.csv
+sample_id,date,site,latitude,longitude,species,count,notes
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
+S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
+
+~$ tail -2 species_observations.csv
+S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
+S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
+```
+
+`head -4` incluye la cabecera (la primera línea del archivo) más las 3 primeras filas de datos — si quieres saltarte la cabecera, dile a `tail` que empiece en la línea 2 con `tail -n +2` (el `+` significa "desde esta línea hasta el final", en vez de "las últimas N líneas").
+
+## Contar: `wc`
+
+`wc` (*word count*) cuenta líneas (`-l`), palabras (`-w`) o caracteres (`-c`):
+
+```
+~$ wc -l species_observations.csv
+6 species_observations.csv
+```
+
+El archivo tiene 6 líneas: la cabecera más 5 observaciones. Esta es una fuente habitual de errores de "uno de más" (*off-by-one*): si quieres el número de observaciones, es `wc -l` menos 1, o directamente cuenta desde la línea 2 con `tail -n +2 archivo | wc -l`.
+
+## Extraer columnas: `cut`
+
+`cut -d',' -f3,6` extrae las columnas 3 y 6 de un archivo separado por comas (`-d` indica el delimitador, `-f` los números de columna):
+
+```
+~$ cut -d',' -f3,6 species_observations.csv
+site,species
+SiteA,Quercus_robur
+SiteA,Pinus_sylvestris
+SiteB,Fragaria_vesca
+SiteC,Arabidopsis_thaliana
+SiteB,Betula_pendula
+```
+
+## Combinar columnas: `paste`
+
+`paste` hace lo contrario de `cut`: une archivos línea a línea, columna junto a columna. Es útil cuando tienes datos relacionados repartidos en varios archivos:
+
+```
+~$ cut -d',' -f1,3 species_observations.csv > ids_sites.csv
+~$ cut -d',' -f6,7 species_observations.csv > especie_count.csv
+~$ paste -d',' ids_sites.csv especie_count.csv
+sample_id,site,species,count
+S001,SiteA,Quercus_robur,3
+S002,SiteA,Pinus_sylvestris,5
+...
+```
+
+## Ordenar: `sort`
+
+Por defecto `sort` ordena alfabéticamente. `-n` ordena numéricamente (imprescindible para números, porque alfabéticamente "10" va antes que "9"), `-r` invierte el orden, y `-t'DELIM' -kN,N` ordena por una columna concreta:
+
+```
+~$ tail -n +2 species_observations.csv | sort -t',' -k7,7 -nr
+S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
+S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
+S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
+```
+
+`-k7,7` dice "ordena por la columna 7 y solo por la 7" (sin el segundo `7`, `sort` seguiría comparando columnas posteriores en caso de empate). `-nr` combina numérico (`-n`) y descendente (`-r`).
+
+## Eliminar duplicados: `uniq`
+
+`uniq` elimina líneas duplicadas — pero con una condición importante: **solo detecta duplicados en líneas consecutivas**. Si las líneas iguales no están juntas, `uniq` no las agrupa. Por eso casi siempre verás `sort` justo antes de `uniq` en una tubería: `sort` agrupa las líneas iguales, y entonces `uniq` puede eliminarlas. Con `-c`, además de eliminar duplicados, cuenta cuántas veces aparecía cada línea.
+
+## Transformar texto: `tr`
+
+`tr` sustituye o elimina caracteres, uno a uno. `tr '[:upper:]' '[:lower:]'` convierte todo el texto a minúsculas (sustituye cada mayúscula por su minúscula correspondiente):
+
+```
+~$ echo "SIERRA DE GREDOS" | tr '[:upper:]' '[:lower:]'
+sierra de gredos
+```
+
+## Un problema real: contar localidades correctamente
+
+Quieres saber cuántas localidades distintas hay en `registro_campo_bruto.csv` y cuántas muestras tiene cada una. La receta obvia es `cut` + `sort` + `uniq -c`:
+
+```
+~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | sort | uniq -c
+      1 el escorial
+      1 El escorial
+      1 El Escorial
+      1 picos de europa
+      1 Picos de Europa
+      1 Picos De Europa
+      1 sierra de gredos
+      2 Sierra de Gredos
+      1 Sierra De Gredos
+      1 Sierra de guadarrama
+      1 Sierra de Guadarrama
+```
+
+11 grupos, cuando en realidad solo hay 4 localidades. El problema es exactamente el mismo que viste en el módulo de expresiones regulares: `uniq` compara el texto tal cual, y para él `Sierra de Gredos` y `sierra de gredos` son líneas distintas. Añadir `tr` para pasar todo a minúsculas ayuda, pero no del todo:
+
+```
+~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sort | uniq -c
+      2 el escorial
+      1 el escorial
+      3 picos de europa
+      4 sierra de gredos
+      2 sierra de guadarrama
+```
+
+Ya solo queda un grupo partido en dos: `el escorial` y `el escorial ` (con un espacio final, la misma inconsistencia de la fila `S106` que corregiste con `sed` en el módulo anterior). Eliminando ese espacio sobrante antes de ordenar, el resultado es por fin correcto:
+
+```
+~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
+      3 el escorial
+      3 picos de europa
+      4 sierra de gredos
+      2 sierra de guadarrama
+```
+
+3 + 3 + 4 + 2 = 12, que coincide con las 12 filas de datos del archivo. Esta secuencia — normalizar mayúsculas, limpiar espacios, y solo entonces ordenar y contar — es el patrón que usarás una y otra vez al analizar datos recogidos a mano.
+
+## Ejercicios
+
+1. Muestra el contenido completo de `species_observations.csv` con `cat`.
+2. Muestra las 3 primeras filas de datos (sin contar la cabecera) con `head`, y las 2 últimas con `tail`.
+3. Cuenta cuántas observaciones (sin contar la cabecera) hay en `species_observations.csv`.
+4. Extrae solo las columnas `site` y `species` de `species_observations.csv` con `cut`.
+5. Ordena las observaciones de `species_observations.csv` por número de individuos (`count`) de mayor a menor.
+6. Usando `cut`, divide `species_observations.csv` en dos archivos: uno con `sample_id` y `site`, otro con `species` y `count`. Vuelve a unirlos con `paste` en el orden original.
+7. En `registro_campo_bruto.csv`, cuenta cuántas veces aparece cada localidad usando `cut`, `sort` y `uniq -c`, **sin** ninguna normalización previa. Comprueba que obtienes 11 grupos en vez de 4.
+8. Corrige el resultado del ejercicio anterior añadiendo `tr` (minúsculas) y `sed` (eliminar espacios finales) antes de `sort`/`uniq -c`. Deberías obtener exactamente 4 localidades, con recuentos que sumen 12.
+
+## Soluciones
+
+1. `cat species_observations.csv`
+2. `head -4 species_observations.csv` (incluye la cabecera + 3 filas) y `tail -2 species_observations.csv`
+3. `tail -n +2 species_observations.csv | wc -l` → `5`
+4. `cut -d',' -f3,6 species_observations.csv`
+5. `tail -n +2 species_observations.csv | sort -t',' -k7,7 -nr`
+6.
+   ```
+   ~$ cut -d',' -f1,3 species_observations.csv > ids_sites.csv
+   ~$ cut -d',' -f6,7 species_observations.csv > especie_count.csv
+   ~$ paste -d',' ids_sites.csv especie_count.csv
+   ```
+7. `cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | sort | uniq -c` → 11 grupos.
+8. `cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c` → 4 grupos (`el escorial`: 3, `picos de europa`: 3, `sierra de gredos`: 4, `sierra de guadarrama`: 2).
