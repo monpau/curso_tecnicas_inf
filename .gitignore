@@ -1,0 +1,17 @@
+# Documentos privados de trabajo
+.agent.md
+claude_prompt.txt
+subir_a_uv.sh
+
+# Archivos internos de Quarto
+curso/.quarto/
+
+# Sitio generado (se puede regenerar con quarto render)
+curso/_site/
+
+# VS Code
+.vscode/
+
+# Linux
+*~
+.DS_Store
