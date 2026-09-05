@@ -1,34 +1,93 @@
 ---
-title: "Técnicas informáticas para estudiantes de 4º de Biología"
+title: "Presentación del curso"
 ---
 
-## A quién va dirigido
 
-Este curso está pensado para estudiantes de 4º de Biología (orientaciones molecular-biosanitaria y naturalista-de campo) sin experiencia previa en Linux ni en programación.
+## Objetivos
 
-## Enfoque
+Este curso está orientado a estudiantes de 4º de Biología sin experiencia previa en Linux ni en programación.
 
-Cada lección incluye objetivos de aprendizaje, comandos y fragmentos de código listos para copiar/pegar, ejercicios prácticos paso a paso y soluciones. El material **no se ejecuta automáticamente**: los alumnos escriben o pegan el código en `gedit` (u otro editor) y lo ejecutan localmente en su propia terminal.
+Los objetivos del curso son:
 
-Varios ejercicios usan datos "sucios" — con inconsistencias de mayúsculas/minúsculas, erratas o espacios extra — porque ese es el estado real en el que suelen llegar los datos de campo o de laboratorio, y aprender a detectarlos y corregirlos es parte del objetivo del curso.
+- Aprender a manejarse en un entorno Linux y ejecutar programas por línea de comandos
+- Detectar errores de ejecución de programas en línea de comandos
+- Leer, modificar y filtrar archivos de datos biológicos masivos mediante línea de comandos
+- Elaborar pequeños scripts (en Python)para la extracción y el filtrado de datos de interés de bases de datos biológicas 
+- Elaborar bases de datos georreferenciadas como instrumentos de registro de la información medioambiental.
+- Diseñar proyectos SIG siguiendo los estándares del Open Geospatial Consortium (OGC) que permitan la interoperación de los sistemas de geoprocesamiento.
 
-## Requisitos mínimos
+## Equipo mínimo
 
-- Un equipo con Linux (o WSL/macOS con `bash`) y Python 3 instalado.
+- Un equipo con Linux y Python 3 instalado.
 - Un editor de texto: `gedit` u otro similar.
-- Para el módulo 11, conexión a internet.
 
-## Módulos
+:::{.callout-note}
+Windows dispone de un terminal de comandos que permite ejecutar programas y scripts de forma similar a Linux. Solo es necesario instalar [WSL](https://learn.microsoft.com/es-es/windows/wsl/install) y un editor de texto como `gedit` o `notepad++`.
+
+En MacOS, el terminal de comandos está disponible por defecto y permite ejecutar programas y scripts de forma similar a Linux. Solo es necesario instalar un editor de texto como `gedit` o `TextMate`.
+:::
+
+## Temas
 
 1. [Introducción a la computación en biología](modulos/01_introduccion.qmd) — 1 h
 2. [Navegación y manejo de directorios en la terminal](modulos/02_terminal.qmd) — 2 h
 3. [Manejo de archivos de texto mediante línea de comandos](modulos/03_texto.qmd) — 4 h
 4. [Expresiones regulares](modulos/04_regex.qmd) — 2 h
 5. [Pipelines y programación en shell](modulos/05_pipelines.qmd) — 2 h
+6. Resolución de casos en Bioquímica — 4 h
 7. [Introducción a la programación y Python](modulos/07_python_intro.qmd) — 2 h
 8. [Tipos y operadores](modulos/08_tipos_operadores.qmd) — 2 h
 9. [Bucles y condicionales](modulos/09_bucles_condicionales.qmd) — 4 h
 10. [Lectura, modificación y escritura de archivos](modulos/10_lectura_escritura.qmd) — 4 h
 11. [Acceso a datos en línea vía APIs](modulos/11_apis.qmd) — 2 h
+12. Resolución de casos en Genética — 4 h
+13. Resolución de casos en Biodiversidad I — 4 h
+14. Introducción a los sistemas de información geográfica — 1 h
+15. Fundamentos epistemológicos del análisis espacial — 2 h
+16. Estructura del dato espacial — 2 h
+17. Dimensiones cartografiables del territorio — 2 h
+18. Agregación de información cartográfica mediante aplicaciones SIG — 2 h
+19. Cartografía de la biodiversidad — 2 h
+20. Resolución de casos en Biodiversidad II — 4 h
 
-Los módulos están pensados para hacerse en orden: cada uno reutiliza herramientas y, a menudo, los mismos archivos de datos de los módulos anteriores (p. ej. `registro_campo_bruto.csv` aparece en los módulos 3, 4 y 5; `sequences.fasta` en los módulos 4, 7 y 9).
+## Evaluación
+
+La evaluación de la asignatura consistirá:
+
+- 50% examen teórico-práctico
+- 50% evaluación de los casos prácticos resueltos durante el curso, mediante la entrega de informes o memorias de los mismos.
+
+Los casos prácticos del último apartado tienen la consideración de actividades no recuperables.
+
+La nota de la asignatura será global, calculada mediante la suma de las calificaciones, siempre que en el examen de teoría se alcance un mínimo de 5 sobre 10. Para superar la asignatura se requiere un 5 sobre 10. 
+
+En caso de no superarse la asignatura en primera convocatoria del curso académico, las calificaciones delas diferentes actividades no recuperables se guardarán para la segunda convocatoria dentro del mismo curso académico. 
+
+
+## Bibliografía
+
+Haddock, S. H. D., y Dunn, C. W. (2011). Practical Computing for Biologists. Sinauer Associates, Inc.
+
+Downey, A. B. (2024) [Thinking Python](https://allendowney.github.io/ThinkPython). O'Reilly Media
+
+Marzal Varó, A., Gracia Luengo, I. y García-Sevilla, P. (2014). [Introducción a la programación con Python 3](https://repositori.uji.es/handle/10234/102653). Ed. Universitat Jaume I.
+
+The Carpentries. (2023). [La terminal de Unix](https://swcarpentry.github.io/shell-novice-es/).  
+
+Sweigart, A. (2025). [Automate the Boring Stuff with Python: Practical programming for total beginners](https://automatetheboringstuff.com/). No Starch Press. 
+
+Bosque Sendra, J. (2001). Sistemas de información geográfica. Rialp.
+
+González Pavón, C., Tarrazó Serrano, D., & Castiñeira Ibáñez, S. (2024). Introducción a QGIS . Tirant lo Blanch.
+
+Pérez Navarro, A., Botella Plana, A., Muñoz Bollas, A., Olivella González, R., Olmedilla Hernández, J.C. y
+
+Rodríguez Lloret, J. (2011). Introducción a los sistemas de información geográfica y geotelemática. Editorial UOC.
+
+## Otros recursos
+
+Hay infinidad de recursos en línea para aprender a programar en Python y manejarse en Linux. Algunos de ellos son:
+
+- [![Rosalind](./figures/rosalindlogo.jpg){width=150}](http://rosalind.info/) — Plataforma de aprendizaje de bioinformática mediante resolución de problemas.
+
+- [Python for Everybody](https://www.py4e.com/) — Curso gratuito de Python para principiantes.
