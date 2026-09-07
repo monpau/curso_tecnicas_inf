@@ -1,18 +1,18 @@
 ---
-title: "Módulo 2 — Navegación y manejo de directorios en la terminal"
+title: "Navegación y manejo de directorios en la terminal"
 ---
 
-**Duración estimada:** 2 h
 
-## Objetivos
 
-Al finalizar este módulo serás capaz de:
+## Sistemas Unix/Linux y la terminal
 
-- Moverte por el sistema de archivos desde la terminal (`pwd`, `ls`, `cd`).
-- Crear y eliminar directorios (`mkdir`, `rmdir`, `rm -r`).
-- Copiar y mover archivos y directorios (`cp`, `mv`).
-- Cambiar permisos básicos de archivos (`chmod`).
-- Reconocer y corregir nombres de archivo inconsistentes, un problema muy habitual en proyectos reales de datos biológicos.
+Unix es una familia de sistemas operativos que nació a finales de los años 60 y sentó las bases de cómo funcionan hoy la mayoría de servidores, superordenadores y clústeres de cálculo científico. Linux es un sistema libre inspirado en Unix, y macOS es también un sistema Unix por debajo del interfaz gráfico; ambos comparten muchas herramientas y la misma forma de trabajar en la terminal que veremos en este módulo. Windows no es Unix, pero puede ejecutar un entorno Linux completo mediante WSL.
+
+Esto importa para la computación biológica porque casi todos los servidores, clústeres HPC y servicios en la nube donde se ejecutan los análisis bioinformáticos usan Linux, y las herramientas del campo (alineadores, ensambladores, pipelines) se documentan y distribuyen pensando en ese entorno. Aprender a moverte en la terminal de Linux es, además, transferible: los mismos comandos funcionan casi sin cambios en macOS y en WSL.
+
+La terminal es una ventana de texto en la que escribes órdenes que el sistema ejecuta y responde, también en texto. Por debajo, un programa llamado **shell** (la más habitual es `bash`) interpreta lo que escribes. Frente a una interfaz gráfica, la terminal permite repetir tareas de forma exacta, automatizarlas mediante scripts y trabajar en servidores remotos que no tienen pantalla ni ratón, como es el caso de la mayoría de clústeres de cálculo.
+
+No vamos a usar la terminal porque sea "más difícil" en ningún sentido de mérito, sino porque es la herramienta más eficaz para trabajar de forma reproducible en biología computacional.
 
 ## El sistema de ficheros: una jerarquía en árbol
 
@@ -26,25 +26,6 @@ En Linux, todos los archivos y directorios cuelgan de un único directorio raíz
 │   └── juan
 └── etc
 ```
-
-### Rutas absolutas y relativas
-
-Hay dos formas de indicar dónde está un archivo:
-
-- **Ruta absoluta**: describe el camino completo desde la raíz, y siempre empieza por `/`. Por ejemplo, `/home/alicia/documentos/tesis.md` identifica ese archivo sin importar en qué directorio te encuentres al escribirla.
-- **Ruta relativa**: describe el camino desde tu directorio de trabajo actual, y **no** empieza por `/`. Si `pwd` te dice que estás en `/home/alicia`, entonces `documentos/tesis.md` es una ruta relativa equivalente a la absoluta anterior.
-
-La regla práctica es simple: **si empieza por `/`, es absoluta; si no, es relativa** (y se interpreta a partir de donde estés en ese momento — el mismo `documentos/tesis.md` apunta a un archivo distinto según cuál sea tu directorio de trabajo).
-
-Tres atajos de notación que verás constantemente:
-
-| Símbolo | Significado |
-|---|---|
-| `.` | el directorio actual |
-| `..` | el directorio padre (un nivel por encima) |
-| `~` | tu directorio personal (`$HOME`, p. ej. `/home/alicia`) |
-
-Esto es lo que hace que `cd ..` funcione: `..` es una ruta relativa que siempre significa "un nivel arriba en el árbol", sin importar en qué rama del árbol estés.
 
 ## ¿Dónde estoy? — `pwd` y `ls`
 
@@ -80,6 +61,28 @@ Cada una de estas órdenes usa uno de los conceptos de la sección anterior:
 - `cd ..` — sube un nivel usando el atajo `..` (el padre del directorio actual).
 - `cd /home/alumno/Desktop` — ruta absoluta: te lleva ahí sin importar dónde estuvieras antes, porque empieza por `/`.
 - `cd ~` (o `cd` sin argumentos) — te lleva a tu directorio personal.
+
+
+### Rutas absolutas y relativas
+
+Hay dos formas de indicar dónde está un archivo:
+
+- **Ruta absoluta**: describe el camino completo desde la raíz, y siempre empieza por `/`. Por ejemplo, `/home/alicia/documentos/tesis.md` identifica ese archivo sin importar en qué directorio te encuentres al escribirla.
+- **Ruta relativa**: describe el camino desde tu directorio de trabajo actual, y **no** empieza por `/`. Si `pwd` te dice que estás en `/home/alicia`, entonces `documentos/tesis.md` es una ruta relativa equivalente a la absoluta anterior.
+
+La regla práctica es simple: **si empieza por `/`, es absoluta; si no, es relativa** (y se interpreta a partir de donde estés en ese momento — el mismo `documentos/tesis.md` apunta a un archivo distinto según cuál sea tu directorio de trabajo).
+
+Tres atajos de notación que verás constantemente:
+
+| Símbolo | Significado |
+|---|---|
+| `.` | el directorio actual |
+| `..` | el directorio padre (un nivel por encima) |
+| `~` | tu directorio personal (`$HOME`, p. ej. `/home/alicia`) |
+
+Esto es lo que hace que `cd ..` funcione: `..` es una ruta relativa que siempre significa "un nivel arriba en el árbol", sin importar en qué rama del árbol estés.
+
+
 
 ## Crear y eliminar directorios — `mkdir`, `rmdir`, `rm -r`
 
@@ -117,17 +120,7 @@ Para eliminar un directorio con contenido hace falta `rm -r` (recursivo):
 
 `cp` copia (`-r` para copiar un directorio completo con su contenido); `mv` mueve **o** renombra, según si el destino es una ruta distinta o solo un nombre nuevo.
 
-## Permisos básicos — `chmod`
 
-```
-~$ ls -l raw_data/muestra_01_v2.fastq
--rw-r--r-- 1 alumno alumno 2048 abr  2 10:15 raw_data/muestra_01_v2.fastq
-~$ chmod 444 raw_data/muestra_01_v2.fastq
-~$ ls -l raw_data/muestra_01_v2.fastq
--r--r--r-- 1 alumno alumno 2048 abr  2 10:15 raw_data/muestra_01_v2.fastq
-```
-
-`chmod 444` deja el archivo en solo lectura para todo el mundo — útil para proteger datos crudos (`raw_data`) de modificaciones accidentales. `chmod 644` restaura la lectura/escritura para el propietario.
 
 ## Un problema real: nombres de archivo inconsistentes
 

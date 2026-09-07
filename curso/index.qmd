@@ -16,6 +16,20 @@ Los objetivos del curso son:
 - Elaborar bases de datos georreferenciadas como instrumentos de registro de la información medioambiental.
 - Diseñar proyectos SIG siguiendo los estándares del Open Geospatial Consortium (OGC) que permitan la interoperación de los sistemas de geoprocesamiento.
 
+Al finalizar el curso deberías ser capaz de entender y escribir algo como
+
+```bash
+sed 's/^Chr1/chr1/' variantes.vcf | grep '^chr1' | wc -l
+```
+
+o 
+
+```python
+for line in open("datos.txt"):
+    if "Quercus" in line:
+        print(line)
+```
+
 ## Equipo mínimo
 
 - Un equipo con Linux y Python 3 instalado.

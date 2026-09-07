@@ -26,8 +26,8 @@ website:
 
 format:
   html:
-    theme: minty
+    theme: flatly
     toc: true
     toc-depth: 3
-    code-copy: true
+    code-copy: false
     highlight-style: github
