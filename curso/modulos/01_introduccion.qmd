@@ -3,7 +3,7 @@ title: "Introducción a la computación en biología"
 ---
 
 
-## La pregunta es biológica, pero la respuesta exige computación
+# La pregunta es biológica, pero la respuesta exige computación
 
 La biología sigue empezando con preguntas biológicas:
 
@@ -47,7 +47,7 @@ Durante el curso aprenderás dos formas complementarias de hacerlo:
 - **Python:** programas más flexibles para automatizar análisis y crear resultados
   a partir de datos.
 
-## Sistemas abiertos: por qué importan
+# Sistemas abiertos: por qué importan
 
 En este curso utilizaremos herramientas abiertas o basadas en estándares abiertos:
 Linux, `bash`, Python y formatos de texto habituales en biología.
@@ -68,7 +68,7 @@ Esto tiene ventajas prácticas importantes.
   mejoras, crear tutoriales y aprovechar trabajo previo.
 
 
-## Archivos de texto
+# Archivos de texto
 
 Una característica de los sistemas Unix es que todo es un **archivo de texto**. Un archivo de texto es aquel que contiene únicamente texto plano, formado por caracteres legibles como letras, números, tabuladores, signos de puntuación y saltos de línea, sin estilos tipográficos ni imágenes. Los programas, los datos y la configuración se almacenan en archivos que pueden ser leídos y modificados con un editor de texto.
 
@@ -92,7 +92,7 @@ Examina este ejemplo de archivo de datos de campo:
 - ¿Qué problemas de consistencia y claridad tiene?
 :::
 
-### Características esenciales
+## Características esenciales
 
 Un buen archivo de texto para análisis suele cumplir estas reglas:
 
@@ -117,7 +117,7 @@ Un buen archivo de texto para análisis suele cumplir estas reglas:
     qué representa cada campo y con qué procedimiento se obtuvieron los datos.
 
 
-### Formatos estándar en biología
+## Formatos estándar en biología
 
 En vez de inventar un formato propio para cada proyecto, la biología usa formatos
 estandarizados. Cada formato describe una clase concreta de datos y tiene reglas que
@@ -132,7 +132,7 @@ las herramientas pueden reconocer.
 | VCF | Variantes genéticas | Cabeceras que empiezan por `##` y `#CHROM` | SNPs e indels entre muestras |
 | Newick | Árboles filogenéticos | Paréntesis, comas y punto y coma final | Filogenias y dendrogramas |
 
-#### CSV y TSV: tablas de datos
+### CSV y TSV: tablas de datos
 
 CSV significa *comma-separated values*; TSV significa *tab-separated values*.
 Ambos son formatos de tabla. Cada fila representa una observación y cada columna una
@@ -145,7 +145,7 @@ S002,Albufera,2024-05-12,Egretta_garzetta,7
 S003,Pego-Oliva,2024-05-14,Ardea_cinerea,1
 ```
 
-#### FASTA: secuencias
+### FASTA: secuencias
 
 Un archivo FASTA contiene secuencias de ADN, ARN o proteína. Cada secuencia comienza
 con una cabecera que empieza por `>`.
@@ -161,7 +161,7 @@ ATGACCATGATTACGCCAAGCTTGGCACTGCTGCTGCTGATGCGT
 Si quisiera contar cuántas secuencias hay en un archivo FASTA, ¿qué debería hacer?
 :::
 
-#### FASTQ: lecturas y calidad
+### FASTQ: lecturas y calidad
 
 FASTQ almacena lecturas producidas por un secuenciador. Cada lectura ocupa exactamente
 cuatro líneas:
@@ -181,7 +181,7 @@ Las cuatro líneas son:
 4. Calidad de cada base, codificada mediante caracteres.
 
 
-#### GFF3: anotaciones de un genoma
+### GFF3: anotaciones de un genoma
 
 GFF3 se usa para indicar dónde están las regiones anotadas de una secuencia: genes,
 exones, intrones, CDS, repeticiones, etc. Cada registro tiene nueve columnas separadas
@@ -199,7 +199,7 @@ chr1	annotation	mRNA	1015	5200	.	+	.	ID=transcript002;Parent=gene001
 ¿Cómo podría tener una idea aproximada del número medio de transcritos por gen?
 :::
 
-#### VCF: variantes genéticas
+### VCF: variantes genéticas
 
 VCF significa *Variant Call Format*. Se usa para representar variantes respecto a un
 genoma de referencia.
@@ -216,11 +216,11 @@ chr2	6980	rs345	T	C	52	PASS	GT:RO:AO:DP 1/1:0:12:12
 ```
 
 
-## Buenas prácticas para el curso
+# Buenas prácticas para el curso
 
 A continuación te dejo algunas recomendaciones para evitar problemas comunes.
 
-### Evitar nombres problemáticos
+## Evitar nombres problemáticos
 
 El uso de nombres descriptivos para archivos, carpetas y variables es fundamental para que tu trabajo sea comprensible y reproducible. Un nombre claro permite a otra persona (o a ti mismo dentro de seis meses) entender qué contiene un archivo o qué representa una variable sin tener que abrirlo o inspeccionarlo.
 
@@ -246,7 +246,7 @@ Si usas nombres como `datos.csv`, `final.csv`, `final_final.csv`,
   `cosas_buenas.csv` es posible que acabes en el infierno
 :::
 
-#### Nombres de archivos y carpetas
+### Nombres de archivos y carpetas
  
 La recomendación general es:
 
@@ -267,7 +267,7 @@ En Linux las extensiones no son obligatorias, pero ayudan a identificar el forma
 :::
 
 
-#### Nombres de variables
+### Nombres de variables
 
 Una variable guarda un valor al que queremos referirnos en un programa. Igual que un archivo, su nombre debe indicar qué representa.
 
@@ -305,7 +305,7 @@ PEP 8, la guía de estilo de Python, recomienda la convención *snake_case* para
 ::: 
 
 
-### RTFM y RTFE
+## RTFM y RTFE
 
 En informática hay una máxima que se repite constantemente:
 

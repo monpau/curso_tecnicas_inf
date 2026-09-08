@@ -3,16 +3,39 @@ title: "Navegación y manejo de directorios en la terminal"
 ---
 
 
+# Sistemas Unix/Linux
 
-## Sistemas Unix/Linux y la terminal
+Unix es una familia de sistemas operativos que nació a finales de los años 60 y sentó las bases de cómo funcionan hoy la mayoría de servidores, superordenadores y clústeres de cálculo científico. Linux es un sistema libre inspirado en Unix, y macOS es también un sistema Unix por debajo de la interfaz gráfica; ambos comparten muchas herramientas y la misma forma de trabajar en la terminal que veremos en este módulo. Windows no es Unix, pero puede ejecutar un entorno Linux completo mediante WSL.
 
-Unix es una familia de sistemas operativos que nació a finales de los años 60 y sentó las bases de cómo funcionan hoy la mayoría de servidores, superordenadores y clústeres de cálculo científico. Linux es un sistema libre inspirado en Unix, y macOS es también un sistema Unix por debajo del interfaz gráfico; ambos comparten muchas herramientas y la misma forma de trabajar en la terminal que veremos en este módulo. Windows no es Unix, pero puede ejecutar un entorno Linux completo mediante WSL.
+En computación biológica casi todos los servidores, clústeres HPC y servicios en la nube donde se ejecutan los análisis bioinformáticos usan Linux, y las herramientas del campo (alineadores, ensambladores, pipelines) se documentan y distribuyen pensando en ese entorno. Aprender a moverte en la terminal de Linux es, además, transferible: los mismos comandos funcionan casi sin cambios en macOS y en WSL.
 
-Esto importa para la computación biológica porque casi todos los servidores, clústeres HPC y servicios en la nube donde se ejecutan los análisis bioinformáticos usan Linux, y las herramientas del campo (alineadores, ensambladores, pipelines) se documentan y distribuyen pensando en ese entorno. Aprender a moverte en la terminal de Linux es, además, transferible: los mismos comandos funcionan casi sin cambios en macOS y en WSL.
+## Distribuciones
 
-La terminal es una ventana de texto en la que escribes órdenes que el sistema ejecuta y responde, también en texto. Por debajo, un programa llamado **shell** (la más habitual es `bash`) interpreta lo que escribes. Frente a una interfaz gráfica, la terminal permite repetir tareas de forma exacta, automatizarlas mediante scripts y trabajar en servidores remotos que no tienen pantalla ni ratón, como es el caso de la mayoría de clústeres de cálculo.
+Linux, como cualquier otro sistema operativo, se compone de un gran número de piezas, que, en este caso, son desarrolladas de forma independiente por miles de programadores y proyectos.
+Normalmente estas piezas son integradas por un distribuidor y Linux es suministrado como una [distribución Linux](http://es.wikipedia.org/wiki/Distribuci%C3%B3n_linux).
+Las distribuciones Linux incluyen todo el software necesario para instalar un servidor o un escritorio.
+Algunas de las aplicaciones incluidas habitualmente son el navegador web Firefox y las aplicaciones de oficina LibreOffice.
 
-No vamos a usar la terminal porque sea "más difícil" en ningún sentido de mérito, sino porque es la herramienta más eficaz para trabajar de forma reproducible en biología computacional.
+Existen cientos de distribuciones Linux.
+Estas distribuciones están adaptadas para usuarios o tareas específicas.
+Algunas de estas distribuciones están desarrolladas o apoyadas por empresas como Fedora (Red Hat) y [Ubuntu](http://www.ubuntu.com/) (Canonical) mientras que otras son mantenidas por la propia comunidad de usuarios como [Debian](http://www.debian.org/).
+
+
+
+# Introducción a Ubuntu
+
+[Ubuntu](http://es.wikipedia.org/wiki/Ubuntu) es una distribución Linux basada en Debian y orientada a usuarios de escritorio.
+
+## Los usuarios
+
+Los sistemas Unix son multiusuario, es decir, soportan que varios usuarios los utilicen simultáneamente.
+Todos los usuarios, excepto uno, tienen unos privilegios bastante restringidos y no pueden modificar el sistema.
+De este modo unos usuarios se ven protegidos de las acciones de los otros.
+
+Existe un usuario especial llamado *root* con privilegios de administración absolutos sobre el sistema.
+Para realizar las tareas cotidianas nunca hay que acceder al sistema como *root*.
+En Ubuntu este usuario está deshabilitado por defecto y solo se pueden adquirir los privilegios de administrador temporalmente.
+
 
 ## El sistema de ficheros: una jerarquía en árbol
 
@@ -27,50 +50,80 @@ En Linux, todos los archivos y directorios cuelgan de un único directorio raíz
 └── etc
 ```
 
-## ¿Dónde estoy? — `pwd` y `ls`
+## Ejercicios
+
+Para comprobar que no tenemos problemas de manejo del sistema vamos a realizar una serie de tareas:
+
+- Explorar el escritorio abriendo programas, moviéndote entre escritorios, minimizando y maximizando las aplicaciones, etc.
+
+- Navegar por los directorios del sistema de ficheros mediante el explorador de archivos.
+
+- Crear un subdirectorio llamado `tec_inf` en el escritorio.
+
+- Crear un fichero de texto mediante el editor de textos gedit y guardarlo en el directorio que acabamos de crear.
+
+- Copiar el fichero anterior al directorio Documentos.
+
+- Eliminar el fichero original.
+
+- Bloquea la sesión de tu usuario y vuelve a entrar en ella.
+
+
+# La terminal de Unix
+
+La [Shell](https://en.wikipedia.org/wiki/Command-line_interface) (o terminal) es un intérprete de comandos. Permite controlar el ordenador de forma textual. Frente a una interfaz gráfica, la terminal permite repetir tareas de forma exacta, automatizarlas mediante scripts y trabajar en servidores remotos que no tienen pantalla ni ratón, como es el caso de la mayoría de clústeres de cálculo.
+
+No vamos a usar la terminal porque sea "más difícil" en ningún sentido de mérito, sino porque es la herramienta más eficaz para trabajar de forma reproducible en biología computacional. En general, las ventajas de la línea de comandos frente a una interfaz gráfica son:
+
+  - **Necesidad**. Existe mucho software que está solo disponible en la terminal. Esto es especialmente cierto en el área de la bioinformática.
+
+  - **Flexibilidad**. Los programas gráficos suelen ser muy adecuados para realizar la tarea para la que han sido creados, pero son difíciles de adaptar para otras tareas. Los programas diseñados para ser usados en la línea de comandos suelen ser muy versátiles.
+
+  - **Reproducibilidad**. Documentar y repetir el proceso seguido para realizar un análisis con un programa gráfico es muy costoso puesto que es difícil describir la secuencia de clics y dobles clics que hemos realizado. Por el contrario, los procesos realizados mediante la línea de comandos son muy fáciles de documentar puesto que tan solo debemos guardar el texto que hemos introducido en la pantalla.
+
+  - **Fiabilidad**. Los programas básicos de Unix fueron creados en los años 70 y han sido probados por innumerables usuarios por lo que se han convertido en piezas de código extraordinariamente confiables.
+
+  - **Recursos**. Las interfaces gráficas suelen consumir muchos recursos mientras que los programas que funcionan en línea de comandos suelen ser extraordinariamente livianos y rápidos. Este poco uso de recursos facilita, por ejemplo, que se utilice a través de la red.
+
+Al abrir la terminal, el sistema nos muestra un *prompt* que indica que está listo para recibir órdenes. En Ubuntu, el *prompt* suele ser similar a:  
+
+    usuario@ordenador:~/Escritorio$
+
+Este *prompt* indica que el usuario `usuario` está conectado al ordenador `ordenador` y que su directorio de trabajo actual es `~/Escritorio` (el directorio `Escritorio` dentro del directorio personal del usuario, que se representa con `~`).
+
+
+# ¿Dónde estoy? — `pwd` y `ls`
 
 `pwd` (*print working directory*) muestra el directorio en el que te encuentras. `ls` lista su contenido.
 
-```
+```{.bash}
 ~$ pwd
 /home/alumno
 ~$ ls
 Desktop  Documents  Downloads
-~$ ls -la
-total 24
-drwxr-xr-x  5 alumno alumno 4096 abr  2 10:00 .
-drwxr-xr-x  3 root   root   4096 abr  1 09:00 ..
-drwxr-xr-x  2 alumno alumno 4096 abr  2 10:00 Desktop
 ```
 
-`-l` muestra el listado en formato largo (permisos, tamaño, fecha); `-a` incluye los archivos ocultos (los que empiezan por `.`).
+:::{.callout-tip title="Cuestión"}
+- ¿Podrías listar el contenido del directorio en forma de lista larga, con información de permisos, propietario y fecha de modificación?
+- ¿Cómo listarías también los archivos ocultos?
+:::
 
-## Moverte entre directorios — `cd`
 
-```
+# Moverte entre directorios — `cd`
+
+Para cambiar de directorio se usa `cd` (*change directory*). Por ejemplo:
+
+```{.bash}
 ~$ cd Documents
-~/Documents$ cd ..
 ~$ cd /home/alumno/Desktop
-~/Desktop$ cd ~
-~$
 ```
 
-Cada una de estas órdenes usa uno de los conceptos de la sección anterior:
-
-- `cd Documents` — ruta relativa: baja a `Documents` dentro del directorio en el que estabas.
-- `cd ..` — sube un nivel usando el atajo `..` (el padre del directorio actual).
-- `cd /home/alumno/Desktop` — ruta absoluta: te lleva ahí sin importar dónde estuvieras antes, porque empieza por `/`.
-- `cd ~` (o `cd` sin argumentos) — te lleva a tu directorio personal.
-
-
-### Rutas absolutas y relativas
+## Rutas absolutas y relativas
 
 Hay dos formas de indicar dónde está un archivo:
 
 - **Ruta absoluta**: describe el camino completo desde la raíz, y siempre empieza por `/`. Por ejemplo, `/home/alicia/documentos/tesis.md` identifica ese archivo sin importar en qué directorio te encuentres al escribirla.
 - **Ruta relativa**: describe el camino desde tu directorio de trabajo actual, y **no** empieza por `/`. Si `pwd` te dice que estás en `/home/alicia`, entonces `documentos/tesis.md` es una ruta relativa equivalente a la absoluta anterior.
-
-La regla práctica es simple: **si empieza por `/`, es absoluta; si no, es relativa** (y se interpreta a partir de donde estés en ese momento — el mismo `documentos/tesis.md` apunta a un archivo distinto según cuál sea tu directorio de trabajo).
 
 Tres atajos de notación que verás constantemente:
 
@@ -84,100 +137,115 @@ Esto es lo que hace que `cd ..` funcione: `..` es una ruta relativa que siempre 
 
 
 
-## Crear y eliminar directorios — `mkdir`, `rmdir`, `rm -r`
+# Crear directorios y eliminar archivos — `mkdir`, `rm`
 
-```
+```{.bash}
 ~$ mkdir proyecto_secuenciacion
-~$ mkdir proyecto_secuenciacion/raw_data proyecto_secuenciacion/scripts proyecto_secuenciacion/results proyecto_secuenciacion/docs
-~$ ls proyecto_secuenciacion
-docs  raw_data  results  scripts
+~$ mkdir proyecto_secuenciacion/raw_data 
+~$ mkdir proyecto_secuenciacion/scripts proyecto_secuenciacion/results proyecto_secuenciacion/docs
 ```
 
-`rmdir` solo elimina directorios **vacíos**:
+Para eliminar un archivo se usa `rm` (*remove*):
 
+```{.bash}
+~$ rm proyecto_secuenciacion/docs/README.md
 ```
-~$ rmdir proyecto_secuenciacion/docs
-```
+
+:::{.callout-tip title="Cuestión"}
+- Crea una carpeta llamada `test` y crea un archivo llamado `prueba.txt` dentro de él (para crear el archivo usa el programa `touch`).
+- Comprueba desde el terminal que el archivo existe.
+- Elimina el archivo.
+- Elimina la carpeta.
+:::
+
 
 Para eliminar un directorio con contenido hace falta `rm -r` (recursivo):
 
-```
+```{.bash}
 ~$ rm -r proyecto_secuenciacion/results
 ```
 
 ::: {.callout-warning}
-`rm -r` **no tiene papelera**: lo que borras con `rm` desaparece de forma permanente. Antes de usarlo con `*` o rutas amplias, comprueba con `ls` que estás en el directorio correcto y que la ruta es exactamente la que quieres borrar.
+`rm` **no tiene papelera**: lo que borras con `rm` desaparece de forma permanente. Antes de usarlo con `*` o rutas amplias, comprueba con `ls` que estás en el directorio correcto y que la ruta es exactamente la que quieres borrar.
 :::
 
-## Copiar y mover — `cp`, `mv`
+# Copiar, mover y renombrar — `cp`, `mv`
 
-```
-~$ cp raw_data/muestra_01.fastq results/muestra_01_backup.fastq
-~$ cp -r raw_data raw_data_backup
-~$ mv muestra_02.fastq raw_data/
-~$ mv raw_data/muestra_01.fastq raw_data/muestra_01_v2.fastq
-```
+`cp` (*copy*) copia archivos o directorios. La estructura básica es `cp origen destino`. Por ejemplo:
 
-`cp` copia (`-r` para copiar un directorio completo con su contenido); `mv` mueve **o** renombra, según si el destino es una ruta distinta o solo un nombre nuevo.
-
-
-
-## Un problema real: nombres de archivo inconsistentes
-
-En proyectos reales es muy frecuente que distintas personas (o el mismo instrumento en días distintos) generen archivos con nombres que no siguen ninguna convención común. Por ejemplo:
-
-```
-~$ ls raw_data
-Muestra 01.fastq
-muestra_02.FASTQ
-MUESTRA-03.fastq
-muestra_4.fastq
+```{.bash}
+~$ touch sampling_data.txt
+~$ cp sampling_data.txt sampling_data_backup.txt
 ```
 
-Estas inconsistencias (espacios, mayúsculas/minúsculas mezcladas, separadores distintos) parecen un detalle menor, pero rompen scripts que esperan un patrón de nombre fijo, y dificultan mucho automatizar el procesado de docenas o cientos de archivos. La convención más robusta es: minúsculas, sin espacios ni acentos, separador `_` consistente, ceros a la izquierda si hay muchas muestras (`muestra_01.fastq`, `muestra_02.fastq`, ...).
+:::{.callout-tip title="Cuestión"}
+- Crea un directorio, con un subdirectorio y un archivo dentro.
+- Copia todo el directorio a otro directorio
+:::
 
-## Ejercicios
+`mv` (*move*) mueve o renombra. El funcionamiento básico es:
+- Mover: `mv origen destino` mueve el archivo o directorio `origen` a la ruta `destino`.
+- Renombrar: `mv origen nuevo_nombre` cambia el nombre del archivo o directorio.
+
+```{.bash}
+~$ mv sampling_data.txt sampling_data_2024.txt
+~$ mkdir backup
+~$ mv sampling_data_backup.txt backup/
+```
+
+# Wildcards
+
+En muchas ocasiones resulta útil tratar los ficheros de un modo conjunto.
+Por ejemplo, imaginemos que queremos mover todos los ficheros de texto a un directorio y las imágenes a otro.
+Creemos una pequeña demostración:
+
+```{.bash}
+  ~$ touch exp_1a.txt
+  ~$ touch exp_1b.txt
+  ~$ touch exp_1b.jpg
+  ~$ touch exp_1a.jpg
+```
+:::{.callout-tip title="Cuestión"}
+- ¿Cómo lo harías?
+:::
+
+
+Podemos referirnos a todos los archivos que acaban en txt utilizando un asterisco:
+
+```{.bash}
+  ~$ mv *txt exp_1
+  ~$ ls
+  exp_1  exp_1a.jpg  exp_1b.jpg
+```
+
+El asterisco sustituye a cualquier texto, por lo que al escribir \*txt incluimos a cualquier fichero que tenga un nombre cualquiera, pero que termine con las letras txt.
+Podríamos, por ejemplo, referirnos a los ficheros del experimento 1a:
+
+```{.bash}
+  ~$ ls *1a*
+  exp_1a.jpg
+```
+
+Esta herramienta es muy potente y útil, pero tenemos que tener cuidado con ella, sobre todo cuando la combinamos con `rm`. 
+
+Por ejemplo, la orden:
+
+```{.bash}
+  $ rm -r *
+```
+Borraría todos los ficheros y directorios que cuelgan del directorio de trabajo actual. Puede que esto sea lo que queramos, pero hemos de andar con cuidado.
+
+
+# Ejercicios
 
 1. Crea la estructura de directorios `proyecto_campo/{raw_data,scripts,results}` con una sola línea de `mkdir`.
-2. Sitúate dentro de `proyecto_campo/raw_data` (ruta relativa) y comprueba con `pwd` que estás en el sitio correcto. Anota la ruta absoluta que te devuelve. Después, sin salir de la terminal, muévete a `proyecto_campo/scripts` usando `..` (ruta relativa), y por último vuelve a `raw_data` pero esta vez escribiendo la ruta absoluta completa que anotaste antes.
-3. Dentro de `raw_data`, crea estos cuatro archivos vacíos con `touch`, tal cual están escritos (son un ejemplo real de nombres inconsistentes):
-   - `Muestra 01.fastq`
-   - `muestra_02.FASTQ`
-   - `MUESTRA-03.fastq`
-   - `muestra_4.fastq`
+2. Sitúate dentro de `proyecto_campo/raw_data`. Ahora muévete a `proyecto_campo/scripts` usando **rutas relativas**, y por último vuelve a `raw_data` pero esta vez escribiendo la ruta absoluta completa.
+3. Dentro de `raw_data`, crea estos cuatro archivos vacíos con `touch`:
+
+```{.bash}
+touch "Muestra 01.fastq" muestra_02.FASTQ MUESTRA-03.fastq muestra_4.fastq
+```
 4. Lista el contenido de `raw_data` con `ls -l` y anota qué tres cosas distintas varían entre estos nombres (pista: mayúsculas, separador, ceros a la izquierda).
-5. Renombra los cuatro archivos con `mv` para que sigan la convención `muestra_01.fastq`, `muestra_02.fastq`, `muestra_03.fastq`, `muestra_04.fastq`.
-6. Crea una copia de seguridad de todo `raw_data` llamada `raw_data_backup` con `cp -r`.
-7. Deja `raw_data` en modo solo lectura para evitar modificaciones accidentales, y comprueba con `ls -l` que el cambio se aplicó.
-8. Intenta borrar `raw_data_backup` primero con `rmdir` (fallará porque no está vacío) y después con el comando correcto.
-
-## Soluciones
-
-1. `mkdir -p proyecto_campo/{raw_data,scripts,results}`
-2.
-   ```
-   ~$ cd proyecto_campo/raw_data
-   ~$ pwd
-   /home/alumno/proyecto_campo/raw_data
-   ~$ cd ../scripts
-   ~$ pwd
-   /home/alumno/proyecto_campo/scripts
-   ~$ cd /home/alumno/proyecto_campo/raw_data
-   ```
-   (la ruta absoluta exacta depende de tu usuario y de dónde creaste `proyecto_campo` — usa la que te devolvió tu propio `pwd`).
-3.
-   ```
-   ~$ touch "Muestra 01.fastq" muestra_02.FASTQ MUESTRA-03.fastq muestra_4.fastq
-   ```
-   (las comillas son necesarias porque el nombre contiene un espacio).
-4. `ls -l` — varían: el uso de mayúsculas/minúsculas (`Muestra`/`muestra`/`MUESTRA`), el separador (espacio, `_`, `-`) y si el número lleva cero a la izquierda (`01` frente a `4`).
-5.
-   ```
-   ~$ mv "Muestra 01.fastq" muestra_01.fastq
-   ~$ mv muestra_02.FASTQ muestra_02.fastq
-   ~$ mv MUESTRA-03.fastq muestra_03.fastq
-   ~$ mv muestra_4.fastq muestra_04.fastq
-   ```
-6. `cp -r raw_data raw_data_backup` (ejecutado desde `proyecto_campo`).
-7. `chmod 444 raw_data/*` y después `ls -l raw_data` para comprobar que los permisos empiezan por `-r--r--r--`.
-8. `rmdir raw_data_backup` da error ("Directory not empty"); el comando correcto es `rm -r raw_data_backup`.
+5. Renombra los cuatro archivos con la convención `muestra_00.fastq`
+6. Crea una copia de seguridad de todo `raw_data` llamada `raw_data_backup`.
+7. Elimina `raw_data`.

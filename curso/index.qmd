@@ -102,6 +102,8 @@ Rodríguez Lloret, J. (2011). Introducción a los sistemas de información geogr
 
 Hay infinidad de recursos en línea para aprender a programar en Python y manejarse en Linux. Algunos de ellos son:
 
+- [Cursos de bioinformática y programación del Grupo de Bioinfomática y Genómica de la UPV](https://plantgenomics.es/courses.html) — Cursos muy completos y didácticos. Los materiales del presente curso están basados en estos cursos.
+
 - [![Rosalind](./figures/rosalindlogo.jpg){width=150}](http://rosalind.info/) — Plataforma de aprendizaje de bioinformática mediante resolución de problemas.
 
 - [Python for Everybody](https://www.py4e.com/) — Curso gratuito de Python para principiantes.
