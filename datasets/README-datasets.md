@@ -10,6 +10,7 @@ Archivos
 - `registro_campo_bruto.csv`: registro de campo con errores típicos de captura de datos reales (mayúsculas/minúsculas inconsistentes, erratas de especie como "sylvestris"/"silvestris", espacios extra) — usado en el módulo de expresiones regulares para practicar `grep`/`sed` sobre datos "sucios".
 - `codigos_muestreo.csv`: códigos de muestreo (localidad + sustrato + época + altura) junto a la especie encontrada — usado en el módulo de expresiones regulares para practicar contenedores (clases de caracteres) y rangos numéricos.
 - `muestras_con_comas.csv`: notas de campo entre comillas que contienen comas — usado en el módulo de lectura/escritura de archivos para mostrar por qué `split(",")` a mano es frágil y el módulo `csv` no.
+- `sitios_info.csv`: hábitat de cada sitio de muestreo (`SiteA`-`SiteE`) — usado en el módulo de manejo de texto para practicar `join` combinando esta tabla con `species_observations.csv` por la columna `site`.
 
 Uso recomendado
 1. Abrir `gedit` y pegar el contenido del archivo que se necesite practicar.

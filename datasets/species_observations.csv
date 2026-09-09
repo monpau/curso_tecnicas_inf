@@ -1,6 +1,120 @@
-sample_id,date,site,latitude,longitude,species,count,notes
+#>Sampling data obtained in the field
+#>Notes refere to the sampling conditions and the state of the species observed
+#sample_id,date,site,latitude,longitude,species,count,notes
 S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
 S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
-S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
-S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
-S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
+S003,2024-06-01,SiteB,41.001,-3.5,Fragaria_vesca,12,Bosque claro
+S004,2024-06-02,SiteC,40.9,-3.6,Arabidopsis_thaliana,30,Parcel experimental
+S005,2024-06-15,SiteB,41.001,-3.5,Betula_pendula,2,Jóvenes
+S006,2024-06-16,SiteA,40.076,-3.478,Quercus_petraea,9,Ejemplar de gran porte
+S007,2024-06-17,SiteE,41.109,-3.708,Pinus_sylvestris,6,Zona de sombra parcial
+S008,2024-06-20,SiteE,41.16,-3.694,Quercus_coccifera,42,Sotobosque denso
+S009,2024-06-23,SiteB,40.996,-3.522,Quercus_robur,11,Sotobosque denso
+S010,2024-06-23,SiteC,40.878,-3.628,Quercus_petraea,22,Parcela experimental
+S011,2024-06-26,SiteD,40.71,-3.265,Rumex_acetosa,17,Plantación cercana
+S012,2024-06-28,SiteE,41.112,-3.658,Quercus_ilex,36,Floración en curso
+S013,2024-06-30,SiteE,41.119,-3.743,Quercus_suber,15,Colonización reciente
+S014,2024-07-02,SiteA,40.159,-3.419,Acer_campestre,18,Densidad alta
+S015,2024-07-02,SiteB,40.988,-3.529,Quercus_coccifera,45,Cerca de afloramiento rocoso
+S016,2024-07-05,SiteE,41.163,-3.697,Quercus_faginea,11,Densidad alta
+S017,2024-07-07,SiteC,40.949,-3.586,Taraxacum_officinale,15,Cerca de afloramiento rocoso
+S018,2024-07-07,SiteA,40.096,-3.503,Taxus_baccata,26,Suelo pedregoso
+S019,2024-07-10,SiteB,41.042,-3.493,Clematis_vitalba,21,Zona de sombra parcial
+S020,2024-07-11,SiteD,40.788,-3.286,Corylus_avellana,17,Jóvenes
+S021,2024-07-13,SiteE,41.154,-3.675,Crataegus_monogyna,38,Regeneración natural
+S022,2024-07-13,SiteB,41.051,-3.536,Digitalis_purpurea,6,Colonización reciente
+S023,2024-07-13,SiteA,40.088,-3.49,Quercus_faginea,28,Borde de cultivo
+S024,2024-07-13,SiteD,40.738,-3.25,Centaurea_cyanus,17,Zona expuesta al viento
+S025,2024-07-13,SiteA,40.141,-3.452,Olea_europaea,42,Fructificación observada
+S026,2024-07-14,SiteC,40.893,-3.605,Vitis_vinifera,17,Presencia de plántulas
+S027,2024-07-15,SiteE,41.191,-3.663,Genista_scorpius,41,Presencia de plántulas
+S028,2024-07-17,SiteB,40.988,-3.534,Myrtus_communis,34,Adultos en borde de camino
+S029,2024-07-18,SiteD,40.702,-3.257,Genista_scorpius,16,plantación cercana
+S030,2024-07-19,SiteE,41.195,-3.741,Digitalis_purpurea,5,Colonización reciente
+S031,2024-07-22,SiteB,41.017,-3.455,Quercus_petraea,17,Presencia de plántulas
+S032,2024-07-24,SiteB,41.044,-3.474,Hedera_helix,13,Sotobosque denso
+S033,2024-07-24,SiteD,40.8,-3.285,Buxus_sempervirens,34,Densidad alta
+S034,2024-07-25,SiteB,40.973,-3.516,Plantago_lanceolata,36,Cerca del arroyo
+S035,2024-07-27,SiteA,40.08,-3.443,Cistus_ladanifer,5,plantación cercana
+S036,2024-07-28,SiteA,40.124,-3.478,Digitalis_purpurea,14,Zona expuesta al viento
+S037,2024-07-28,SiteE,41.158,-3.726,Nerium_oleander,27,Zona de sombra parcial
+S038,2024-07-28,SiteA,40.139,-3.471,Prunus_spinosa,30,Ejemplar de gran porte
+S039,2024-07-29,SiteA,40.079,-3.433,Fraxinus_excelsior,16,Zona de sombra parcial
+S040,2024-07-29,SiteE,41.145,-3.708,Olea_europaea,30,Cerca del arroyo
+S041,2024-07-29,SiteD,40.781,-3.264,Fraxinus_excelsior,4,Ladera orientada al sur
+S042,2024-08-01,SiteA,40.166,-3.421,Rosa_canina,27,Individuos aislados
+S043,2024-08-04,SiteB,41.037,-3.46,Rosa_canina,25,Adultos en borde de camino
+S044,2024-08-07,SiteC,40.943,-3.571,Cistus_albidus,28,Sotobosque denso
+S045,2024-08-07,SiteB,40.97,-3.528,Quercus_suber,38,Ejemplar de gran porte
+S046,2024-08-07,SiteC,40.856,-3.592,Papaver_rhoeas,34,Ejemplares maduros
+S047,2024-08-08,SiteE,41.108,-3.731,Rumex_acetosa,5,Cerca de afloramiento rocoso
+S048,2024-08-08,SiteD,40.712,-3.261,Erica_arborea,38,Borde de cultivo
+S049,2024-08-10,SiteE,41.108,-3.684,Trifolium_pratense,34,Fructificación observada
+S050,2024-08-12,SiteB,41.018,-3.519,Quercus_pubescens,26,Jóvenes
+S051,2024-08-12,SiteD,40.732,-3.275,Betula_pendula,1,Densidad alta
+S052,2024-08-13,SiteA,40.127,-3.455,Salix_alba,23,Bosque claro
+S053,2024-08-13,SiteC,40.878,-3.606,Bellis_perennis,20,Borde de cultivo
+S054,2024-08-13,SiteE,41.13,-3.684,Quercus_suber,17,Parcela experimental
+S055,2024-08-15,SiteE,41.116,-3.722,Lavandula_stoechas,22,Zona de sombra parcial
+S056,2024-08-18,SiteE,41.149,-3.659,Arabidopsis_thaliana,6,Ladera orientada al sur
+S057,2024-08-19,SiteC,40.854,-3.617,Quercus_faginea,41,Suelo pedregoso
+S058,2024-08-20,SiteD,40.755,-3.307,Quercus_robur,8,Bosque claro
+S059,2024-08-21,SiteE,41.104,-3.713,Taraxacum_officinale,10,Población dispersa
+S060,2024-08-22,SiteA,40.104,-3.416,Quercus_suber,23,Zona de sombra parcial
+S061,2024-08-23,SiteA,40.108,-3.45,Prunus_spinosa,40,Ejemplar de gran porte
+S062,2024-08-24,SiteB,41.037,-3.452,Rubus_ulmifolius,27,Adultos en borde de camino
+S063,2024-08-25,SiteC,40.928,-3.609,Foeniculum_vulgare,16,Suelo pedregoso
+S064,2024-08-28,SiteA,40.111,-3.502,Nerium_oleander,15,Zona de sombra parcial
+S065,2024-08-29,SiteC,40.881,-3.57,Cistus_ladanifer,15,Adultos en borde de camino
+S066,2024-09-01,SiteD,40.733,-3.264,Myrtus_communis,18,Daños por herbivoría
+S067,2024-09-03,SiteE,41.133,-3.747,Juniperus_communis,12,Suelo húmedo
+S068,2024-09-03,SiteA,40.084,-3.463,Vitis_vinifera,21,Población dispersa
+S069,2024-09-04,SiteD,40.79,-3.331,Quercus_suber,28,Adultos en borde de camino
+S070,2024-09-04,SiteC,40.893,-3.555,Ilex_aquifolium,40,Fructificación observada
+S071,2024-09-06,SiteC,40.901,-3.583,Taxus_baccata,26,Sotobosque denso
+S072,2024-09-07,SiteE,41.113,-3.708,Acer_campestre,44,Ejemplar de gran porte
+S073,2024-09-08,SiteE,41.157,-3.709,Quercus_robur,20,Floración en curso
+S074,2024-09-11,SiteD,40.779,-3.289,Quercus_suber,30,Densidad alta
+S075,2024-09-11,SiteB,41.002,-3.471,Ficus_carica,11,Cerca de afloramiento rocoso
+S076,2024-09-12,SiteC,40.902,-3.587,Ilex_aquifolium,6,Colonización reciente
+S077,2024-09-15,SiteC,40.872,-3.63,Pinus_sylvestris,3,Cerca del arroyo
+S078,2024-09-16,SiteE,41.185,-3.743,Prunus_spinosa,41,Suelo húmedo
+S079,2024-09-16,SiteD,40.749,-3.326,Verbascum_thapsus,45,Adultos en borde de camino
+S080,2024-09-16,SiteD,40.722,-3.27,Quercus_pubescens,34,Densidad alta
+S081,2024-09-18,SiteE,41.125,-3.665,Retama_sphaerocarpa,9,Densidad alta
+S082,2024-09-21,SiteD,40.761,-3.278,Papaver_rhoeas,28,Zona expuesta al viento
+S083,2024-09-23,SiteB,41.025,-3.503,Juniperus_communis,16,Ladera orientada al sur
+S084,2024-09-25,SiteE,41.148,-3.726,Buxus_sempervirens,5,Sotobosque denso
+S085,2024-09-26,SiteB,40.978,-3.518,Bellis_perennis,6,Jóvenes
+S086,2024-09-29,SiteB,40.989,-3.535,Lavandula_stoechas,5,Población dispersa
+S087,2024-09-29,SiteC,40.904,-3.608,Lavandula_stoechas,27,Regeneración natural
+S088,2024-10-02,SiteE,41.138,-3.749,Sorbus_aucuparia,20,Colonización reciente
+S089,2024-10-03,SiteD,40.754,-3.277,Quercus_petraea,15,Individuos aislados
+S090,2024-10-06,SiteC,40.894,-3.647,Ilex_aquifolium,43,Cerca de afloramiento rocoso
+S091,2024-10-09,SiteB,41.035,-3.458,Urtica_dioica,35,Adultos en borde de camino
+S092,2024-10-12,SiteE,41.156,-3.747,Verbascum_thapsus,28,Jóvenes
+S093,2024-10-14,SiteB,40.956,-3.512,Lavandula_stoechas,30,Fructificación observada
+S094,2024-10-17,SiteD,40.728,-3.255,Prunus_spinosa,17,Bosque claro
+S095,2024-10-17,SiteA,40.148,-3.501,Sorbus_aucuparia,15,Ladera orientada al sur
+S096,2024-10-18,SiteA,40.148,-3.411,Thymus_vulgaris,2,Borde de cultivo
+S097,2024-10-20,SiteB,40.964,-3.483,Trifolium_pratense,14,Densidad alta
+S098,2024-10-21,SiteC,40.867,-3.589,Ficus_carica,8,Colonización reciente
+S099,2024-10-24,SiteC,40.861,-3.647,Genista_scorpius,37,Cerca de afloramiento rocoso
+S100,2024-10-25,SiteD,40.794,-3.33,Plantago_lanceolata,45,Ladera orientada al sur
+S101,2024-10-25,SiteA,40.143,-3.476,Sambucus_nigra,39,Parcela experimental
+S102,2024-10-27,SiteC,40.903,-3.584,Betula_pendula,33,Ladera orientada al sur
+S103,2024-10-30,SiteA,40.158,-3.424,Fraxinus_excelsior,28,Daños por herbivoría
+S104,2024-10-30,SiteB,40.995,-3.477,Verbascum_thapsus,18,Borde de cultivo
+S105,2024-10-30,SiteD,40.744,-3.277,Olea_europaea,21,Cerca del arroyo
+S106,2024-10-30,SiteC,40.938,-3.626,Retama_sphaerocarpa,37,Borde de cultivo
+S107,2024-10-30,SiteC,40.853,-3.565,Rubus_ulmifolius,32,Zona de sombra parcial
+S108,2024-10-30,SiteC,40.884,-3.562,Hedera_helix,18,Zona expuesta al viento
+S109,2024-10-30,SiteE,41.195,-3.741,Vitis_vinifera,27,Individuos aislados
+S110,2024-10-30,SiteD,40.765,-3.301,Pinus_sylvestris,6,Floración en curso
+S111,2024-10-30,SiteD,40.769,-3.319,Quercus_petraea,24,Individuos aislados
+S112,2024-10-30,SiteD,40.8,-3.295,Sorbus_aucuparia,45,Densidad alta
+S113,2024-10-30,SiteC,40.875,-3.638,Thymus_vulgaris,21,Parcela experimental
+S114,2024-10-30,SiteB,40.973,-3.502,Vitis_vinifera,38,Colonización reciente
+S115,2024-10-30,SiteA,40.156,-3.476,Castanea_sativa,12,Floración en curso
+S116,2024-10-30,SiteE,41.113,-3.745,Arabidopsis_thaliana,36,Floración en curso
+S117,2024-10-30,SiteD,40.71,-3.349,Cistus_albidus,31,Individuos aislados

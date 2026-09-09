@@ -1,58 +1,16 @@
 ---
-title: "Módulo 3 — Manejo de archivos de texto mediante línea de comandos"
+title: "Manejo de archivos de texto mediante línea de comandos"
 ---
 
-**Duración estimada:** 4 h
+Para este módulo vamos a trabajar con el siguiente [archivo](../datasets/species_observations.xlsx) que contiene observaciones de especies vegetales en distintos sitios de muestreo.
 
-## Objetivos
+# Ver el contenido de un archivo: `cat`, `less`, `head`, `tail`
 
-Al finalizar este módulo serás capaz de:
-
-- Ver el contenido de un archivo de texto de varias formas (`cat`, `less`, `head`, `tail`).
-- Contar líneas, palabras y caracteres con `wc`.
-- Extraer columnas de un archivo delimitado con `cut`, y combinarlas con `paste`.
-- Ordenar líneas con `sort` y eliminar duplicados con `uniq`.
-- Transformar texto (mayúsculas/minúsculas, eliminar caracteres) con `tr`.
-- Encadenar estas herramientas para responder preguntas reales sobre un archivo, incluso cuando los datos tienen inconsistencias.
-
-## Materiales
-
-Este módulo usa dos archivos de `datasets/`:
-
-**`species_observations.csv`**
-
-```
-sample_id,date,site,latitude,longitude,species,count,notes
-S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
-S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
-S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
-S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
-S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
-```
-
-**`registro_campo_bruto.csv`** (ya lo usaste en el módulo de expresiones regulares — es un registro de campo con mayúsculas/minúsculas inconsistentes y espacios sobrantes, tal como llega en la vida real):
-
-```
-sample_id,fecha,localidad,especie,notas
-S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
-S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
-S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
-S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
-S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
-S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
-S107,2024-04-10,Sierra de Guadarrama,Betula pendula,Hoja amarillenta
-S108,2024-04-10,Sierra de guadarrama,betula Pendula,Cerca del arroyo
-S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
-S110,2024-04-15,Picos de Europa,Fagus sylvatica,Bosque denso
-S111,2024-04-15,picos de europa,Fagus silvatica,Sotobosque humedo
-S112,2024-04-15,Picos De Europa,FAGUS SYLVATICA,Zona protegida
-```
-
-## Ver el contenido de un archivo: `cat`, `less`, `head`, `tail`
+## 'cat' y 'less'
 
 `cat` vuelca el archivo entero en la terminal, de golpe:
 
-```
+```{.bash}
 ~$ cat species_observations.csv
 sample_id,date,site,latitude,longitude,species,count,notes
 S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
@@ -61,6 +19,15 @@ S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
 ```
 
 Para un archivo de miles de líneas, `cat` no es práctico: el texto se desplaza fuera de la pantalla antes de que puedas leerlo. `less` abre el archivo en un visor paginado — puedes bajar con las flechas o `Espacio`, subir con `b`, buscar con `/palabra`, y salir con `q` — sin cargar nunca todo el archivo en memoria de golpe.
+
+```{.bash}
+~$ less species_observations.csv
+```
+
+`less` tiene muchas opciones, una que suele ser útil es `-S` para que no haga *wrap* de las líneas largas (las corta y te permite desplazarte horizontalmente con las flechas).
+
+## 'head' y 'tail'
+
 
 `head` y `tail` muestran solo el principio o el final. Por defecto son 10 líneas; con `-N` eliges cuántas:
 
@@ -78,7 +45,26 @@ S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
 
 `head -4` incluye la cabecera (la primera línea del archivo) más las 3 primeras filas de datos — si quieres saltarte la cabecera, dile a `tail` que empiece en la línea 2 con `tail -n +2` (el `+` significa "desde esta línea hasta el final", en vez de "las últimas N líneas").
 
-## Contar: `wc`
+## Caracteres invisibles y codificación: `cat -A`
+
+Un archivo de texto no es más que una secuencia de bytes que el ordenador interpreta como caracteres según una **codificación** — hoy en día, casi siempre UTF-8. La mayor parte del tiempo esto pasa desapercibido, pero dos casos se cuelan con frecuencia en datos reales: caracteres no imprimibles (tabuladores, fines de línea) y letras fuera del alfabeto inglés (acentos, eñes), que en UTF-8 ocupan más de un byte cada una.
+
+`cat -A` muestra esos caracteres que normalmente son invisibles:
+
+```{.bash}
+~$ head -3 species_observations.csv | cat -A
+sample_id,date,site,latitude,longitude,species,count,notes$
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino$
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,PlantaciM-CM-3n cercana$
+```
+
+El `$` al final de cada línea marca el salto de línea — si vieras `^M$` en su lugar, sería la señal de un archivo editado en Windows (que termina cada línea con dos caracteres, retorno de carro + salto de línea, en vez de uno solo), un desajuste que puede hacer que `grep` o `sed` no encuentren coincidencias que a simple vista sí están ahí. Fíjate también en `PlantaciM-CM-3n`: la "ó" no es un único carácter para el ordenador, sino dos bytes (`M-C` y `M-3`) que tu terminal reinterpreta como UTF-8 y te muestra como "ó".
+
+::: {.callout-note}
+Si alguna vez `grep` o `sed` "no encuentran" algo que ves perfectamente en pantalla, sospecha de caracteres invisibles: espacios finales, tabuladores en vez de espacios, o fines de línea de Windows. `cat -A` es la primera herramienta a la que recurrir para diagnosticarlo.
+:::
+
+# Contar: `wc`
 
 `wc` (*word count*) cuenta líneas (`-l`), palabras (`-w`) o caracteres (`-c`):
 
@@ -89,7 +75,7 @@ S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
 
 El archivo tiene 6 líneas: la cabecera más 5 observaciones. Esta es una fuente habitual de errores de "uno de más" (*off-by-one*): si quieres el número de observaciones, es `wc -l` menos 1, o directamente cuenta desde la línea 2 con `tail -n +2 archivo | wc -l`.
 
-## Extraer columnas: `cut`
+# Extraer columnas: `cut`
 
 `cut -d',' -f3,6` extrae las columnas 3 y 6 de un archivo separado por comas (`-d` indica el delimitador, `-f` los números de columna):
 
@@ -103,25 +89,121 @@ SiteC,Arabidopsis_thaliana
 SiteB,Betula_pendula
 ```
 
-## Combinar columnas: `paste`
+# Buscar cadenas: `grep`
 
-`paste` hace lo contrario de `cut`: une archivos línea a línea, columna junto a columna. Es útil cuando tienes datos relacionados repartidos en varios archivos:
+`grep` busca líneas que contengan un patrón de texto. Por ejemplo, para ver solo las observaciones de `SiteA`:
+
+```{.bash}
+~$ grep 'SiteA' species_observations.csv
+S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
+S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
+```
+
+Ten en cuenta que `grep` busca el patrón **exacto** que has introducido. Distingue entre mayúsculas de minúsculas y no importa si es una palabra completa o parte de ella.
+
+`grep` tiene muchas opciones por ejemplo puede:
+-  `-i` ignorar mayúsculas/minúsculas
+- `-v` inviertir la búsqueda (muestra las líneas que **no** contienen el patrón)
+- `-n` mostrar el número de línea junto a cada coincidencia
+- `-f` permite usar un archivo con varios patrones de búsqueda
+
+
+# Combinando comandos: tuberías (pipelines) `|`
+
+Las tuberías permiten encadenar comandos: la salida de uno se convierte en la entrada del siguiente. Por ejemplo, para contar cuántas observaciones hay de `SiteA`:
+
+```{.bash}
+~$ grep 'SiteA' species_observations.csv | wc -l
+```
+
+:::{ .callout-tip title=Cuestión}
+- ¿Podrías contar cuántas líneas de información tiene el archivo?
+- ¿Podrías contar cuántas líneas de observaciones tiene el archivo (sin contar la cabecera)?
+- ¿Cuántas observaciones son de `Plantación`? ¿y de `plantación`?
+:::
+
+# Flujos de información: entrada, salida y error estándar
+
+Cuando ejecutas un comando, en realidad tiene abiertos tres flujos (*streams*) de información:
+
+- **Entrada estándar** (*stdin*): de donde el comando lee, normalmente el teclado.
+- **Salida estándar** (*stdout*): donde el comando escribe sus resultados, normalmente la pantalla.
+- **Error estándar** (*stderr*): un canal aparte donde el comando escribe sus mensajes de error — también a la pantalla por defecto, lo que hace que a simple vista *stdout* y *stderr* parezcan un único flujo.
+
+Una tubería `|` solo conecta la salida estándar de un comando con la entrada estándar del siguiente. Los mensajes de error **no** viajan por la tubería — siguen apareciendo en pantalla aunque hayas encauzado la salida a otro sitio. Por ejemplo, si te equivocas en el nombre de un archivo:
+
+```{.bash}
+~$ grep 'SiteA' species_observations.csv archivo_inexistente.csv | wc -l
+grep: archivo_inexistente.csv: No such file or directory
+22
+```
+
+El aviso `grep: archivo_inexistente.csv: No such file or directory` es *stderr*, y aparece igual aunque `| wc -l` esté capturando la salida normal (*stdout*) de `grep` para contarla — por eso ves el error mezclado con el resultado (`22`) en vez de que "contamine" el conteo. En el módulo 5 verás cómo redirigir cada flujo por separado, por ejemplo para descartar los errores o guardarlos en su propio archivo.
+
+# Redirecciones: `>`, `>>`, `<`
+
+Hasta ahora, la salida de tus comandos siempre iba a la pantalla. Puedes redirigirla a un archivo en su lugar:
+
+- `>` guarda la salida en un archivo, **sobrescribiéndolo** si ya existe.
+- `>>` añade la salida al final del archivo, sin borrar lo que ya había.
 
 ```
-~$ cut -d',' -f1,3 species_observations.csv > ids_sites.csv
-~$ cut -d',' -f6,7 species_observations.csv > especie_count.csv
-~$ paste -d',' ids_sites.csv especie_count.csv
-sample_id,site,species,count
-S001,SiteA,Quercus_robur,3
-S002,SiteA,Pinus_sylvestris,5
+~$ echo "Numero de secuencias en sequences.fasta:" > informe.txt
+~$ grep -c "^>" sequences.fasta >> informe.txt
+~$ cat informe.txt
+Numero de secuencias en sequences.fasta:
+4
+```
+
+Si hubieras usado `>` en la segunda línea en vez de `>>`, el informe se habría quedado solo con el `4`, borrando la primera línea.
+
+`<` hace lo contrario: en vez de que un comando reciba un nombre de archivo como argumento, le entrega el contenido del archivo como si lo estuvieras escribiendo tú por teclado (entrada estándar). La diferencia se nota, por ejemplo, en `wc`:
+
+```
+~$ wc -l species_observations.csv
+6 species_observations.csv
+~$ wc -l < species_observations.csv
+6
+```
+
+Con el nombre como argumento, `wc` sabe qué archivo está contando y lo indica. Con `<`, `wc` solo ve un flujo de texto sin nombre, así que no puede mostrarlo — solo el número.
+
+
+# Combinar por una clave común: `join`
+
+`paste` une archivos por **posición** (la línea 1 con la línea 1, la línea 2 con la línea 2...), sin mirar el contenido. `join` es más exigente pero más útil: une dos archivos emparejando las líneas cuyo campo clave coincide, igual que un `VLOOKUP` de una hoja de cálculo o un `JOIN` de SQL.
+
+Usa el archivo [sitios_info.csv](../datasets/sitios_info.csv), con información de hábitat por sitio:
+
+```{.bash}
+~$ cat sitios_info.csv
+site,habitat
+SiteA,Encinar
+SiteB,Bosque_mixto
+SiteC,Parcela_experimental
+SiteD,Robledal
+SiteE,Pinar
+```
+
+`join` tiene dos requisitos: ambos archivos deben estar **ordenados** por el campo clave, y por defecto compara el primer campo de cada uno. En `species_observations.csv` el sitio está en la columna 3, así que primero lo extraemos y ordenamos:
+
+```{.bash}
+~$ cut -d',' -f3,6,7 species_observations.csv | tail -n +2 | sort -t',' -k1,1 > obs_por_site.csv
+~$ tail -n +2 sitios_info.csv | sort -t',' -k1,1 > sitios_ordenado.csv
+~$ join -t',' obs_por_site.csv sitios_ordenado.csv
+SiteA,Acer_campestre,18,Encinar
+SiteA,Castanea_sativa,12,Encinar
+SiteA,Cistus_ladanifer,5,Encinar
 ...
 ```
 
-## Ordenar: `sort`
+`-t','` le dice a `join` que el separador es la coma (si no se lo indicas, asume espacios). Cada línea del resultado junta una observación con el hábitat de su sitio — y si un sitio no apareciera en `sitios_info.csv`, `join` simplemente lo omitiría del resultado, a diferencia de `paste`, que habría pegado columnas sin sentido entre archivos de distinto contenido.
+
+# Ordenar: `sort`
 
 Por defecto `sort` ordena alfabéticamente. `-n` ordena numéricamente (imprescindible para números, porque alfabéticamente "10" va antes que "9"), `-r` invierte el orden, y `-t'DELIM' -kN,N` ordena por una columna concreta:
 
-```
+```{.bash}
 ~$ tail -n +2 species_observations.csv | sort -t',' -k7,7 -nr
 S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
 S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
@@ -132,62 +214,68 @@ S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
 
 `-k7,7` dice "ordena por la columna 7 y solo por la 7" (sin el segundo `7`, `sort` seguiría comparando columnas posteriores en caso de empate). `-nr` combina numérico (`-n`) y descendente (`-r`).
 
-## Eliminar duplicados: `uniq`
+# Eliminar duplicados: `uniq`
 
 `uniq` elimina líneas duplicadas — pero con una condición importante: **solo detecta duplicados en líneas consecutivas**. Si las líneas iguales no están juntas, `uniq` no las agrupa. Por eso casi siempre verás `sort` justo antes de `uniq` en una tubería: `sort` agrupa las líneas iguales, y entonces `uniq` puede eliminarlas. Con `-c`, además de eliminar duplicados, cuenta cuántas veces aparecía cada línea.
 
-## Transformar texto: `tr`
 
-`tr` sustituye o elimina caracteres, uno a uno. `tr '[:upper:]' '[:lower:]'` convierte todo el texto a minúsculas (sustituye cada mayúscula por su minúscula correspondiente):
+# Editar archivos: `sed`, `nano` y `vim`
 
-```
-~$ echo "SIERRA DE GREDOS" | tr '[:upper:]' '[:lower:]'
-sierra de gredos
-```
+Todo lo anterior lee y transforma archivos, pero no los edita a mano. Hay dos formas de hacerlo: cambiar el contenido directamente desde la línea de órdenes con `sed`, sin abrir nada, o abrir un editor de texto que funcione dentro de la terminal — imprescindible cuando trabajas en un servidor remoto sin entorno gráfico. Los más habituales son `nano` y `vim`.
 
-## Un problema real: contar localidades correctamente
+## `sed`: editar sin abrir el archivo
 
-Quieres saber cuántas localidades distintas hay en `registro_campo_bruto.csv` y cuántas muestras tiene cada una. La receta obvia es `cut` + `sort` + `uniq -c`:
+`sed` (*stream editor*) aplica cambios al contenido de un archivo sin necesidad de abrirlo. Su función más usada es `s` (*substitute*): `sed 's/texto_antiguo/texto_nuevo/'` sustituye, en cada línea, la primera aparición de `texto_antiguo` por `texto_nuevo`.
 
-```
-~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | sort | uniq -c
-      1 el escorial
-      1 El escorial
-      1 El Escorial
-      1 picos de europa
-      1 Picos de Europa
-      1 Picos De Europa
-      1 sierra de gredos
-      2 Sierra de Gredos
-      1 Sierra De Gredos
-      1 Sierra de guadarrama
-      1 Sierra de Guadarrama
+Por ejemplo, hay una errata real en `species_observations.csv`: la fila `S004` dice `Parcel experimental` en vez de `Parcela experimental`:
+
+```{.bash}
+~$ grep 'Parcel ' species_observations.csv
+S004,2024-06-02,SiteC,40.9,-3.6,Arabidopsis_thaliana,30,Parcel experimental
+~$ sed 's/Parcel /Parcela /' species_observations.csv | grep 'Parcela experimental'
+S004,2024-06-02,SiteC,40.9,-3.6,Arabidopsis_thaliana,30,Parcela experimental
 ```
 
-11 grupos, cuando en realidad solo hay 4 localidades. El problema es exactamente el mismo que viste en el módulo de expresiones regulares: `uniq` compara el texto tal cual, y para él `Sierra de Gredos` y `sierra de gredos` son líneas distintas. Añadir `tr` para pasar todo a minúsculas ayuda, pero no del todo:
+Por defecto `sed` **no modifica el archivo original**: imprime el resultado corregido por pantalla, y el archivo en disco sigue teniendo la errata. Para conservar el resultado, redirige la salida a un archivo nuevo:
 
-```
-~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sort | uniq -c
-      2 el escorial
-      1 el escorial
-      3 picos de europa
-      4 sierra de gredos
-      2 sierra de guadarrama
+```{.bash}
+~$ sed 's/Parcel /Parcela /' species_observations.csv > species_observations_corregido.csv
 ```
 
-Ya solo queda un grupo partido en dos: `el escorial` y `el escorial ` (con un espacio final, la misma inconsistencia de la fila `S106` que corregiste con `sed` en el módulo anterior). Eliminando ese espacio sobrante antes de ordenar, el resultado es por fin correcto:
+::: {.callout-warning}
+No redirijas la salida al mismo archivo de entrada (`sed '...' archivo.csv > archivo.csv`): `sed` lee el archivo a la vez que intentas sobrescribirlo, y acabas con un archivo vacío. Si de verdad quieres modificar el archivo original, algunas versiones de `sed` aceptan la opción `-i` (*in-place*) — pero úsala con cuidado, porque no pide confirmación ni se puede deshacer.
+:::
 
+`s/.../.../ ` es solo la punta del iceberg: en el módulo 4 verás cómo combinarlo con expresiones regulares para sustituciones mucho más potentes que un texto literal.
+
+## `nano`
+
+`nano` es el más sencillo: al abrirlo, escribes directamente, como en cualquier editor de texto normal. Las órdenes disponibles se muestran en la parte inferior de la pantalla, con `^` representando la tecla `Ctrl`:
+
+```{.bash}
+~$ nano informe.txt
 ```
-~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
-      3 el escorial
-      3 picos de europa
-      4 sierra de gredos
-      2 sierra de guadarrama
+
+Las más importantes son `Ctrl+O` (*write Out*, guardar — confirma el nombre de archivo con `Enter`) y `Ctrl+X` (salir). Si has hecho cambios y sales sin guardar, `nano` te preguntará si quieres guardarlos antes de cerrar.
+
+## `vim`
+
+`vim` (o `vi`) es mucho más potente, pero funciona de forma distinta a lo que esperarías: es un editor **modal**. Al abrirlo, estás en **modo normal**, donde las teclas son órdenes (moverte, borrar, copiar...) en vez de texto — si escribes ahí, no aparece texto, ¡suceden cosas raras! Para escribir, primero hay que entrar en **modo inserción**:
+
+```{.bash}
+~$ vim informe.txt
 ```
 
-3 + 3 + 4 + 2 = 12, que coincide con las 12 filas de datos del archivo. Esta secuencia — normalizar mayúsculas, limpiar espacios, y solo entonces ordenar y contar — es el patrón que usarás una y otra vez al analizar datos recogidos a mano.
+- `i` entra en modo inserción (ahora sí, escribes texto normal).
+- `Esc` vuelve al modo normal.
+- `:wq` seguido de `Enter`, **en modo normal**, guarda y sale (*write* + *quit*).
+- `:q!` seguido de `Enter` sale sin guardar los cambios.
 
-## Ejercicios
+::: {.callout-tip}
+Quedarse "atrapado" en `vim` sin saber cómo salir es casi un rito de iniciación en Unix. Si te pasa: pulsa `Esc` (para asegurarte de que estás en modo normal) y luego escribe `:q!` seguido de `Enter`.
+:::
+
+# Ejercicios
 
 1. Muestra el contenido completo de `species_observations.csv` con `cat`.
 2. Muestra las 3 primeras filas de datos (sin contar la cabecera) con `head`, y las 2 últimas con `tail`.
@@ -197,19 +285,8 @@ Ya solo queda un grupo partido en dos: `el escorial` y `el escorial ` (con un es
 6. Usando `cut`, divide `species_observations.csv` en dos archivos: uno con `sample_id` y `site`, otro con `species` y `count`. Vuelve a unirlos con `paste` en el orden original.
 7. En `registro_campo_bruto.csv`, cuenta cuántas veces aparece cada localidad usando `cut`, `sort` y `uniq -c`, **sin** ninguna normalización previa. Comprueba que obtienes 11 grupos en vez de 4.
 8. Corrige el resultado del ejercicio anterior añadiendo `tr` (minúsculas) y `sed` (eliminar espacios finales) antes de `sort`/`uniq -c`. Deberías obtener exactamente 4 localidades, con recuentos que sumen 12.
-
-## Soluciones
-
-1. `cat species_observations.csv`
-2. `head -4 species_observations.csv` (incluye la cabecera + 3 filas) y `tail -2 species_observations.csv`
-3. `tail -n +2 species_observations.csv | wc -l` → `5`
-4. `cut -d',' -f3,6 species_observations.csv`
-5. `tail -n +2 species_observations.csv | sort -t',' -k7,7 -nr`
-6.
-   ```
-   ~$ cut -d',' -f1,3 species_observations.csv > ids_sites.csv
-   ~$ cut -d',' -f6,7 species_observations.csv > especie_count.csv
-   ~$ paste -d',' ids_sites.csv especie_count.csv
-   ```
-7. `cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | sort | uniq -c` → 11 grupos.
-8. `cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c` → 4 grupos (`el escorial`: 3, `picos de europa`: 3, `sierra de gredos`: 4, `sierra de guadarrama`: 2).
+9. Usa `cat -A` sobre las 3 primeras líneas de `species_observations.csv` (con `head -3 | cat -A`). Localiza una fila con una vocal acentuada e identifica los dos códigos `M-x` que la representan.
+10. Ejecuta `grep 'SiteA' species_observations.csv archivo_que_no_existe.csv | wc -l`. ¿Por qué aparece el mensaje de error en pantalla aunque estés canalizando la salida con `|` hacia `wc -l`? ¿Qué flujo lo transporta?
+11. Usando [sitios_info.csv](../datasets/sitios_info.csv), obtén con `join` una tabla que combine cada observación (`site`, `species`, `count`) con el `habitat` de su sitio. Recuerda ordenar ambos archivos por la columna clave antes de unirlos.
+12. Usa `sed 's/.../.../'` para corregir la errata `Parcel experimental` → `Parcela experimental` en `species_observations.csv`, guardando el resultado en `species_observations_corregido.csv` sin modificar el archivo original.
+13. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar) y guarda los cambios con `:wq`.

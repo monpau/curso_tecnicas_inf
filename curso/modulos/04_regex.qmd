@@ -1,20 +1,8 @@
 ---
-title: "Módulo 4 — Expresiones regulares"
+title: "Expresiones regulares"
 ---
 
-**Duración estimada:** 2 h
-
-## Objetivos
-
-Al finalizar este módulo serás capaz de:
-
-- Escribir patrones básicos de expresiones regulares.
-- Usar contenedores (clases de caracteres, p. ej. `[PR]`) para representar "uno de estos caracteres".
-- Usar `grep`/`grep -E` para buscar patrones en archivos de texto y FASTA.
-- Usar `sed` para hacer sustituciones sencillas.
-- Detectar y corregir inconsistencias típicas de datos reales: mayúsculas/minúsculas mezcladas, erratas y espacios sobrantes.
-
-## ¿Por qué expresiones regulares?
+# ¿Por qué expresiones regulares?
 
 Imagina un listado de muestreos donde cada fila tiene un código de 5 caracteres seguido de la especie encontrada. El código sigue un formato fijo: **localidad** (1 letra) + **tipo de sustrato** (1 letra) + **época** (1 letra) + **altura** (2 dígitos, en cientos de metros):
 
@@ -37,13 +25,13 @@ Quieres quedarte solo con los muestreos que cumplan **las tres condiciones a la 
 
 Las expresiones regulares resuelven justo este problema: en vez de escribir el texto exacto que buscas, describes un **patrón** que ese texto debe cumplir. En este módulo construirás, pieza a pieza, el patrón que selecciona exactamente estas 5 filas.
 
-## ¿Qué son las expresiones regulares?
+# ¿Qué son las expresiones regulares?
 
 Una expresión regular (*regex*) es un lenguaje en miniatura para describir patrones de texto: en vez de "busca la cadena exacta X", permite decir cosas como "busca un código que empiece por P o por R, seguido de cualquier letra, luego A o B, y termine en un número de dos cifras mayor que 9" — el patrón que resuelve el ejemplo anterior. Un *motor* de expresiones regulares —integrado en herramientas como `grep`, `sed` o el módulo `re` de Python, que usaremos más adelante— lee ese patrón y lo compara contra el texto para decidir si hay coincidencia (y, con `sed`, para sustituirla).
 
 Es la misma idea que el buscador avanzado de cualquier editor de texto cuando activas la opción "usar expresión regular": aquí simplemente aprenderás la sintaxis compacta con la que se escribe ese patrón.
 
-## Diseñar y probar patrones con regex101.com
+# Diseñar y probar patrones con regex101.com
 
 Acertar con un patrón a la primera es difícil incluso con experiencia: es fácil que capture menos —o más— de lo que querías. [regex101.com](https://regex101.com/) es una herramienta online gratuita que muestra, mientras escribes, qué partes de un texto coinciden con tu patrón —resaltadas en color— junto con una explicación de cada fragmento.
 

@@ -1,75 +1,9 @@
 ---
-title: "Módulo 5 — Pipelines y programación en shell"
+title: "Programación en shell"
 ---
 
-**Duración estimada:** 2 h
 
-## Objetivos
-
-Al finalizar este módulo serás capaz de:
-
-- Encadenar comandos con `|` para construir pipelines.
-- Guardar y añadir la salida de un comando a un archivo con `>` y `>>`, y alimentar un comando desde un archivo con `<`.
-- Convertir una lista de resultados en argumentos de otro comando con `xargs`.
-- Escribir un script de shell reutilizable y ejecutarlo.
-
-## Materiales
-
-Este módulo reutiliza tres archivos de `datasets/` que ya conoces: `sequences.fasta`, `species_observations.csv` y `registro_campo_bruto.csv`.
-
-## Ya has usado pipelines
-
-Si has hecho los módulos 3 y 4, ya has escrito pipelines sin llamarlos así. Por ejemplo, esto del módulo 3:
-
-```
-~$ cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
-```
-
-Un **pipeline** es una cadena de comandos unidos por `|` (la tubería), donde la salida de cada comando se convierte en la entrada del siguiente: `cut` extrae una columna, `tail` descarta la cabecera, `tr` normaliza mayúsculas, `sed` limpia espacios, `sort` ordena, y `uniq -c` cuenta. Cada comando hace una cosa pequeña; encadenarlos es lo que construye algo útil. Es la misma filosofía que ya viste en el módulo 3 con `cut`/`paste`: herramientas simples que se combinan, en vez de un único comando gigante que lo haga todo.
-
-## Redirecciones: `>`, `>>`, `<`
-
-Hasta ahora, la salida de tus comandos siempre iba a la pantalla. Puedes redirigirla a un archivo en su lugar:
-
-- `>` guarda la salida en un archivo, **sobrescribiéndolo** si ya existe.
-- `>>` añade la salida al final del archivo, sin borrar lo que ya había.
-
-```
-~$ echo "Numero de secuencias en sequences.fasta:" > informe.txt
-~$ grep -c "^>" sequences.fasta >> informe.txt
-~$ cat informe.txt
-Numero de secuencias en sequences.fasta:
-4
-```
-
-Si hubieras usado `>` en la segunda línea en vez de `>>`, el informe se habría quedado solo con el `4`, borrando la primera línea.
-
-`<` hace lo contrario: en vez de que un comando reciba un nombre de archivo como argumento, le entrega el contenido del archivo como si lo estuvieras escribiendo tú por teclado (entrada estándar). La diferencia se nota, por ejemplo, en `wc`:
-
-```
-~$ wc -l species_observations.csv
-6 species_observations.csv
-~$ wc -l < species_observations.csv
-6
-```
-
-Con el nombre como argumento, `wc` sabe qué archivo está contando y lo indica. Con `<`, `wc` solo ve un flujo de texto sin nombre, así que no puede mostrarlo — solo el número.
-
-## `xargs`: de una lista a argumentos
-
-Muchos comandos (`grep`, `sort`, `cut`...) leen texto de la entrada estándar. Pero otros, como `mkdir`, esperan sus argumentos escritos directamente en la línea de órdenes, no por tubería. `xargs` es el puente entre ambos mundos: toma lo que le llega por `|` y lo convierte en argumentos del comando que le sigues.
-
-Por ejemplo, quieres crear un directorio por cada `site` distinto de `species_observations.csv`, sin escribirlos a mano uno a uno:
-
-```
-~$ cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u | xargs mkdir -p
-~$ ls -d Site*
-SiteA  SiteB  SiteC
-```
-
-`sort -u` (única + ordenada) produce la lista `SiteA`, `SiteB`, `SiteC`; `xargs mkdir -p` toma esa lista y ejecuta `mkdir -p SiteA SiteB SiteC` por ti. Sin `xargs`, `mkdir` habría interpretado toda la lista como un único nombre de directorio raro con saltos de línea dentro.
-
-## Scripts de shell
+# Scripts de shell
 
 Un pipeline útil merece guardarse para no volver a teclearlo. Un script de shell es un archivo de texto con una secuencia de comandos, más una primera línea especial (la *shebang*, `#!/bin/bash`) que le dice al sistema con qué programa ejecutarlo:
 
@@ -92,26 +26,88 @@ grep -c "^>" "$1"
 Las comillas dobles alrededor de `"$1"` no son decoración: si el argumento tuviera espacios (como los nombres de archivo mal escritos que viste en el módulo 2, del tipo `"Muestra 01.fastq"`), sin comillas el script lo trocearía en varios argumentos. Poner siempre `"$1"` entre comillas es un hábito que te evitará errores difíciles de depurar.
 :::
 
-## Ejercicios
+## Variables
 
-1. Construye un pipeline que cuente cuántas secuencias hay en `sequences.fasta` (pista: cabeceras que empiezan por `>`).
-2. Guarda el resultado del ejercicio anterior en un archivo `informe.txt`, precedido por una línea de texto que describa qué es ese número (usa `>` y `>>`).
-3. Usa `wc -l <` (con redirección de entrada) para contar las líneas de `species_observations.csv` sin que el nombre del archivo aparezca en la salida.
-4. Usa `cut`, `sort -u` y `xargs mkdir -p` para crear, en una sola línea, un directorio por cada localidad distinta (ya normalizada a minúsculas y sin espacios sobrantes) de `registro_campo_bruto.csv`.
-5. Escribe un script `contar_secuencias.sh` que reciba un archivo FASTA como argumento (`$1`) y muestre cuántas secuencias contiene. Dale permisos de ejecución y pruébalo con `sequences.fasta`.
-6. (Reto) Escribe un script `limpiar_localidades.sh` que reciba un CSV como argumento y aplique el pipeline completo de limpieza de localidades del módulo 3 (minúsculas, sin espacios sobrantes, ordenado y contado). Pruébalo con `registro_campo_bruto.csv`.
+Un script gana en claridad cuando guarda valores intermedios en variables en vez de repetirlos. Se asignan con `nombre=valor` (sin espacios alrededor del `=`) y se recuperan anteponiendo `$`:
+
+```bash
+#!/bin/bash
+archivo=$1
+total=$(grep -c "^>" "$archivo")
+echo "El archivo $archivo tiene $total secuencias"
+```
+
+Los nombres de variable solo pueden contener letras, números y `_`, y por convención se escriben en minúsculas — así se evita chocar con variables del propio sistema, que suelen ir en mayúsculas (`PATH`, `HOME`...).
+
+## Bucles `for`
+
+`for` repite un bloque de comandos una vez por cada elemento de una lista. Esa lista puede venir de tres formas:
+
+- Un rango numérico: `for numero in {1..10}`
+- Una lista de valores escritos a mano: `for site in SiteA SiteB SiteC`
+- La salida de un comando: `for site in $(comando)`
+
+La tercera forma es la más potente, porque conecta un bucle con cualquier pipeline que ya sepas construir. Por ejemplo, para contar cuántas observaciones hay de cada `site` en `species_observations.csv` sin escribir los nombres de sitio a mano:
+
+```bash
+#!/bin/bash
+for site in $(cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u);
+do
+  n=$(grep -c "$site" species_observations.csv)
+  echo "$site: $n observaciones"
+done
+```
+
+## Renombrar archivos en bloque
+
+Un uso muy habitual de `for` es renombrar muchos archivos a la vez — por ejemplo, los que descargas de un secuenciador o de una base de datos suelen traer nombres largos con información redundante, de los que solo te interesa una parte. Combinando `for` con `cut` (que ya conoces del módulo 3) y `mv` puedes quedarte con la parte significativa del nombre sin tocarlos uno a uno.
+
+Imagina estos tres archivos, con la tirada, el carril, la muestra, la especie y el número de lectura todo junto en el nombre:
+
+```
+RUN2024_LANE3_S001_Quercus_robur_R1.fastq.gz
+RUN2024_LANE3_S002_Pinus_sylvestris_R1.fastq.gz
+RUN2024_LANE3_S003_Fragaria_vesca_R1.fastq.gz
+```
+
+Y que lo único que quieres conservar es la muestra y la lectura: `S001_R1.fastq.gz`, `S002_R1.fastq.gz`, etc. `cut` puede extraer varios campos a la vez y unirlos con el separador que quieras mediante `--output-delimiter`:
+
+```{.bash}
+~$ echo "RUN2024_LANE3_S001_Quercus_robur_R1.fastq.gz" | cut -d'_' -f3,6 --output-delimiter='_'
+S001_R1.fastq.gz
+```
+
+El campo 3 es la muestra (`S001`) y el campo 6 es `R1.fastq.gz` (recuerda que `cut` cuenta también la extensión como parte del último campo, porque el punto no es el separador). Metiéndolo en un bucle `for` que recorra los archivos y los renombre con `mv`:
+
+```bash
+#!/bin/bash
+for archivo in RUN*.fastq.gz;
+do
+  nuevo=$(echo "$archivo" | cut -d'_' -f3,6 --output-delimiter='_')
+  mv "$archivo" "$nuevo"
+done
+```
+
+`for archivo in RUN*.fastq.gz` usa el wildcard `*` del módulo 2 para recorrer solo los archivos que coinciden con ese patrón, sin tener que escribir sus nombres a mano.
+
+::: {.callout-note}
+Antes de lanzar un renombrado masivo, es buena práctica probar el bucle sustituyendo `mv "$archivo" "$nuevo"` por `echo "$archivo" "->" "$nuevo"` y comprobar que los nombres nuevos son los que esperas. Un `mv` mal calculado, igual que un `rm`, no tiene deshacer.
+:::
+
+# Ejercicios
+
+1. Construye un comando que cuente cuántas secuencias hay en `sequences.fasta` (pista: cabeceras que empiezan por `>`).
+2. Escribe un script `contar_secuencias.sh` que reciba un archivo FASTA como argumento (`$1`) y muestre cuántas secuencias contiene. Dale permisos de ejecución y pruébalo con `sequences.fasta`.
+3. Modifica `contar_secuencias.sh` para que guarde el resultado de `grep -c` en una variable y muestre un mensaje más descriptivo, del tipo `El archivo sequences.fasta tiene 4 secuencias`.
+4. (Reto) Escribe un script `limpiar_localidades.sh` que reciba un CSV como argumento y aplique el pipeline completo de limpieza de localidades del módulo 3 (minúsculas, sin espacios sobrantes, ordenado y contado). Pruébalo con `registro_campo_bruto.csv`.
+5. Escribe un bucle `for` que recorra cada `site` distinto de `species_observations.csv` (obtenido con `cut`, `tail -n +2` y `sort -u`) y muestre cuántas observaciones tiene cada uno.
+6. Crea (con `touch`) estos tres archivos vacíos: `RUN2024_LANE3_S010_Betula_pendula_R1.fastq.gz`, `RUN2024_LANE3_S011_Salix_alba_R1.fastq.gz`, `RUN2024_LANE3_S012_Olea_europaea_R1.fastq.gz`. Escribe un script que los recorra con `for` y los renombre, quedándote solo con la muestra y la lectura (`S010_R1.fastq.gz`, `S011_R1.fastq.gz`, `S012_R1.fastq.gz`).
+7. (Reto) Amplía el script anterior para que, antes de renombrar cada archivo, muestre por pantalla la muestra y la especie en formato `S010,Betula_pendula` (usa `cut` una segunda vez sobre `$archivo` para extraer los campos de la especie).
 
 ## Soluciones
 
 1. `grep -c "^>" sequences.fasta`
 2.
-   ```
-   ~$ echo "Numero de secuencias en sequences.fasta:" > informe.txt
-   ~$ grep -c "^>" sequences.fasta >> informe.txt
-   ```
-3. `wc -l < species_observations.csv`
-4. `cut -d',' -f3 registro_campo_bruto.csv | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort -u | xargs mkdir -p`
-5.
    ```bash
    #!/bin/bash
    grep -c "^>" "$1"
@@ -121,7 +117,18 @@ Las comillas dobles alrededor de `"$1"` no son decoración: si el argumento tuvi
    ~$ ./contar_secuencias.sh sequences.fasta
    4
    ```
-6.
+3.
+   ```bash
+   #!/bin/bash
+   archivo=$1
+   total=$(grep -c "^>" "$archivo")
+   echo "El archivo $archivo tiene $total secuencias"
+   ```
+   ```
+   ~$ ./contar_secuencias.sh sequences.fasta
+   El archivo sequences.fasta tiene 4 secuencias
+   ```
+4.
    ```bash
    #!/bin/bash
    cut -d',' -f3 "$1" | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
@@ -133,4 +140,33 @@ Las comillas dobles alrededor de `"$1"` no son decoración: si el argumento tuvi
          3 picos de europa
          4 sierra de gredos
          2 sierra de guadarrama
+   ```
+5.
+   ```bash
+   for site in $(cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u);
+   do
+     n=$(grep -c "$site" species_observations.csv)
+     echo "$site: $n observaciones"
+   done
+   ```
+6.
+   ```bash
+   #!/bin/bash
+   for archivo in RUN*.fastq.gz;
+   do
+     nuevo=$(echo "$archivo" | cut -d'_' -f3,6 --output-delimiter='_')
+     mv "$archivo" "$nuevo"
+   done
+   ```
+7.
+   ```bash
+   #!/bin/bash
+   for archivo in RUN*.fastq.gz;
+   do
+     muestra=$(echo "$archivo" | cut -d'_' -f3)
+     especie=$(echo "$archivo" | cut -d'_' -f4,5 --output-delimiter='_')
+     echo "$muestra,$especie"
+     nuevo=$(echo "$archivo" | cut -d'_' -f3,6 --output-delimiter='_')
+     mv "$archivo" "$nuevo"
+   done
    ```

@@ -195,8 +195,7 @@ Para eliminar un directorio con contenido hace falta `rm -r` (recursivo):
 
 # Wildcards
 
-En muchas ocasiones resulta útil tratar los ficheros de un modo conjunto.
-Por ejemplo, imaginemos que queremos mover todos los ficheros de texto a un directorio y las imágenes a otro.
+En muchas ocasiones resulta útil tratar los ficheros de un modo conjunto. Por ejemplo, mover todos los ficheros de texto a un directorio y las imágenes a otro.  
 Creemos una pequeña demostración:
 
 ```{.bash}
@@ -206,11 +205,10 @@ Creemos una pequeña demostración:
   ~$ touch exp_1a.jpg
 ```
 :::{.callout-tip title="Cuestión"}
-- ¿Cómo lo harías?
+- Independientemente, de las herramientas que ya conoces, ¿cómo lo harías? ¿Qué lógica general seguirías para mover los ficheros de texto a un directorio y las imágenes a otro?
 :::
 
-
-Podemos referirnos a todos los archivos que acaban en txt utilizando un asterisco:
+Los wildcards son caracteres especiales que permiten referirse a un conjunto de ficheros que cumplen un patrón determinado. El más común es el asterisco `*`, que sustituye a cualquier texto. Por ejemplo, para mover todos los archivos de texto a un directorio llamado `exp_1` podríamos hacer:
 
 ```{.bash}
   ~$ mv *txt exp_1

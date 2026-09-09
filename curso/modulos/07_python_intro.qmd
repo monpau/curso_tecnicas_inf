@@ -1,18 +1,8 @@
 ---
-title: "Módulo 7 — Introducción a la programación y Python"
+title: "Introducción a la programación y Python"
 ---
 
-**Duración estimada:** 2 h
-
-## Objetivos
-
-Al finalizar este módulo serás capaz de:
-
-- Explicar qué es una variable y crear variables en Python.
-- Escribir un script `.py` con `gedit` y ejecutarlo desde la terminal con `python3`.
-- Leer un archivo y contar sus líneas con un script sencillo.
-
-## De la terminal a Python
+# De la terminal a Python
 
 Hasta ahora le has dado órdenes a la terminal una a una (o encadenadas en pipelines). Python es distinto: en vez de comandos sueltos, escribes un **programa** — una secuencia de instrucciones guardada en un archivo — y se la entregas entera al intérprete de Python para que la ejecute de arriba a abajo.
 
