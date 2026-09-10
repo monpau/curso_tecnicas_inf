@@ -17,6 +17,9 @@ S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
 S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
 ...
 ```
+:::{ .callout-note}
+Aquí el [archivo de texto](../datasets/species_observations.csv)
+:::
 
 Para un archivo de miles de líneas, `cat` no es práctico: el texto se desplaza fuera de la pantalla antes de que puedas leerlo. `less` abre el archivo en un visor paginado — puedes bajar con las flechas o `Espacio`, subir con `b`, buscar con `/palabra`, y salir con `q` — sin cargar nunca todo el archivo en memoria de golpe.
 
@@ -27,7 +30,6 @@ Para un archivo de miles de líneas, `cat` no es práctico: el texto se desplaza
 `less` tiene muchas opciones, una que suele ser útil es `-S` para que no haga *wrap* de las líneas largas (las corta y te permite desplazarte horizontalmente con las flechas).
 
 ## 'head' y 'tail'
-
 
 `head` y `tail` muestran solo el principio o el final. Por defecto son 10 líneas; con `-N` eliges cuántas:
 
@@ -42,8 +44,6 @@ S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
 S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
 S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
 ```
-
-`head -4` incluye la cabecera (la primera línea del archivo) más las 3 primeras filas de datos — si quieres saltarte la cabecera, dile a `tail` que empiece en la línea 2 con `tail -n +2` (el `+` significa "desde esta línea hasta el final", en vez de "las últimas N líneas").
 
 ## Caracteres invisibles y codificación: `cat -A`
 
@@ -64,16 +64,24 @@ El `$` al final de cada línea marca el salto de línea — si vieras `^M$` en s
 Si alguna vez `grep` o `sed` "no encuentran" algo que ves perfectamente en pantalla, sospecha de caracteres invisibles: espacios finales, tabuladores en vez de espacios, o fines de línea de Windows. `cat -A` es la primera herramienta a la que recurrir para diagnosticarlo.
 :::
 
+::: {.callout-tip title=Cuestión}
+- ¿Este [archivo](../datasets/gene_info.csv) está separado por espacios o por tabuladores? ¿Y [este](../datasets/gene_expression.csv)?
+:::
+
 # Contar: `wc`
 
 `wc` (*word count*) cuenta líneas (`-l`), palabras (`-w`) o caracteres (`-c`):
 
+```{.bash}
+~$ wc species_observations.csv
+120  351  8995 species_observations.csv
 ```
-~$ wc -l species_observations.csv
-6 species_observations.csv
-```
+Si solo quieres, por ejemplo, el número de líneas, añade `-l`:
 
-El archivo tiene 6 líneas: la cabecera más 5 observaciones. Esta es una fuente habitual de errores de "uno de más" (*off-by-one*): si quieres el número de observaciones, es `wc -l` menos 1, o directamente cuenta desde la línea 2 con `tail -n +2 archivo | wc -l`.
+```{.bash}
+~$ wc -l species_observations.csv
+120 species_observations.csv
+```
 
 # Extraer columnas: `cut`
 
@@ -88,6 +96,12 @@ SiteB,Fragaria_vesca
 SiteC,Arabidopsis_thaliana
 SiteB,Betula_pendula
 ```
+
+::: {.callout-tip title=Cuestión}
+- Extrae la información de la muestra B de **gene_expression.csv**
+- Extrae el código de SwissProt de **gene_info.csv**
+:::
+
 
 # Buscar cadenas: `grep`
 
@@ -120,6 +134,7 @@ Las tuberías permiten encadenar comandos: la salida de uno se convierte en la e
 - ¿Podrías contar cuántas líneas de información tiene el archivo?
 - ¿Podrías contar cuántas líneas de observaciones tiene el archivo (sin contar la cabecera)?
 - ¿Cuántas observaciones son de `Plantación`? ¿y de `plantación`?
+- ¿En qué tipos de ambientes aparecen las especies *Rumex acetosa*, *Quercus ilex*, *Quercus suber* y *Acer campestre*?
 :::
 
 # Flujos de información: entrada, salida y error estándar
@@ -147,57 +162,12 @@ Hasta ahora, la salida de tus comandos siempre iba a la pantalla. Puedes redirig
 - `>` guarda la salida en un archivo, **sobrescribiéndolo** si ya existe.
 - `>>` añade la salida al final del archivo, sin borrar lo que ya había.
 
-```
-~$ echo "Numero de secuencias en sequences.fasta:" > informe.txt
-~$ grep -c "^>" sequences.fasta >> informe.txt
-~$ cat informe.txt
-Numero de secuencias en sequences.fasta:
-4
-```
+:::{.callout-tip title="Cuestión" }
+Usa el siguiente [archivo](../datasets/sequences.fasta) que almacena secuencias fasta
+- Guarda en un archivo el número de secuencias
+- Guarda en el mismo archivo los géneros de las especies
+:::
 
-Si hubieras usado `>` en la segunda línea en vez de `>>`, el informe se habría quedado solo con el `4`, borrando la primera línea.
-
-`<` hace lo contrario: en vez de que un comando reciba un nombre de archivo como argumento, le entrega el contenido del archivo como si lo estuvieras escribiendo tú por teclado (entrada estándar). La diferencia se nota, por ejemplo, en `wc`:
-
-```
-~$ wc -l species_observations.csv
-6 species_observations.csv
-~$ wc -l < species_observations.csv
-6
-```
-
-Con el nombre como argumento, `wc` sabe qué archivo está contando y lo indica. Con `<`, `wc` solo ve un flujo de texto sin nombre, así que no puede mostrarlo — solo el número.
-
-
-# Combinar por una clave común: `join`
-
-`paste` une archivos por **posición** (la línea 1 con la línea 1, la línea 2 con la línea 2...), sin mirar el contenido. `join` es más exigente pero más útil: une dos archivos emparejando las líneas cuyo campo clave coincide, igual que un `VLOOKUP` de una hoja de cálculo o un `JOIN` de SQL.
-
-Usa el archivo [sitios_info.csv](../datasets/sitios_info.csv), con información de hábitat por sitio:
-
-```{.bash}
-~$ cat sitios_info.csv
-site,habitat
-SiteA,Encinar
-SiteB,Bosque_mixto
-SiteC,Parcela_experimental
-SiteD,Robledal
-SiteE,Pinar
-```
-
-`join` tiene dos requisitos: ambos archivos deben estar **ordenados** por el campo clave, y por defecto compara el primer campo de cada uno. En `species_observations.csv` el sitio está en la columna 3, así que primero lo extraemos y ordenamos:
-
-```{.bash}
-~$ cut -d',' -f3,6,7 species_observations.csv | tail -n +2 | sort -t',' -k1,1 > obs_por_site.csv
-~$ tail -n +2 sitios_info.csv | sort -t',' -k1,1 > sitios_ordenado.csv
-~$ join -t',' obs_por_site.csv sitios_ordenado.csv
-SiteA,Acer_campestre,18,Encinar
-SiteA,Castanea_sativa,12,Encinar
-SiteA,Cistus_ladanifer,5,Encinar
-...
-```
-
-`-t','` le dice a `join` que el separador es la coma (si no se lo indicas, asume espacios). Cada línea del resultado junta una observación con el hábitat de su sitio — y si un sitio no apareciera en `sitios_info.csv`, `join` simplemente lo omitiría del resultado, a diferencia de `paste`, que habría pegado columnas sin sentido entre archivos de distinto contenido.
 
 # Ordenar: `sort`
 
@@ -217,6 +187,48 @@ S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
 # Eliminar duplicados: `uniq`
 
 `uniq` elimina líneas duplicadas — pero con una condición importante: **solo detecta duplicados en líneas consecutivas**. Si las líneas iguales no están juntas, `uniq` no las agrupa. Por eso casi siempre verás `sort` justo antes de `uniq` en una tubería: `sort` agrupa las líneas iguales, y entonces `uniq` puede eliminarlas. Con `-c`, además de eliminar duplicados, cuenta cuántas veces aparecía cada línea.
+
+# Combinar archivos horizontalmente: `paste` y `join`
+
+`paste` une archivos por **posición** (la línea 1 con la línea 1, la línea 2 con la línea 2...), sin mirar el contenido. 
+
+```bash
+~$ paste gene_info.csv gene_expression.csv
+```
+La opción `-d` permite modificar el carácter usado para unirlos. 
+
+`join` es más útil y une dos archivos emparejando las líneas cuyo campo clave coincide. 
+
+Para ello
+
+
+
+
+
+
+
+Usa el archivo [sitios_info.csv](../datasets/sitios_info.csv), con información de hábitat por sitio y *species_observations*.
+
+El uso de `join` es el siguiente: 
+
+```
+join -t 
+`` 
+
+`join` tiene dos requisitos: ambos archivos deben estar **ordenados** por el campo clave, y por defecto compara el primer campo de cada uno. En `species_observations.csv` el sitio está en la columna 3, así que primero lo extraemos y ordenamos:
+
+```{.bash}
+~$ cut -d',' -f3,6,7 species_observations.csv | tail -n +2 | sort -t',' -k1,1 > obs_por_site.csv
+~$ tail -n +2 sitios_info.csv | sort -t',' -k1,1 > sitios_ordenado.csv
+~$ join -t',' obs_por_site.csv sitios_ordenado.csv
+SiteA,Acer_campestre,18,Encinar
+SiteA,Castanea_sativa,12,Encinar
+SiteA,Cistus_ladanifer,5,Encinar
+...
+```
+
+`-t','` le dice a `join` que el separador es la coma (si no se lo indicas, asume espacios). Cada línea del resultado junta una observación con el hábitat de su sitio — y si un sitio no apareciera en `sitios_info.csv`, `join` simplemente lo omitiría del resultado, a diferencia de `paste`, que habría pegado columnas sin sentido entre archivos de distinto contenido.
+
 
 
 # Editar archivos: `sed`, `nano` y `vim`
@@ -241,6 +253,27 @@ Por defecto `sed` **no modifica el archivo original**: imprime el resultado corr
 ```{.bash}
 ~$ sed 's/Parcel /Parcela /' species_observations.csv > species_observations_corregido.csv
 ```
+
+## Sustituir caracteres: `tr`
+
+`tr` (*translate*) sustituye caracteres por otros, uno a uno, en el texto que recibe por *stdin* — a diferencia de `sed`, no admite un nombre de archivo como argumento ni entiende patrones o columnas, solo traduce carácter por carácter:
+
+```{.bash}
+~$ cat gene_info.csv | tr '\t' ';'
+gene;swissprot_id;description
+pka;P12345;Protein kinase A catalytic subunit
+...
+```
+
+::: {.callout-tip title=Cuestión}
+- Convierte los tabuladores de `gene_info.csv` en `;` con `tr '\t' ';'`.
+- Sobre ese resultado, convierte ahora los `;` en espacios con `tr ';' ' '`.
+- Con ese segundo resultado, intenta extraer la columna `description` con `cut -d' ' -f3`.
+
+¿Obtienes lo mismo que con `cut -d'\t' -f3` sobre el archivo original? ¿A qué se debe la diferencia?
+:::
+
+
 
 ::: {.callout-warning}
 No redirijas la salida al mismo archivo de entrada (`sed '...' archivo.csv > archivo.csv`): `sed` lee el archivo a la vez que intentas sobrescribirlo, y acabas con un archivo vacío. Si de verdad quieres modificar el archivo original, algunas versiones de `sed` aceptan la opción `-i` (*in-place*) — pero úsala con cuidado, porque no pide confirmación ni se puede deshacer.
@@ -283,10 +316,10 @@ Quedarse "atrapado" en `vim` sin saber cómo salir es casi un rito de iniciació
 4. Extrae solo las columnas `site` y `species` de `species_observations.csv` con `cut`.
 5. Ordena las observaciones de `species_observations.csv` por número de individuos (`count`) de mayor a menor.
 6. Usando `cut`, divide `species_observations.csv` en dos archivos: uno con `sample_id` y `site`, otro con `species` y `count`. Vuelve a unirlos con `paste` en el orden original.
-7. En `registro_campo_bruto.csv`, cuenta cuántas veces aparece cada localidad usando `cut`, `sort` y `uniq -c`, **sin** ninguna normalización previa. Comprueba que obtienes 11 grupos en vez de 4.
+7. En `registro_campo_bruto.csv`, cuenta cuántas veces aparece cada localidad usando `cut`, `sort` y `uniq -c`.
 8. Corrige el resultado del ejercicio anterior añadiendo `tr` (minúsculas) y `sed` (eliminar espacios finales) antes de `sort`/`uniq -c`. Deberías obtener exactamente 4 localidades, con recuentos que sumen 12.
 9. Usa `cat -A` sobre las 3 primeras líneas de `species_observations.csv` (con `head -3 | cat -A`). Localiza una fila con una vocal acentuada e identifica los dos códigos `M-x` que la representan.
-10. Ejecuta `grep 'SiteA' species_observations.csv archivo_que_no_existe.csv | wc -l`. ¿Por qué aparece el mensaje de error en pantalla aunque estés canalizando la salida con `|` hacia `wc -l`? ¿Qué flujo lo transporta?
 11. Usando [sitios_info.csv](../datasets/sitios_info.csv), obtén con `join` una tabla que combine cada observación (`site`, `species`, `count`) con el `habitat` de su sitio. Recuerda ordenar ambos archivos por la columna clave antes de unirlos.
 12. Usa `sed 's/.../.../'` para corregir la errata `Parcel experimental` → `Parcela experimental` en `species_observations.csv`, guardando el resultado en `species_observations_corregido.csv` sin modificar el archivo original.
 13. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar) y guarda los cambios con `:wq`.
+14. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)

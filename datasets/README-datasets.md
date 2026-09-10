@@ -11,6 +11,7 @@ Archivos
 - `codigos_muestreo.csv`: códigos de muestreo (localidad + sustrato + época + altura) junto a la especie encontrada — usado en el módulo de expresiones regulares para practicar contenedores (clases de caracteres) y rangos numéricos.
 - `muestras_con_comas.csv`: notas de campo entre comillas que contienen comas — usado en el módulo de lectura/escritura de archivos para mostrar por qué `split(",")` a mano es frágil y el módulo `csv` no.
 - `sitios_info.csv`: hábitat de cada sitio de muestreo (`SiteA`-`SiteE`) — usado en el módulo de manejo de texto para practicar `join` combinando esta tabla con `species_observations.csv` por la columna `site`.
+- `muestras_fastq.zip`: 10 archivos `.fastq` sintéticos, cada uno con una o dos secuencias (15 secuencias en total) — usado en el módulo de manejo de texto para practicar `cat` (fusionar varios archivos en uno) y `wc -l` (contar secuencias a partir de las líneas del FASTQ combinado).
 
 Uso recomendado
 1. Abrir `gedit` y pegar el contenido del archivo que se necesite practicar.

@@ -1,0 +1,8 @@
+gene	swissprot_id	description
+pka	P12345	Protein kinase A catalytic subunit
+fos	P67890	Fatty acid synthase
+cox	Q12345	Cytochrome c oxidase subunit 1
+lac	P23456	Lactate dehydrogenase A
+p53	P45678	Tumor protein p53
+rna	P34567	RNA polymerase II subunit RPB1
+
