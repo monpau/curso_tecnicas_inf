@@ -2,31 +2,8 @@
 title: "Módulo 10 — Lectura, modificación y escritura de archivos"
 ---
 
-**Duración estimada:** 4 h
 
-## Objetivos
-
-Al finalizar este módulo serás capaz de:
-
-- Abrir un archivo en modo lectura, escritura o añadido con `open()`.
-- Escribir en un archivo nuevo con `.write()`.
-- Usar el módulo `csv` para leer y escribir archivos CSV de forma robusta.
-- Reconocer por qué trocear un CSV a mano con `.split(",")` puede dar resultados incorrectos.
-
-## Materiales
-
-Este módulo usa `species_observations.csv` (ya conocido) y un archivo nuevo, `muestras_con_comas.csv`:
-
-```
-sample_id,especie,notas
-M01,Quercus robur,"Ejemplar sano, sin danos visibles"
-M02,Pinus sylvestris,"Corteza danada, posible plaga"
-M03,Fragaria vesca,"Sin observaciones"
-```
-
-Fíjate en las notas: llevan una coma **dentro** del propio campo de texto, y por eso van entre comillas dobles. Esto es habitual en CSV reales.
-
-## Modos de apertura: lectura, escritura, añadido
+# Modos de apertura: lectura, escritura, añadido
 
 `open(ruta, modo)` acepta un segundo argumento que dice qué vas a hacer con el archivo — el mismo concepto que `>` y `>>` de la terminal (módulo 5), ahora dentro de Python:
 
@@ -44,7 +21,7 @@ print(contenido[:50])         # primeros 50 caracteres
 
 `f.read()` trae el archivo entero de una vez, como cadena; `f.readlines()` (módulo 7) lo trae como una lista de líneas; iterar con `for linea in f:` los lee uno a uno sin cargar el archivo entero en memoria — la opción más segura para archivos grandes.
 
-## Escribir archivos con `.write()`
+# Escribir archivos con `.write()`
 
 ```python
 with open("species_observations.csv") as f:
@@ -66,7 +43,7 @@ with open("resumen.txt", "a") as f:
     f.write(f"Total de observaciones: {len(lineas) - 1}\n")
 ```
 
-## Un problema real: por qué `split(",")` no basta
+# Un problema real: por qué `split(",")` no basta
 
 Ya usas `.split(",")` desde el módulo 8 para trocear una línea CSV. Pruébalo sobre `muestras_con_comas.csv`:
 
@@ -106,33 +83,47 @@ with open("muestras_con_comas.csv") as f:
 
 Ahora sí: siempre 3 campos, con la coma de la nota intacta dentro del campo, sin comillas de sobra.
 
-## `csv.DictReader` y `csv.DictWriter`
+# Leer y escribir filas como diccionarios, a mano
 
-`csv.reader` te da cada fila como una lista (accedes por posición, como con `.split(",")`). `csv.DictReader` va un paso más allá y te da cada fila como un diccionario, usando la cabecera del archivo como claves — conectando con lo que aprendiste en el módulo 8:
-
-```python
-with open("species_observations.csv") as f:
-    lector = csv.DictReader(f)
-    for fila in lector:
-        print(fila["species"])
-```
-
-`csv.DictWriter` hace lo inverso: escribe diccionarios como filas de un CSV nuevo.
+`csv.reader` te da cada fila como una lista (accedes por posición, como con `.split(",")`). Para trabajar con cada fila como un diccionario — conectando con lo que aprendiste en el módulo 8 — no hace falta ninguna herramienta nueva: basta con trocear la cabecera igual que cualquier otra línea, y emparejar cada nombre de columna con su valor:
 
 ```python
 with open("species_observations.csv") as f:
-    lector = csv.DictReader(f)
-    abundantes = [fila for fila in lector if int(fila["count"]) > 3]
+    lineas = f.readlines()
 
-with open("solo_abundantes.csv", "w", newline="") as f:
-    escritor = csv.DictWriter(f, fieldnames=abundantes[0].keys())
-    escritor.writeheader()
-    escritor.writerows(abundantes)
+cabecera = lineas[0].strip().split(",")
+
+for linea in lineas[1:]:
+    valores = linea.strip().split(",")
+    fila = dict(zip(cabecera, valores))
+    print(fila["species"])
 ```
 
-`int(fila["count"])` es imprescindible: como viste en el módulo 8, todo lo que sale de un CSV es texto, y `"12" > 3` daría un error en Python (no se puede comparar texto con número). `newline=""` al abrir el archivo de escritura es una recomendación del propio módulo `csv` para evitar líneas en blanco de más en Windows; no hace daño dejarlo siempre.
+`zip(cabecera, valores)` empareja cada nombre de columna (`"species"`, `"count"`...) con el valor de esa misma posición en la fila; `dict(...)` convierte esos pares en un diccionario. Ten en cuenta que, al construirlo con `.split(",")` en vez de `csv.reader`, vuelves a estar expuesto al problema de las comas dentro de las notas que viste más arriba — aquí funciona porque `species_observations.csv` no tiene comas protegidas por comillas.
 
-## Ejercicios
+Para escribir diccionarios de vuelta a un CSV, el proceso es el inverso: unes los valores con `",".join(...)`, en el mismo orden que la cabecera.
+
+```python
+with open("species_observations.csv") as f:
+    lineas = f.readlines()
+
+cabecera = lineas[0].strip().split(",")
+abundantes = []
+for linea in lineas[1:]:
+    valores = linea.strip().split(",")
+    fila = dict(zip(cabecera, valores))
+    if int(fila["count"]) > 3:
+        abundantes.append(fila)
+
+with open("solo_abundantes.csv", "w") as f:
+    f.write(",".join(cabecera) + "\n")
+    for fila in abundantes:
+        f.write(",".join(fila[campo] for campo in cabecera) + "\n")
+```
+
+`int(fila["count"])` sigue siendo imprescindible: como viste en el módulo 8, todo lo que sale de un CSV es texto, y `"12" > 3` daría un error en Python (no se puede comparar texto con número). Al escribir, `fila[campo] for campo in cabecera` recorre las columnas en el mismo orden que la cabecera, así que cada valor cae en su columna correcta aunque el diccionario en sí no garantice ningún orden.
+
+# Ejercicios
 
 1. Abre `species_observations.csv` en modo lectura y usa `.read()` para imprimir todo su contenido de una vez.
 2. Usa `.readlines()` y un bucle `for` para imprimir solo el `sample_id` (primera columna) de cada fila, saltándote la cabecera.
@@ -140,10 +131,10 @@ with open("solo_abundantes.csv", "w", newline="") as f:
 4. Añade (modo `"a"`) una línea final a `resumen.txt` con el total de observaciones.
 5. Sobre `muestras_con_comas.csv`, trocea cada línea con `.split(",")` e imprime cuántos campos obtienes por fila. Comprueba que las filas con coma dentro de las notas dan 4 campos en vez de 3.
 6. Repite el ejercicio anterior con `csv.reader` y comprueba que ahora todas las filas dan exactamente 3 campos.
-7. Usa `csv.DictReader` sobre `species_observations.csv` e imprime `fila["species"]` para cada fila.
-8. (Reto) Usa `csv.DictReader` y `csv.DictWriter` para crear `solo_abundantes.csv`, con únicamente las filas de `species_observations.csv` donde `count` sea mayor que 3.
+7. Sin usar el módulo `csv`, abre `species_observations.csv`, trocea la cabecera y cada fila con `.split(",")`, construye cada fila como diccionario con `dict(zip(cabecera, valores))` e imprime `fila["species"]`.
+8. (Reto) A partir del ejercicio anterior, construye una lista `abundantes` con las filas donde `count` sea mayor que 3, y escribe `solo_abundantes.csv` a mano, uniendo cada fila con `",".join(...)` en el mismo orden que la cabecera.
 
-## Soluciones
+# Soluciones
 
 1.
    ```python
@@ -176,21 +167,30 @@ with open("solo_abundantes.csv", "w", newline="") as f:
    ```
 7.
    ```python
-   import csv
    with open("species_observations.csv") as f:
-       lector = csv.DictReader(f)
-       for fila in lector:
-           print(fila["species"])
+       lineas = f.readlines()
+
+   cabecera = lineas[0].strip().split(",")
+   for linea in lineas[1:]:
+       valores = linea.strip().split(",")
+       fila = dict(zip(cabecera, valores))
+       print(fila["species"])
    ```
 8.
    ```python
-   import csv
    with open("species_observations.csv") as f:
-       lector = csv.DictReader(f)
-       abundantes = [fila for fila in lector if int(fila["count"]) > 3]
+       lineas = f.readlines()
 
-   with open("solo_abundantes.csv", "w", newline="") as f:
-       escritor = csv.DictWriter(f, fieldnames=abundantes[0].keys())
-       escritor.writeheader()
-       escritor.writerows(abundantes)
+   cabecera = lineas[0].strip().split(",")
+   abundantes = []
+   for linea in lineas[1:]:
+       valores = linea.strip().split(",")
+       fila = dict(zip(cabecera, valores))
+       if int(fila["count"]) > 3:
+           abundantes.append(fila)
+
+   with open("solo_abundantes.csv", "w") as f:
+       f.write(",".join(cabecera) + "\n")
+       for fila in abundantes:
+           f.write(",".join(fila[campo] for campo in cabecera) + "\n")
    ```

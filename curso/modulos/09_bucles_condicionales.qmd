@@ -1,19 +1,8 @@
 ---
-title: "Módulo 9 — Bucles y condicionales"
+title: "Bucles y condicionales"
 ---
 
-**Duración estimada:** 4 h
-
-## Objetivos
-
-Al finalizar este módulo serás capaz de:
-
-- Tomar decisiones en un programa con `if`/`elif`/`else`.
-- Repetir una acción un número conocido de veces con `for`, y un número desconocido de veces con `while`.
-- Parsear un archivo FASTA a mano, línea a línea, con un bucle.
-- Filtrar secuencias por longitud y contar bases, y reconocer un error típico al hacerlo.
-
-## Condicionales: `if` / `elif` / `else`
+# Condicionales: `if` / `elif` / `else`
 
 ```python
 count = 12
@@ -34,7 +23,7 @@ abundante
 
 Python evalúa las condiciones en orden: si `count > 10` es verdadero, usa esa rama y se salta el resto; si no, prueba `elif count > 3`; si ninguna se cumple, usa `else`. Solo se ejecuta **una** de las ramas.
 
-## Bucles `for`: repetir un número conocido de veces
+# Bucles `for`: repetir un número conocido de veces
 
 Ya usaste `for linea in f:` en el módulo 7 para recorrer un archivo, y `for id_seq, seq in secuencias.items():` en el módulo 8 para recorrer un diccionario. `for` también recorre directamente los caracteres de una cadena:
 
@@ -44,7 +33,7 @@ for base in secuencia:
     print(base)
 ```
 
-## Bucles `while`: repetir hasta que se cumpla una condición
+# Bucles `while`: repetir hasta que se cumpla una condición
 
 A diferencia de `for`, con `while` no sabes de antemano cuántas vueltas dará — sigue repitiendo mientras la condición sea verdadera. Es la herramienta correcta cuando buscas *algo* sin saber dónde está, por ejemplo la posición del codón de inicio `ATG` en una secuencia:
 
@@ -63,7 +52,7 @@ Codon de inicio encontrado en la posicion 3
 
 En cada vuelta, `i += 1` avanza una posición (es la forma corta de escribir `i = i + 1`), y `secuencia[i:i+3]` mira los 3 caracteres a partir de esa posición. El bucle para en cuanto encuentra `"ATG"`, o si llega al final de la secuencia sin encontrarlo (por eso la condición comprueba primero `i < len(secuencia)`: sin ese límite, si `"ATG"` no apareciera nunca, el bucle no terminaría jamás).
 
-## Parsear un FASTA a mano
+# Parsear un FASTA a mano
 
 Con `for`, `if` y un diccionario (módulo 8), ya tienes todo lo necesario para convertir un archivo FASTA en una estructura de datos que puedas consultar: un diccionario que asocie cada identificador con su secuencia completa.
 
@@ -93,7 +82,7 @@ seq4|Fragaria_vesca|trnL 34
 
 `linea.strip()` elimina el salto de línea del final (si no lo hicieras, se colaría dentro de tus secuencias). Cuando la línea es una cabecera, `linea[1:]` se queda con todo menos el primer carácter (el `>`), y abre una entrada nueva en el diccionario con secuencia vacía. Cuando no es cabecera, es una línea de secuencia, y se añade (`+=`) a la entrada que se abrió más recientemente.
 
-## Filtrar por longitud
+# Filtrar por longitud
 
 Con el diccionario ya construido, filtrar es solo un `for` con un `if` dentro:
 
@@ -105,7 +94,7 @@ for id_seq, seq in secuencias.items():
         print(f"{id_seq}: secuencia corta ({len(seq)} bases)")
 ```
 
-## Contar bases — y un error típico al hacerlo
+# Contar bases — y un error típico al hacerlo
 
 Quieres contar cuántas veces aparece cada base en una secuencia:
 
@@ -144,7 +133,7 @@ print(sum(conteo.values()), "de", len(secuencia_mixta), "caracteres")
 11 de 11 caracteres
 ```
 
-## Ejercicios
+# Ejercicios
 
 1. Dado `count = 7`, usa `if`/`elif`/`else` para clasificarlo como `"abundante"` (>10), `"frecuente"` (>3) o `"escaso"`, e imprime el resultado.
 2. Usa un bucle `while` para encontrar la posición del primer codón de parada `"TAA"` en la secuencia `"ATGCGTATCTAAGGC"`.

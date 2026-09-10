@@ -1,18 +1,8 @@
 ---
-title: "Módulo 8 — Tipos y operadores"
+title: "Tipos y operadores"
 ---
 
-**Duración estimada:** 2 h
-
-## Objetivos
-
-Al finalizar este módulo serás capaz de:
-
-- Distinguir los tipos básicos de Python: `str`, `int`, `float`, `list`, `dict`.
-- Usar los operadores esenciales sobre cada tipo.
-- Reconocer y evitar un error muy común: tratar un número leído de un archivo como si fuera texto.
-
-## Un problema real: todo lo que lees de un archivo es texto
+# Un problema real: todo lo que lees de un archivo es texto
 
 Recupera la línea de `species_observations.csv` que viste en el módulo anterior, y divídela por comas con `.split(",")`:
 
@@ -52,7 +42,7 @@ print(type(count), count * 2)
 
 Cada vez que leas un valor de un CSV, un FASTA o cualquier archivo de texto, recuerda: **llega como `str`, y tú decides si convertirlo**.
 
-## Tipos básicos
+# Tipos básicos
 
 | Tipo | Ejemplo | Uso típico en este curso |
 |---|---|---|
@@ -62,11 +52,11 @@ Cada vez que leas un valor de un CSV, un FASTA o cualquier archivo de texto, rec
 | `list` | `["Quercus_robur", "Pinus_sylvestris"]` | varias observaciones o secuencias juntas |
 | `dict` | `{"SiteA": "Bosque mixto"}` | traducir un código a su significado |
 
-## Operadores esenciales
+# Operadores esenciales
 
 Con números, los operadores aritméticos habituales: `+ - * /` (división con decimales), `//` (división entera), `%` (resto), `**` (potencia). Con cadenas, `+` concatena y `*` repite (como acabas de ver, a veces por accidente). Los operadores de comparación (`== != < > <= >=`) funcionan igual en ambos y devuelven `True`/`False` — los usarás mucho en el módulo siguiente para condicionales.
 
-## Listas: colecciones ordenadas
+# Listas: colecciones ordenadas
 
 ```python
 especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"]
@@ -77,7 +67,7 @@ print(especies[:2])                 # ['Quercus_robur', 'Pinus_sylvestris'] — 
 
 `especies[:2]` es *slicing*: `[inicio:fin]` extrae un tramo de la lista, sin incluir el índice `fin`. Omitir `inicio` significa "desde el principio".
 
-## Diccionarios: de clave a valor
+# Diccionarios: de clave a valor
 
 Un diccionario asocia claves con valores — útil para traducir un código a su significado:
 
@@ -98,7 +88,7 @@ SiteC: Parcela experimental
 
 `.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
 
-## Ejercicios
+# Ejercicios
 
 1. A partir de `linea = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"`, usa `.split(",")` y accede al campo de la especie por índice.
 2. Extrae el campo del número de individuos, e imprime `type()` antes y después de convertirlo con `int()`.
@@ -107,7 +97,7 @@ SiteC: Parcela experimental
 5. Crea un diccionario que traduzca los códigos `SiteA`, `SiteB`, `SiteC` a una descripción del hábitat, y usa `.get()` para consultar uno.
 6. (Reto) Recorre el diccionario del ejercicio anterior con `.items()` en un bucle `for`, e imprime cada par como `"<código> -> <descripción>"`.
 
-## Soluciones
+# Soluciones
 
 1.
    ```python

@@ -6,24 +6,24 @@ title: "Introducción a la programación y Python"
 
 Hasta ahora le has dado órdenes a la terminal una a una (o encadenadas en pipelines). Python es distinto: en vez de comandos sueltos, escribes un **programa** — una secuencia de instrucciones guardada en un archivo — y se la entregas entera al intérprete de Python para que la ejecute de arriba a abajo.
 
-## Tu primer script
+# Tu primer script
 
 Abre `gedit`, escribe esto, y guárdalo como `hola.py`:
 
 ```python
-print("Hola, bióloga/o")
+print("Hola mundo")
 ```
 
 Ejecútalo desde la terminal, en el mismo directorio donde lo guardaste:
 
-```
+```python
 ~$ python3 hola.py
-Hola, bióloga/o
+Hola mundo
 ```
 
 `print(...)` muestra un texto por pantalla. `python3 hola.py` le dice a la terminal: "ejecuta el intérprete de Python 3 sobre este archivo" — el mismo patrón que `./script.sh` del módulo anterior, pero para Python en vez de para `bash`.
 
-## Variables
+# Variables
 
 Una variable es un nombre que apunta a un valor. En Python no hace falta declarar de antemano qué tipo de dato guardará — se lo asignas directamente con `=`:
 
@@ -53,7 +53,7 @@ Cualquier línea que empiece por `#` es un comentario: Python la ignora por comp
 altura_m = 1.68
 ```
 
-## Un script real: contar líneas de un archivo
+# Un script real: contar líneas de un archivo
 
 Vas a escribir un script que abra `species_observations.csv` y cuente cuántas líneas tiene — el equivalente en Python de `wc -l` del módulo 3:
 
@@ -75,14 +75,14 @@ El archivo tiene 6 lineas.
 Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espacios porque está **dentro** del bloque `with`. En Python la indentación no es un detalle de estilo — es la sintaxis que marca qué instrucciones pertenecen a cada bloque. Usa siempre 4 espacios (no tabulaciones) y sé consistente.
 :::
 
-## Ejercicios
+# Ejercicios
 
 1. Escribe y ejecuta un script `hola.py` que muestre "Hola, bióloga/o" (o un saludo con tu propio nombre).
 2. Crea dos variables, `nombre` y `especie_favorita`, e imprime un mensaje que las combine usando una f-string.
 3. Escribe un script `contar_lineas.py` que abra `species_observations.csv` y muestre cuántas líneas tiene.
 4. Escribe un script que cuente cuántas secuencias hay en `sequences.fasta`, recorriendo el archivo línea a línea con un bucle `for linea in f:` y comprobando si cada línea empieza por `>` con `linea.startswith(">")`. Compara el resultado con el que obtuviste en el módulo 5 usando `grep -c "^>"`.
 
-## Soluciones
+# Soluciones
 
 1.
    ```python
