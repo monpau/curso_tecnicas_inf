@@ -254,17 +254,6 @@ Por defecto `sed` **no modifica el archivo original**: imprime el resultado corr
 ~$ sed 's/Parcel /Parcela /' species_observations.csv > species_observations_corregido.csv
 ```
 
-## Sustituir caracteres: `tr`
-
-`tr` (*translate*) sustituye caracteres por otros, uno a uno, en el texto que recibe por *stdin* — a diferencia de `sed`, no admite un nombre de archivo como argumento ni entiende patrones o columnas, solo traduce carácter por carácter:
-
-```{.bash}
-~$ cat gene_info.csv | tr '\t' ';'
-gene;swissprot_id;description
-pka;P12345;Protein kinase A catalytic subunit
-...
-```
-
 ::: {.callout-tip title=Cuestión}
 - Convierte los tabuladores de `gene_info.csv` en `;` con `tr '\t' ';'`.
 - Sobre ese resultado, convierte ahora los `;` en espacios con `tr ';' ' '`.
@@ -272,7 +261,6 @@ pka;P12345;Protein kinase A catalytic subunit
 
 ¿Obtienes lo mismo que con `cut -d'\t' -f3` sobre el archivo original? ¿A qué se debe la diferencia?
 :::
-
 
 
 ::: {.callout-warning}
@@ -319,7 +307,8 @@ Quedarse "atrapado" en `vim` sin saber cómo salir es casi un rito de iniciació
 7. En `registro_campo_bruto.csv`, cuenta cuántas veces aparece cada localidad usando `cut`, `sort` y `uniq -c`.
 8. Corrige el resultado del ejercicio anterior añadiendo `tr` (minúsculas) y `sed` (eliminar espacios finales) antes de `sort`/`uniq -c`. Deberías obtener exactamente 4 localidades, con recuentos que sumen 12.
 9. Usa `cat -A` sobre las 3 primeras líneas de `species_observations.csv` (con `head -3 | cat -A`). Localiza una fila con una vocal acentuada e identifica los dos códigos `M-x` que la representan.
-11. Usando [sitios_info.csv](../datasets/sitios_info.csv), obtén con `join` una tabla que combine cada observación (`site`, `species`, `count`) con el `habitat` de su sitio. Recuerda ordenar ambos archivos por la columna clave antes de unirlos.
-12. Usa `sed 's/.../.../'` para corregir la errata `Parcel experimental` → `Parcela experimental` en `species_observations.csv`, guardando el resultado en `species_observations_corregido.csv` sin modificar el archivo original.
-13. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar) y guarda los cambios con `:wq`.
-14. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)
+10. Usando [sitios_info.csv](../datasets/sitios_info.csv), obtén con `join` una tabla que combine cada observación (`site`, `species`, `count`) con el `habitat` de su sitio. Recuerda ordenar ambos archivos por la columna clave antes de unirlos.
+11. Usa `sed 's/.../.../'` para corregir la errata `Parcel experimental` → `Parcela experimental` en `species_observations.csv`, guardando el resultado en `species_observations_corregido.csv` sin modificar el archivo original.
+12. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar) y guarda los cambios con `:wq`.
+13. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. ¿Cuántas secuencias hay en cada fichero? Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)
+14. Disponemos de un [fichero](../datasets/tomate.sam) con el resultado de un mapeo en formato SAM ¿Cuntas secuencias se han mapeado? ¿Cuántas se han mapeado en dirección reversa (mirad la segunda columna: 0 forward; 16 reverse)? ¿Cuántos y cuáles son los unigenes a los que se ha podido mapear alguna secuencia? Ordena las nombres de secuencias mapeadas con el orden del unigene y la posición en el unigene.

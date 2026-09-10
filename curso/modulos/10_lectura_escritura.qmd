@@ -1,5 +1,5 @@
 ---
-title: "Módulo 10 — Lectura, modificación y escritura de archivos"
+title: "Lectura, modificación y escritura de archivos"
 ---
 
 
