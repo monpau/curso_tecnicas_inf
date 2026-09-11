@@ -17,11 +17,12 @@ S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
 S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
 ...
 ```
+
 :::{ .callout-note}
 Aquí el [archivo de texto](../datasets/species_observations.csv)
 :::
 
-Para un archivo de miles de líneas, `cat` no es práctico: el texto se desplaza fuera de la pantalla antes de que puedas leerlo. `less` abre el archivo en un visor paginado — puedes bajar con las flechas o `Espacio`, subir con `b`, buscar con `/palabra`, y salir con `q` — sin cargar nunca todo el archivo en memoria de golpe.
+`less` abre el archivo en un visor paginado — puedes bajar con las flechas o `Espacio`, subir con `b`, buscar con `/`, y salir con `q` — **sin cargar nunca todo el archivo en memoria de golpe**.
 
 ```{.bash}
 ~$ less species_observations.csv
@@ -85,9 +86,9 @@ Si solo quieres, por ejemplo, el número de líneas, añade `-l`:
 
 # Extraer columnas: `cut`
 
-`cut -d',' -f3,6` extrae las columnas 3 y 6 de un archivo separado por comas (`-d` indica el delimitador, `-f` los números de columna):
+`cut` extrae las columnas que indiquemos en `-f` (*fields*). Por defecto, asume que el separador de campo es el tabulador, pero esto se puede modificar con `-d` (*delimiter*).
 
-```
+```{.bash}
 ~$ cut -d',' -f3,6 species_observations.csv
 site,species
 SiteA,Quercus_robur
@@ -96,6 +97,16 @@ SiteB,Fragaria_vesca
 SiteC,Arabidopsis_thaliana
 SiteB,Betula_pendula
 ```
+
+Para indicar los campos que queremos seleccionar:
+
+- N : el campo N (p.e., cut -f 3 file1)
+- N- : desde el campo N hasta el final (p.e., cut -f 3- file1)
+- N-M : desde el campo N al M (p.e., cut -f 3-6 file1)
+- -M : desde el primer campo al campo M (p.e., cut -f -3 file1)
+- N,M : los campos indicados (p.e., cut -f 3,6,8 file1)
+
+
 
 ::: {.callout-tip title=Cuestión}
 - Extrae la información de la muestra B de **gene_expression.csv**
@@ -115,9 +126,9 @@ S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
 
 Ten en cuenta que `grep` busca el patrón **exacto** que has introducido. Distingue entre mayúsculas de minúsculas y no importa si es una palabra completa o parte de ella.
 
-`grep` tiene muchas opciones por ejemplo puede:
--  `-i` ignorar mayúsculas/minúsculas
-- `-v` inviertir la búsqueda (muestra las líneas que **no** contienen el patrón)
+`grep` tiene muchas opciones; por ejemplo, puede:
+- `-i` ignorar mayúsculas/minúsculas
+- `-v` invertir la búsqueda (muestra las líneas que **no** contienen el patrón)
 - `-n` mostrar el número de línea junto a cada coincidencia
 - `-f` permite usar un archivo con varios patrones de búsqueda
 
@@ -131,15 +142,17 @@ Las tuberías permiten encadenar comandos: la salida de uno se convierte en la e
 ```
 
 :::{ .callout-tip title=Cuestión}
-- ¿Podrías contar cuántas líneas de información tiene el archivo?
+- ¿Podrías contar cuántas líneas de información tiene el archivo **species_observations.csv**?
 - ¿Podrías contar cuántas líneas de observaciones tiene el archivo (sin contar la cabecera)?
 - ¿Cuántas observaciones son de `Plantación`? ¿y de `plantación`?
-- ¿En qué tipos de ambientes aparecen las especies *Rumex acetosa*, *Quercus ilex*, *Quercus suber* y *Acer campestre*?
+- ¿En qué tipos de ambientes aparecen exclusivamente las especies *Rumex acetosa*, *Quercus ilex*, *Quercus suber* y *Acer campestre*?
 :::
 
 # Flujos de información: entrada, salida y error estándar
 
-Cuando ejecutas un comando, en realidad tiene abiertos tres flujos (*streams*) de información:
+Cuando ejecutas un comando se abren tres flujos (*streams*) de información:
+
+![](../figures/streams.jpeg)
 
 - **Entrada estándar** (*stdin*): de donde el comando lee, normalmente el teclado.
 - **Salida estándar** (*stdout*): donde el comando escribe sus resultados, normalmente la pantalla.
@@ -153,14 +166,12 @@ grep: archivo_inexistente.csv: No such file or directory
 22
 ```
 
-El aviso `grep: archivo_inexistente.csv: No such file or directory` es *stderr*, y aparece igual aunque `| wc -l` esté capturando la salida normal (*stdout*) de `grep` para contarla — por eso ves el error mezclado con el resultado (`22`) en vez de que "contamine" el conteo. En el módulo 5 verás cómo redirigir cada flujo por separado, por ejemplo para descartar los errores o guardarlos en su propio archivo.
+## Redirecciones: `>`, `>>`
 
-# Redirecciones: `>`, `>>`, `<`
+Hasta ahora, la salida de tus comandos siempre iba a la pantalla, pero podemos redirigirla a un archivo en su lugar:
 
-Hasta ahora, la salida de tus comandos siempre iba a la pantalla. Puedes redirigirla a un archivo en su lugar:
-
-- `>` guarda la salida en un archivo, **sobrescribiéndolo** si ya existe.
-- `>>` añade la salida al final del archivo, sin borrar lo que ya había.
+- `>` guarda la **salida estándar** en un archivo, **sobrescribiéndolo** si ya existe.
+- `>>` añade la **salida estándar** al final del archivo, sin borrar lo que ya había.
 
 :::{.callout-tip title="Cuestión" }
 Usa el siguiente [archivo](../datasets/sequences.fasta) que almacena secuencias fasta
@@ -168,13 +179,29 @@ Usa el siguiente [archivo](../datasets/sequences.fasta) que almacena secuencias 
 - Guarda en el mismo archivo los géneros de las especies
 :::
 
+Como los *streams* son separados podemos salvarlos de manera independiente:
+
+- `1>` redirige la **salida estándar**
+- `2>` redirige el **error estándar**
+- `2>&1` redirige ambos flujos al mismo archivo
+
+Esto suele ser muy útil cuando corres algún programa y quieres conservar los mensajes de error del programa. 
+
+:::{.callout-tip title="Cuestión" }
+
+- Ejecuta primero `cat archivo_falso.csv` y luego intenta capturar el error en un archivo.
+- Ejecuta primero `grep 'site' archivo1.csv species_observations.csv` y luego guarda ambos flujos en archivos separados.
+:::
+
 
 # Ordenar: `sort`
 
-Por defecto `sort` ordena alfabéticamente. `-n` ordena numéricamente (imprescindible para números, porque alfabéticamente "10" va antes que "9"), `-r` invierte el orden, y `-t'DELIM' -kN,N` ordena por una columna concreta:
+`sort` es capaz de ordenar basado en una columna. El separador de columna que asume por defecto es el espacio en blanco pero se puede cambiar con `-t`.
+
+La ordenación por defecto es alfabéticamente (`-n` cambia a numérica) y se realiza por la primera columna (`-k`, *keys*, permite escoger por qué columna quieres ordenar): 
 
 ```{.bash}
-~$ tail -n +2 species_observations.csv | sort -t',' -k7,7 -nr
+~$ tail -n +4 species_observations.csv | sort -t',' -k7,7 -nr
 S004,2024-06-02,SiteC,40.900,-3.600,Arabidopsis_thaliana,30,Parcel experimental
 S003,2024-06-01,SiteB,41.001,-3.500,Fragaria_vesca,12,Bosque claro
 S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana
@@ -182,54 +209,13 @@ S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino
 S005,2024-06-15,SiteB,41.001,-3.500,Betula_pendula,2,Jóvenes
 ```
 
-`-k7,7` dice "ordena por la columna 7 y solo por la 7" (sin el segundo `7`, `sort` seguiría comparando columnas posteriores en caso de empate). `-nr` combina numérico (`-n`) y descendente (`-r`).
-
 # Eliminar duplicados: `uniq`
 
-`uniq` elimina líneas duplicadas — pero con una condición importante: **solo detecta duplicados en líneas consecutivas**. Si las líneas iguales no están juntas, `uniq` no las agrupa. Por eso casi siempre verás `sort` justo antes de `uniq` en una tubería: `sort` agrupa las líneas iguales, y entonces `uniq` puede eliminarlas. Con `-c`, además de eliminar duplicados, cuenta cuántas veces aparecía cada línea.
+`uniq` elimina líneas duplicadas **consecutivas**. Si las líneas iguales no están juntas, `uniq` no las agrupa. Por eso casi siempre verás `sort` justo antes de `uniq` en una tubería: `sort` agrupa las líneas iguales, y entonces `uniq` puede eliminarlas. Con `-c`, además de eliminar duplicados, cuenta cuántas veces aparecía cada línea.
 
-# Combinar archivos horizontalmente: `paste` y `join`
-
-`paste` une archivos por **posición** (la línea 1 con la línea 1, la línea 2 con la línea 2...), sin mirar el contenido. 
-
-```bash
-~$ paste gene_info.csv gene_expression.csv
-```
-La opción `-d` permite modificar el carácter usado para unirlos. 
-
-`join` es más útil y une dos archivos emparejando las líneas cuyo campo clave coincide. 
-
-Para ello
-
-
-
-
-
-
-
-Usa el archivo [sitios_info.csv](../datasets/sitios_info.csv), con información de hábitat por sitio y *species_observations*.
-
-El uso de `join` es el siguiente: 
-
-```
-join -t 
-`` 
-
-`join` tiene dos requisitos: ambos archivos deben estar **ordenados** por el campo clave, y por defecto compara el primer campo de cada uno. En `species_observations.csv` el sitio está en la columna 3, así que primero lo extraemos y ordenamos:
-
-```{.bash}
-~$ cut -d',' -f3,6,7 species_observations.csv | tail -n +2 | sort -t',' -k1,1 > obs_por_site.csv
-~$ tail -n +2 sitios_info.csv | sort -t',' -k1,1 > sitios_ordenado.csv
-~$ join -t',' obs_por_site.csv sitios_ordenado.csv
-SiteA,Acer_campestre,18,Encinar
-SiteA,Castanea_sativa,12,Encinar
-SiteA,Cistus_ladanifer,5,Encinar
-...
-```
-
-`-t','` le dice a `join` que el separador es la coma (si no se lo indicas, asume espacios). Cada línea del resultado junta una observación con el hábitat de su sitio — y si un sitio no apareciera en `sitios_info.csv`, `join` simplemente lo omitiría del resultado, a diferencia de `paste`, que habría pegado columnas sin sentido entre archivos de distinto contenido.
-
-
+:::{.callout-tip title="Cuestión" }
+- ¿Cuántas especies distintas has encontrado?
+:::
 
 # Editar archivos: `sed`, `nano` y `vim`
 
@@ -237,37 +223,27 @@ Todo lo anterior lee y transforma archivos, pero no los edita a mano. Hay dos fo
 
 ## `sed`: editar sin abrir el archivo
 
-`sed` (*stream editor*) aplica cambios al contenido de un archivo sin necesidad de abrirlo. Su función más usada es `s` (*substitute*): `sed 's/texto_antiguo/texto_nuevo/'` sustituye, en cada línea, la primera aparición de `texto_antiguo` por `texto_nuevo`.
+`sed` (*stream editor*) aplica cambios al contenido de un archivo sin necesidad de abrirlo. 
 
-Por ejemplo, hay una errata real en `species_observations.csv`: la fila `S004` dice `Parcel experimental` en vez de `Parcela experimental`:
-
-```{.bash}
-~$ grep 'Parcel ' species_observations.csv
-S004,2024-06-02,SiteC,40.9,-3.6,Arabidopsis_thaliana,30,Parcel experimental
-~$ sed 's/Parcel /Parcela /' species_observations.csv | grep 'Parcela experimental'
-S004,2024-06-02,SiteC,40.9,-3.6,Arabidopsis_thaliana,30,Parcela experimental
-```
-
-Por defecto `sed` **no modifica el archivo original**: imprime el resultado corregido por pantalla, y el archivo en disco sigue teniendo la errata. Para conservar el resultado, redirige la salida a un archivo nuevo:
-
-```{.bash}
-~$ sed 's/Parcel /Parcela /' species_observations.csv > species_observations_corregido.csv
-```
+Su función más usada es `s` (*substitute*) y tiene la siguiente sintaxis `sed 's/texto_antiguo/texto_nuevo/g' archivo`. Este comando sustituye, en cada línea, todas las coincidencias de `texto_antiguo` por `texto_nuevo`. Si omitimos la opcion `g` (global),  `sed 's/texto_antiguo/texto_nuevo/' archivo` solo se sustituiría la primera coincidencia de cada línea.
 
 ::: {.callout-tip title=Cuestión}
-- Convierte los tabuladores de `gene_info.csv` en `;` con `tr '\t' ';'`.
-- Sobre ese resultado, convierte ahora los `;` en espacios con `tr ';' ' '`.
-- Con ese segundo resultado, intenta extraer la columna `description` con `cut -d' ' -f3`.
-
-¿Obtienes lo mismo que con `cut -d'\t' -f3` sobre el archivo original? ¿A qué se debe la diferencia?
+- Modifica una errata que hay en `species_observations.csv`: la fila `S004` dice `Parcel experimental` en vez de `Parcela experimental`
 :::
 
+Por defecto `sed` **no modifica el archivo original**: imprime el resultado corregido por pantalla, y el archivo en disco sigue teniendo la errata. Para conservar el resultado, redirige la salida a un archivo nuevo.
 
 ::: {.callout-warning}
 No redirijas la salida al mismo archivo de entrada (`sed '...' archivo.csv > archivo.csv`): `sed` lee el archivo a la vez que intentas sobrescribirlo, y acabas con un archivo vacío. Si de verdad quieres modificar el archivo original, algunas versiones de `sed` aceptan la opción `-i` (*in-place*) — pero úsala con cuidado, porque no pide confirmación ni se puede deshacer.
 :::
 
-`s/.../.../ ` es solo la punta del iceberg: en el módulo 4 verás cómo combinarlo con expresiones regulares para sustituciones mucho más potentes que un texto literal.
+
+::: {.callout-tip title=Cuestión}
+- Convierte los tabuladores (el tabulador se codifica como `\t`) de `gene_info.csv` en `;`.
+- Sobre ese resultado, convierte ahora los `;` en espacios.
+- Intenta extraer la columna `description`.
+:::
+
 
 ## `nano`
 
@@ -298,17 +274,13 @@ Quedarse "atrapado" en `vim` sin saber cómo salir es casi un rito de iniciació
 
 # Ejercicios
 
-1. Muestra el contenido completo de `species_observations.csv` con `cat`.
-2. Muestra las 3 primeras filas de datos (sin contar la cabecera) con `head`, y las 2 últimas con `tail`.
-3. Cuenta cuántas observaciones (sin contar la cabecera) hay en `species_observations.csv`.
-4. Extrae solo las columnas `site` y `species` de `species_observations.csv` con `cut`.
-5. Ordena las observaciones de `species_observations.csv` por número de individuos (`count`) de mayor a menor.
-6. Usando `cut`, divide `species_observations.csv` en dos archivos: uno con `sample_id` y `site`, otro con `species` y `count`. Vuelve a unirlos con `paste` en el orden original.
-7. En `registro_campo_bruto.csv`, cuenta cuántas veces aparece cada localidad usando `cut`, `sort` y `uniq -c`.
-8. Corrige el resultado del ejercicio anterior añadiendo `tr` (minúsculas) y `sed` (eliminar espacios finales) antes de `sort`/`uniq -c`. Deberías obtener exactamente 4 localidades, con recuentos que sumen 12.
-9. Usa `cat -A` sobre las 3 primeras líneas de `species_observations.csv` (con `head -3 | cat -A`). Localiza una fila con una vocal acentuada e identifica los dos códigos `M-x` que la representan.
-10. Usando [sitios_info.csv](../datasets/sitios_info.csv), obtén con `join` una tabla que combine cada observación (`site`, `species`, `count`) con el `habitat` de su sitio. Recuerda ordenar ambos archivos por la columna clave antes de unirlos.
-11. Usa `sed 's/.../.../'` para corregir la errata `Parcel experimental` → `Parcela experimental` en `species_observations.csv`, guardando el resultado en `species_observations_corregido.csv` sin modificar el archivo original.
-12. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar) y guarda los cambios con `:wq`.
-13. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. ¿Cuántas secuencias hay en cada fichero? Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)
-14. Disponemos de un [fichero](../datasets/tomate.sam) con el resultado de un mapeo en formato SAM ¿Cuntas secuencias se han mapeado? ¿Cuántas se han mapeado en dirección reversa (mirad la segunda columna: 0 forward; 16 reverse)? ¿Cuántos y cuáles son los unigenes a los que se ha podido mapear alguna secuencia? Ordena las nombres de secuencias mapeadas con el orden del unigene y la posición en el unigene.
+1. Muestra las 3 primeras filas de `species_observations.csv` (sin contar la cabecera), y las 2 últimas.
+2. Cuenta cuántas observaciones (sin contar la cabecera) hay en `species_observations.csv`.
+3. Extrae solo las columnas `site` y `species` de `species_observations.csv`.
+4. Ordena las observaciones de `species_observations.csv` por especie.
+5. Divide `species_observations.csv` en dos archivos: uno con `sample_id` y `site`, otro con `species` y `count`.
+6. ¿Cuántas localidades diferentes se han muestreado? ¿Cuántas veces aparece cada una?
+7. Corrige el archivo para que se ajuste al número de sitios y guárdalo corregido.
+8. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar).
+9. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. ¿Cuántas secuencias hay en cada fichero? Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)
+10. Disponemos de un [fichero](../datasets/tomate.sam) con el resultado de un mapeo en formato SAM ¿Cuántas secuencias se han mapeado? ¿Cuántas se han mapeado en dirección reversa (mirad la segunda columna: 0 forward; 16 reverse)? ¿Cuántos y cuáles son los unigenes a los que se ha podido mapear alguna secuencia? Ordena los nombres de secuencias mapeadas con el orden del unigene y la posición en el unigene.

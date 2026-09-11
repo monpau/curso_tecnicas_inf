@@ -35,7 +35,7 @@ Es la misma idea que el buscador avanzado de cualquier editor de texto cuando ac
 
 Acertar con un patrón a la primera es difícil incluso con experiencia: es fácil que capture menos —o más— de lo que querías. [regex101.com](https://regex101.com/) es una herramienta online gratuita que muestra, mientras escribes, qué partes de un texto coinciden con tu patrón —resaltadas en color— junto con una explicación de cada fragmento.
 
-Cómo usarla en este módulo:
+Cómo usarla:
 
 1. Abre <https://regex101.com/>.
 2. En el panel izquierdo ("FLAVOR"), selecciona **Python** — es el motor más parecido al que usaremos más adelante en el curso, y comparte casi toda la sintaxis básica con `grep -E`.
@@ -47,76 +47,10 @@ Cómo usarla en este módulo:
 regex101 no es idéntico a `grep -E`/`sed`: son "dialectos" de expresiones regulares ligeramente distintos (por ejemplo, `\d` funciona en Python pero no en `grep -E` estándar). Para los patrones de este módulo —alternativas `|`, anclas `^`/`$`, cuantificadores `+`/`*`— el comportamiento es el mismo en ambos, así que puedes probar ahí con confianza y copiar el resultado a la terminal.
 :::
 
-## Materiales
 
-Este módulo usa tres archivos de `datasets/` (cópialos con `gedit` tal cual aparecen aquí):
+Vamos a trabajar con tres archivos: [sequences.fasta](../datasets/sequences.fasta), [codigos_muestreo.csv](../datasets/codigos_muestero.csv) y [registro_campo_bruto.csv](../datasets/registro_campo_bruto.csv)
 
-**`codigos_muestreo.csv`**
-
-```
-codigo,especie
-PRA18,Erica arborea
-RAB22,Genista florida
-GCB07,Betula pendula
-PSI15,Pinus uncinata
-ESO09,Quercus pyrenaica
-RCA05,Juniperus communis
-PAA31,Rhododendron ferrugineum
-RSB44,Vaccinium myrtillus
-GAA12,Calluna vulgaris
-PRB08,Arctostaphylos uva-ursi
-RAA99,Saxifraga pyrenaica
-PIO61,Silene ciliata
-```
-
-**`sequences.fasta`**
-
-```
->seq1|Arabidopsis_thaliana|rbcL
-ATGTCACCACAAACAGAGACTATCGACTGCTGCTGCTGCTGCTGCTGCTG
->seq2|Quercus_robur|matK
-ATGGCCTTAGGCTTAGCTAGCTAGGCTAGCTAGCTAGCTAGCTAGCTAA
->seq3|Pinus_sylvestris|rbcL
-ATGACCATGATTACGCCAAGCTTGGCACTGCTGCTGCTGATGCGT
->seq4|Fragaria_vesca|trnL
-GATCGATCGATCGATCGATCGATCGATCGATCGA
-```
-
-**`registro_campo_bruto.csv`**
-
-```
-sample_id,fecha,localidad,especie,notas
-S101,2024-04-02,Sierra de Gredos,Quercus robur,Ejemplar adulto
-S102,2024-04-02,sierra de gredos,quercus robur,Cerca del rio
-S103,2024-04-03,Sierra De Gredos,QUERCUS ROBUR,Varios individuos jovenes
-S104,2024-04-05,El Escorial,Pinus sylvestris,Buen estado
-S105,2024-04-05,el escorial,Pinus silvestris,Posible plaga
-S106,2024-04-05,El escorial ,Pinus  sylvestris,Revisar corteza
-S107,2024-04-10,Sierra de Guadarrama,Betula pendula,Hoja amarillenta
-S108,2024-04-10,Sierra de guadarrama,betula Pendula,Cerca del arroyo
-S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
-S110,2024-04-15,Picos de Europa,Fagus sylvatica,Bosque denso
-S111,2024-04-15,picos de europa,Fagus silvatica,Sotobosque humedo
-S112,2024-04-15,Picos De Europa,FAGUS SYLVATICA,Zona protegida
-```
-
-Este segundo archivo es un registro de campo tal como podría llegar de varias personas anotando sobre el terreno: fíjate en `Pinus sylvestris` frente a `Pinus silvestris` (errata real y muy común, cambia la "y" por "i"), en `Sierra de Gredos`/`sierra de gredos`/`Sierra De Gredos` (misma localidad, mayúsculas distintas) y en `El escorial ` (con un espacio sobrante al final). Este tipo de inconsistencias es la norma, no la excepción, en datos recogidos a mano.
-
-## Patrones básicos con `grep`
-
-```
-~$ grep "Quercus" sequences.fasta
->seq2|Quercus_robur|matK
-```
-
-`grep` busca líneas que contienen el patrón indicado. Por defecto distingue mayúsculas de minúsculas; con `-i` deja de hacerlo:
-
-```
-~$ grep -i "quercus" sequences.fasta
->seq2|Quercus_robur|matK
-```
-
-## Contenedores
+# Contenedores
 
 Un contenedor, escrito entre corchetes `[...]`, significa "uno cualquiera de estos caracteres". `[PR]` coincide con una `P` **o** una `R` (y con nada más) en esa posición:
 
@@ -165,7 +99,7 @@ RAA99,Saxifraga pyrenaica
 
 Exactamente las 5 filas del ejemplo con el que abría el módulo. Cada trozo del patrón `^[PR].[AB][1-9][0-9]` corresponde a una condición: `^` ancla al principio de línea, `[PR]` la localidad, `.` el sustrato (cualquiera), `[AB]` la época, y `[1-9][0-9]` una altura de dos cifras mayor que 9.
 
-## Alternativas y anclas con `grep -E`
+# Alternativas y anclas con `grep -E`
 
 El ancla `^` ya la has usado: marca el principio de línea. Su pareja, `$`, marca el final. Con `-E` (expresiones regulares extendidas) tienes además `|`, que expresa alternativas más generales que un contenedor: mientras que `[AB]` solo sirve para elegir entre caracteres sueltos, `|` permite alternar entre palabras o frases enteras, como `Quercus_robur|Pinus_sylvestris`:
 
