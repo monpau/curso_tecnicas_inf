@@ -1,0 +1,15 @@
+##gff-version 3
+chr1	annotation	gene	1001	5000	.	+	.	ID=gene001;Name=RBCS1;function=Ribulose bisphosphate carboxylase small chain
+chr1	annotation	mRNA	1001	5000	.	+	.	ID=transcript001;Parent=gene001
+chr1	annotation	exon	1001	1200	.	+	.	Parent=transcript001
+chr1	annotation	exon	4800	5000	.	+	.	Parent=transcript001
+chr1	annotation	gene	8200	9100	.	-	.	ID=gene002;Name=PSBA1;function=Photosystem II protein D1
+chr1	annotation	mRNA	8200	9100	.	-	.	ID=transcript002;Parent=gene002
+chr1	annotation	exon	8200	9100	.	-	.	Parent=transcript002
+chr2	annotation	gene	305	1890	.	+	.	ID=gene003;Name=MATK1;function=Maturase K
+chr2	annotation	mRNA	305	1890	.	+	.	ID=transcript003;Parent=gene003
+chr2	annotation	exon	305	620	.	+	.	Parent=transcript003
+chr2	annotation	exon	1500	1890	.	+	.	Parent=transcript003
+chr2	annotation	gene	4400	4950	.	-	.	ID=gene004;Name=TRNL1;function=Transfer RNA-Leu
+chr2	annotation	mRNA	4400	4950	.	-	.	ID=transcript004;Parent=gene004
+chr2	annotation	exon	4400	4950	.	-	.	Parent=transcript004

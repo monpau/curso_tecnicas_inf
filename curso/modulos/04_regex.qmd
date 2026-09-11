@@ -48,7 +48,7 @@ regex101 no es idéntico a `grep -E`/`sed`: son "dialectos" de expresiones regul
 :::
 
 
-Vamos a trabajar con tres archivos: [sequences.fasta](../datasets/sequences.fasta), [codigos_muestreo.csv](../datasets/codigos_muestero.csv) y [registro_campo_bruto.csv](../datasets/registro_campo_bruto.csv)
+Vamos a trabajar con varios archivos: [sequences.fasta](../datasets/sequences.fasta), [codigos_muestreo.csv](../datasets/codigos_muestreo.csv), [registro_campo_bruto.csv](../datasets/registro_campo_bruto.csv), [orfs.fasta](../datasets/orfs.fasta), [uniprot_headers.fasta](../datasets/uniprot_headers.fasta) y [anotacion.gff3](../datasets/anotacion.gff3)
 
 # Contenedores
 
@@ -146,6 +146,8 @@ S109,2024-04-12,Sierra de Gredos,Qurcus robur,Posible error de tipeo
 
 `que?rcus` significa "q", "u", luego una "e" opcional, y luego "rcus": encuentra tanto "Quercus" (con e) como la errata "Qurcus" (sin e), en las cuatro filas, en una sola búsqueda y sin necesidad de conocer de antemano cada variante.
 
+Cuando lo que necesitas no es "cero o una vez" sino un número concreto de repeticiones, `*`/`+`/`?` se quedan cortos. Las llaves `{n}`, `{n,}` y `{n,m}` cubren ese caso: `{n}` exige exactamente `n` repeticiones, `{n,}` exige `n` o más, y `{n,m}` exige entre `n` y `m`. Por ejemplo, `A{5,}` encuentra una tirada de 5 adeninas seguidas o más — útil, entre otras cosas, para detectar fragmentos de una longitud mínima dentro de una secuencia, como verás en los ejercicios.
+
 ## Sustituciones con `sed`
 
 `sed 's/patrón/reemplazo/'` sustituye la primera coincidencia de cada línea; con la bandera `g` sustituye todas:
@@ -161,6 +163,22 @@ La segunda orden colapsa cualquier secuencia de espacios repetidos (`  *` = un e
 `sed` por defecto **no modifica el archivo original**: imprime el resultado por pantalla. Para guardarlo, redirige la salida a un archivo nuevo (`sed '...' entrada.csv > salida.csv`) — nunca redirijas al mismo archivo de entrada en la misma orden, lo dejarías vacío.
 :::
 
+## Grupos de captura
+
+Hasta ahora usabas `sed` para sustituir texto por otro texto fijo. Pero también puedes **capturar** trozos del patrón que coincide, envolviéndolos entre paréntesis `(...)`, y reutilizarlos en el reemplazo con `\1`, `\2`... (el primer grupo capturado, el segundo...). Es la manera de reordenar o extraer partes de un texto sin tener que escribirlas a mano.
+
+Por ejemplo, cada cabecera de `sequences.fasta` tiene el formato `>seqN|Genero_especie|marcador`. Para quedarte solo con el género/especie y el marcador entre paréntesis, descartando el número de secuencia:
+
+```
+~$ grep '^>' sequences.fasta | sed -E 's/^>seq[0-9]+\|([A-Za-z_]+)\|([A-Za-z0-9]+)/\1 (\2)/'
+Arabidopsis_thaliana (rbcL)
+Quercus_robur (matK)
+Pinus_sylvestris (rbcL)
+Fragaria_vesca (trnL)
+```
+
+El primer paréntesis `([A-Za-z_]+)` captura el género y la especie; el segundo, `([A-Za-z0-9]+)`, captura el marcador. En el reemplazo, `\1 (\2)` los coloca en el orden que quieras, con el texto que añadas alrededor (aquí, un espacio y unos paréntesis) — el resto de la cabecera (`>seq1|`, `|`) simplemente desaparece, porque no forma parte de ningún grupo capturado.
+
 ## Ejercicios
 
 Si te atascas con un patrón, prototípalo primero en [regex101.com](https://regex101.com/) (flavor Python) pegando las líneas relevantes del archivo, y cuando funcione cópialo a la terminal.
@@ -173,6 +191,9 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
 6. En `registro_campo_bruto.csv`, cuenta cuántas filas mencionan la localidad "Sierra de Gredos" en cualquier combinación de mayúsculas/minúsculas.
 7. Usa `sed` para generar una versión de `registro_campo_bruto.csv` en la que todas las apariciones de `silvestris` estén corregidas a `sylvestris`, guardando el resultado en `registro_campo_limpio.csv`.
 8. (Reto) Encadena `grep` y `sed` con una tubería (`|`) para, en una sola línea, quedarte solo con las filas de `Betula pendula` (en cualquier combinación de mayúsculas/minúsculas) y normalizar esas filas a minúsculas.
+9. (Reto) En [orfs.fasta](../datasets/orfs.fasta) hay cuatro secuencias en una sola línea cada una. Usando `grep -B 1` (para que también se muestre la cabecera de cada coincidencia) y un patrón con cuantificadores, localiza las secuencias que contienen un fragmento de **al menos 100 pb** que empiece por `ATG` y termine en un codón de parada (`TAA`, `TAG` o `TGA`). Debe darte una sola secuencia — las otras tres fallan cada una por un motivo distinto (demasiado corta, sin codón de parada, o sin `ATG`); identifica cuál es cuál.
+10. (Reto) [uniprot_headers.fasta](../datasets/uniprot_headers.fasta) contiene cabeceras de UniProt con el formato `>sp|CÓDIGO|PROT_ESPECIE descripción...` (o `tr|` en vez de `sp|`). Usando `grep`, `sed` y grupos de captura, genera una tabla con tres columnas separadas por tabulador: `codigo`, `prot` y `sp` (la especie).
+11. (Reto) [anotacion.gff3](../datasets/anotacion.gff3) contiene, para cada gen, una línea de tipo `gene` (con su nombre y función en la columna de atributos, `Name=...;function=...`) seguida de líneas `mRNA` y `exon` que no te interesan aquí. Usando `grep` (para quedarte solo con las líneas `gene` — el separador entre columnas es un tabulador, `$'\t'` en bash) y `sed` con grupos de captura, genera un CSV con las columnas `gen,cromosoma,posicion,funcion`, donde `posicion` tenga el formato `inicio-fin`.
 
 ## Soluciones
 
@@ -184,3 +205,28 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
 6. `grep -ci "sierra de gredos" registro_campo_bruto.csv` → `4` (filas `S101`, `S102`, `S103` y `S109`)
 7. `sed 's/silvestris/sylvestris/' registro_campo_bruto.csv > registro_campo_limpio.csv`
 8. `grep -i "betula pendula" registro_campo_bruto.csv | tr '[:upper:]' '[:lower:]'`
+9.
+   ```
+   ~$ grep -B 1 -E "ATG.{94,}(TAA|TAG|TGA)" orfs.fasta
+   >orf1|posible_ORF_largo
+   CCGGCCATG...TAACCGGCC
+   ```
+   Solo `orf1` cumple las tres condiciones a la vez. `orf2` tiene `ATG` y termina en un codón de parada, pero el fragmento entre ambos mide menos de 100 pb; `orf3` tiene `ATG` y de sobra longitud, pero no contiene ningún codón de parada; `orf4` no tiene siquiera un `ATG`.
+10. `grep '^>' uniprot_headers.fasta | sed -E 's/^>[a-z]+\|([A-Z0-9]+)\|([A-Za-z0-9]+)_([A-Za-z0-9]+).*/\1\t\2\t\3/'` produce:
+   ```
+   P12345	KPCA	HUMAN
+   P67890	FAS	MOUSE
+   Q12345	COX1	YEAST
+   P23456	LDHA	ARATH
+   P45678	P53	HUMAN
+   P34567	RPB1	ARATH
+   ```
+   El primer grupo captura el código de acceso, el segundo el nombre corto de la proteína y el tercero el código de especie — el `.*` final descarta el resto de la descripción sin necesidad de capturarlo.
+11. `grep $'\tgene\t' anotacion.gff3 | sed -E 's/^([^\t]+)\t[^\t]+\tgene\t([0-9]+)\t([0-9]+)\t[^\t]+\t[^\t]+\t[^\t]+\tID=[^;]+;Name=([^;]+);function=(.+)$/\4,\1,\2-\3,\5/'` produce:
+   ```
+   RBCS1,chr1,1001-5000,Ribulose bisphosphate carboxylase small chain
+   PSBA1,chr1,8200-9100,Photosystem II protein D1
+   MATK1,chr2,305-1890,Maturase K
+   TRNL1,chr2,4400-4950,Transfer RNA-Leu
+   ```
+   `grep $'\tgene\t'` se queda solo con las líneas donde la tercera columna es `gene` (las de `mRNA` y `exon` quedan fuera). El `sed` captura por separado el cromosoma (grupo 1), el inicio y fin (grupos 2 y 3), el nombre tras `Name=` (grupo 4) y el texto tras `function=` (grupo 5), y los reordena en el reemplazo como `gen,cromosoma,posicion,funcion`.

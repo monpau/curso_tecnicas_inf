@@ -94,6 +94,52 @@ done
 Antes de lanzar un renombrado masivo, es buena práctica probar el bucle sustituyendo `mv "$archivo" "$nuevo"` por `echo "$archivo" "->" "$nuevo"` y comprobar que los nombres nuevos son los que esperas. Un `mv` mal calculado, igual que un `rm`, no tiene deshacer.
 :::
 
+# `awk`: procesar texto por columnas
+
+`awk` es un lenguaje pensado para archivos con estructura de columnas: lee el archivo línea a línea y, en cada línea, separa automáticamente los campos — por defecto por espacios o tabuladores — a los que te refieres como `$1`, `$2`, `$3`... (`$0` es la línea completa, sin dividir). Su forma básica es:
+
+```
+awk '{acción}' archivo
+```
+
+`-F` indica el separador de campo, igual que `-d` en `cut`.
+
+## Imprimir columnas
+
+`print` muestra lo que le pases, separado por comas en el propio `print` (que `awk` traduce a un espacio en la salida). Vamos a usar [blast_tabular.tsv](../datasets/blast_tabular.tsv), un resultado de BLAST en formato tabular (`-outfmt 6`, separado por tabuladores) donde cada fila es el mejor alineamiento de un gen contra una base de datos de referencia:
+
+```{.bash}
+~$ awk -F'\t' '{print $1, $2}' blast_tabular.tsv
+pka ref_pka_Athaliana
+fos ref_fos_Athaliana
+cox ref_cox_Athaliana
+lac ref_lac_Athaliana
+p53 ref_p53_Athaliana
+rna ref_rna_Athaliana
+```
+
+`$1` es el identificador del gen consultado (*query*) y `$2` el de la secuencia de referencia con la que ha alineado — las dos primeras columnas de cualquier salida de BLAST tabular. A diferencia de `cut -f1,2`, que solo puede extraer columnas tal cual, `awk` te deja además calcular con ellas.
+
+## Calcular una división: porcentaje de cobertura
+
+Cada fila de `blast_tabular.tsv` trae, entre otras, la columna 4 (`length`, la longitud del alineamiento) y la columna 13 (`qlen`, la longitud total del gen consultado). La cobertura del gen es qué proporción de su longitud total ha quedado cubierta por el alineamiento: `length / qlen`. `awk` hace aritmética con `+ - * /` directamente sobre los campos:
+
+```{.bash}
+~$ awk -F'\t' '{printf "%s\t%.1f%%\n", $1, ($4/$13)*100}' blast_tabular.tsv
+pka	90.0%
+fos	93.8%
+cox	100.0%
+lac	45.0%
+p53	100.0%
+rna	100.0%
+```
+
+`printf` (en vez de `print`) permite controlar el formato: `%s` inserta el nombre del gen como texto, `%.1f%%` inserta el número con un decimal seguido de un `%` literal (por eso va doblado, `%%`), y `\t`/`\n` separan con un tabulador y saltan de línea al final, igual que en los `echo`/`sed` que ya conoces.
+
+::: {.callout-note}
+Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje de identidad) alto no basta para confiar en un hit de BLAST — un alineamiento muy parecido pero muy corto respecto al gen completo puede ser un dominio compartido o una coincidencia parcial, no el gen entero.
+:::
+
 # Ejercicios
 
 1. Construye un comando que cuente cuántas secuencias hay en `sequences.fasta` (pista: cabeceras que empiezan por `>`).
@@ -103,6 +149,8 @@ Antes de lanzar un renombrado masivo, es buena práctica probar el bucle sustitu
 5. Escribe un bucle `for` que recorra cada `site` distinto de `species_observations.csv` (obtenido con `cut`, `tail -n +2` y `sort -u`) y muestre cuántas observaciones tiene cada uno.
 6. Crea (con `touch`) estos tres archivos vacíos: `RUN2024_LANE3_S010_Betula_pendula_R1.fastq.gz`, `RUN2024_LANE3_S011_Salix_alba_R1.fastq.gz`, `RUN2024_LANE3_S012_Olea_europaea_R1.fastq.gz`. Escribe un script que los recorra con `for` y los renombre, quedándote solo con la muestra y la lectura (`S010_R1.fastq.gz`, `S011_R1.fastq.gz`, `S012_R1.fastq.gz`).
 7. (Reto) Amplía el script anterior para que, antes de renombrar cada archivo, muestre por pantalla la muestra y la especie en formato `S010,Betula_pendula` (usa `cut` una segunda vez sobre `$archivo` para extraer los campos de la especie).
+8. Usando [blast_tabular.tsv](../datasets/blast_tabular.tsv), escribe un `awk` que imprima solo el identificador del gen (`$1`) y su porcentaje de identidad (`$3`, `pident`).
+9. (Reto) Amplía el `awk` anterior para que, además, calcule y muestre el porcentaje de cobertura (`$4/$13*100`) de cada gen, con un decimal. ¿Qué gen tiene la cobertura más baja?
 
 ## Soluciones
 
@@ -170,3 +218,15 @@ Antes de lanzar un renombrado masivo, es buena práctica probar el bucle sustitu
      mv "$archivo" "$nuevo"
    done
    ```
+8. `awk -F'\t' '{print $1, $3}' blast_tabular.tsv`
+9.
+   ```
+   ~$ awk -F'\t' '{printf "%s\t%.1f\n", $1, ($4/$13)*100}' blast_tabular.tsv
+   pka	90.0
+   fos	93.8
+   cox	100.0
+   lac	45.0
+   p53	100.0
+   rna	100.0
+   ```
+   `lac` tiene la cobertura más baja, un 45%.
