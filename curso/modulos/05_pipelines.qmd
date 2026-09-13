@@ -2,39 +2,56 @@
 title: "Programación en shell"
 ---
 
-
 # Scripts de shell
 
-Un pipeline útil merece guardarse para no volver a teclearlo. Un script de shell es un archivo de texto con una secuencia de comandos, más una primera línea especial (la *shebang*, `#!/bin/bash`) que le dice al sistema con qué programa ejecutarlo:
+Los *scripts* (archivo con un conjunto de órdenes) permiten automatizar y acelerar el trabajo.
+
+Vamos a crear nuestro primer script. Para ello en un editor de texto escribiremos lo siguente y lo guardaremos con el nombre hola.sh.
 
 ```bash
 #!/bin/bash
-grep -c "^>" "$1"
+# Este es nuestro primer progrma
+echo Hola Mundo
 ```
 
-`$1` es el primer argumento que le pases al script al ejecutarlo — así el script funciona con cualquier archivo FASTA, no solo con `sequences.fasta`. Guarda esto como `contar_secuencias.sh`, dale permiso de ejecución, y ejecútalo:
+A continuación iremos a la terminal y lo ejecutaremos:
 
+```{.bash}
+~$ ./hola.sh
 ```
-~$ chmod +x contar_secuencias.sh
-~$ ./contar_secuencias.sh sequences.fasta
-4
+La primera línea (la *shebang*, `#!/bin/bash`) que le dice al sistema con qué programa ejecutarlo. La segunda es un comentario para consumo humano ya que va precedido de `#`. La tercera línea es la que incia que queremos imprimir en pantalla (`echo)
+
+:::{.callout-tip title=Cuestión}
+¿Podrías crear un script que tomara un archivo FASTA y contara el número de secuencias?
+
+Queremos generar un script que funcione así:
+
+contar_seqs.sh sequences.fasta
+
+Pista: para que un script tome el argumento que pasamos luego (sequences.fasta en este caso) se hace llamando `$1`
+:::
+
+
+::: {.callout-note collapse="true"}
+
+```bash
+#!/bin/bash
+grep "^>" "$1" | wc -l
 ```
 
-`chmod +x` es necesario porque, igual que viste en el módulo 2, un archivo nuevo no es ejecutable por defecto. `./` delante del nombre le dice a la terminal "ejecuta el script que está en este directorio" (sin la `./`, buscaría un comando llamado `contar_secuencias.sh` entre los comandos del sistema, y no lo encontraría).
-
-::: {.callout-note}
 Las comillas dobles alrededor de `"$1"` no son decoración: si el argumento tuviera espacios (como los nombres de archivo mal escritos que viste en el módulo 2, del tipo `"Muestra 01.fastq"`), sin comillas el script lo trocearía en varios argumentos. Poner siempre `"$1"` entre comillas es un hábito que te evitará errores difíciles de depurar.
 :::
 
 ## Variables
 
-Un script gana en claridad cuando guarda valores intermedios en variables en vez de repetirlos. Se asignan con `nombre=valor` (sin espacios alrededor del `=`) y se recuperan anteponiendo `$`:
+Podemos guardar valores en variables. Estas se asignan con `nombre=valor` (sin espacios alrededor del `=`) y se recuperan anteponiendo `$`:
 
 ```bash
 #!/bin/bash
-archivo=$1
-total=$(grep -c "^>" "$archivo")
-echo "El archivo $archivo tiene $total secuencias"
+to_print='Hola caracola'
+echo to_print ahora es $to_print
+to_print=5.5
+echo to_print ahora es $to_print
 ```
 
 Los nombres de variable solo pueden contener letras, números y `_`, y por convención se escriben en minúsculas — así se evita chocar con variables del propio sistema, que suelen ir en mayúsculas (`PATH`, `HOME`...).
@@ -43,55 +60,79 @@ Los nombres de variable solo pueden contener letras, números y `_`, y por conve
 
 `for` repite un bloque de comandos una vez por cada elemento de una lista. Esa lista puede venir de tres formas:
 
-- Un rango numérico: `for numero in {1..10}`
-- Una lista de valores escritos a mano: `for site in SiteA SiteB SiteC`
-- La salida de un comando: `for site in $(comando)`
+- Un rango numérico: `for variable in {1..10}`
+- Una lista de valores escritos a mano: `for variable in SiteA SiteB SiteC`
+- La salida de un comando: `for variable in $(comando)` 
 
-La tercera forma es la más potente, porque conecta un bucle con cualquier pipeline que ya sepas construir. Por ejemplo, para contar cuántas observaciones hay de cada `site` en `species_observations.csv` sin escribir los nombres de sitio a mano:
+:::{.callout-tip title=Cuestión}
+¿Qué qué valores iría tomando `var1` en los siguientes casos?
 
+- `for var1 in $(ls *.txt)`
+- `for var1 in $(grep '>' sequences.fasta)`
+- `for var1 in $(grep '>' sequences.fasta | sed 's/>//')` 
+- `for var1 in $(grep '>' sequences.fasta | sed 's/>//' | cut -f 1 -d'|')`
+:::
+
+Tras un `for` los comandos se ejecutan dentro de un bloque `do-done`:
+
+```{.bash}
+#!/bin/bash
+for numero in {1..20};
+do
+  echo Este es el número: $numero
+done
+```
+
+:::{.callout-tip title=Cuestión}
+¿Podrías contar cuántas observaciones hay de cada `site` en `species_observations.csv` sin escribir los nombres de sitio a mano?
+:::
+
+:::{.callout-note collapse="true"}
 ```bash
 #!/bin/bash
 for site in $(cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u);
 do
-  n=$(grep -c "$site" species_observations.csv)
+  n=$(grep "$site" species_observations.csv | wc -l)
   echo "$site: $n observaciones"
 done
 ```
+:::
 
 ## Renombrar archivos en bloque
 
 Un uso muy habitual de `for` es renombrar muchos archivos a la vez — por ejemplo, los que descargas de un secuenciador o de una base de datos suelen traer nombres largos con información redundante, de los que solo te interesa una parte. Combinando `for` con `cut` (que ya conoces del módulo 3) y `mv` puedes quedarte con la parte significativa del nombre sin tocarlos uno a uno.
 
-Imagina estos tres archivos, con la tirada, el carril, la muestra, la especie y el número de lectura todo junto en el nombre:
+Imagina estos tres archivos, con el *run* del secuenciador, la *lane* en la que se corrió, el nombre de la muestra, la especie y la dirección de las lecturas (R1 o R2) todo junto en el nombre:
 
 ```
 RUN2024_LANE3_S001_Quercus_robur_R1.fastq.gz
-RUN2024_LANE3_S002_Pinus_sylvestris_R1.fastq.gz
+RUN2024_LANE3_S002_Pinus_sylvestris_R2.fastq.gz
 RUN2024_LANE3_S003_Fragaria_vesca_R1.fastq.gz
 ```
 
-Y que lo único que quieres conservar es la muestra y la lectura: `S001_R1.fastq.gz`, `S002_R1.fastq.gz`, etc. `cut` puede extraer varios campos a la vez y unirlos con el separador que quieras mediante `--output-delimiter`:
+Y quieres renombrarlos solo con el nombre de la muestra y la dirección de la lectura (`S001_R1.fastq.gz`, `S002_R2.fastq.gz`, ...)
 
+:::{.callout-tip title=Cuestión}
+- ¿Podrías con las herramientas que conoces extraer del nombre del archivo la información que te interesa?
+- ¿Podrías guardarlo en una variable en un script?
+- ¿Podrías incluirlo en un `for`? ¿Sobre qué hacemos el `for`?
+:::
+
+:::{.callout-note collapse="true"}
 ```{.bash}
-~$ echo "RUN2024_LANE3_S001_Quercus_robur_R1.fastq.gz" | cut -d'_' -f3,6 --output-delimiter='_'
-S001_R1.fastq.gz
-```
-
-El campo 3 es la muestra (`S001`) y el campo 6 es `R1.fastq.gz` (recuerda que `cut` cuenta también la extensión como parte del último campo, porque el punto no es el separador). Metiéndolo en un bucle `for` que recorra los archivos y los renombre con `mv`:
-
-```bash
 #!/bin/bash
-for archivo in RUN*.fastq.gz;
+
+for file in $(ls *.fastq.gz)
 do
-  nuevo=$(echo "$archivo" | cut -d'_' -f3,6 --output-delimiter='_')
-  mv "$archivo" "$nuevo"
+   sample=$(echo "$file" | cut -d'_' -f 3)
+   direct=$(echo "$file" | cut -d'_' -f 6 | cut -d'.' -f1)
+   
+   new_file="${sample}_${direct}.fastq.gz"
+   mv "$file" "new_file"
 done
-```
+``` 
 
-`for archivo in RUN*.fastq.gz` usa el wildcard `*` del módulo 2 para recorrer solo los archivos que coinciden con ese patrón, sin tener que escribir sus nombres a mano.
-
-::: {.callout-note}
-Antes de lanzar un renombrado masivo, es buena práctica probar el bucle sustituyendo `mv "$archivo" "$nuevo"` por `echo "$archivo" "->" "$nuevo"` y comprobar que los nombres nuevos son los que esperas. Un `mv` mal calculado, igual que un `rm`, no tiene deshacer.
+Siempre, siempre, SIEMPRE, antes de lanzar un `for` (especialmente si hace uso de `rm`) asegúrate con `echo` que los nombres son los que esperas. 
 :::
 
 # `awk`: procesar texto por columnas
@@ -142,91 +183,67 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
 
 # Ejercicios
 
-1. Construye un comando que cuente cuántas secuencias hay en `sequences.fasta` (pista: cabeceras que empiezan por `>`).
-2. Escribe un script `contar_secuencias.sh` que reciba un archivo FASTA como argumento (`$1`) y muestre cuántas secuencias contiene. Dale permisos de ejecución y pruébalo con `sequences.fasta`.
-3. Modifica `contar_secuencias.sh` para que guarde el resultado de `grep -c` en una variable y muestre un mensaje más descriptivo, del tipo `El archivo sequences.fasta tiene 4 secuencias`.
-4. (Reto) Escribe un script `limpiar_localidades.sh` que reciba un CSV como argumento y aplique el pipeline completo de limpieza de localidades del módulo 3 (minúsculas, sin espacios sobrantes, ordenado y contado). Pruébalo con `registro_campo_bruto.csv`.
-5. Escribe un bucle `for` que recorra cada `site` distinto de `species_observations.csv` (obtenido con `cut`, `tail -n +2` y `sort -u`) y muestre cuántas observaciones tiene cada uno.
-6. Crea (con `touch`) estos tres archivos vacíos: `RUN2024_LANE3_S010_Betula_pendula_R1.fastq.gz`, `RUN2024_LANE3_S011_Salix_alba_R1.fastq.gz`, `RUN2024_LANE3_S012_Olea_europaea_R1.fastq.gz`. Escribe un script que los recorra con `for` y los renombre, quedándote solo con la muestra y la lectura (`S010_R1.fastq.gz`, `S011_R1.fastq.gz`, `S012_R1.fastq.gz`).
-7. (Reto) Amplía el script anterior para que, antes de renombrar cada archivo, muestre por pantalla la muestra y la especie en formato `S010,Betula_pendula` (usa `cut` una segunda vez sobre `$archivo` para extraer los campos de la especie).
-8. Usando [blast_tabular.tsv](../datasets/blast_tabular.tsv), escribe un `awk` que imprima solo el identificador del gen (`$1`) y su porcentaje de identidad (`$3`, `pident`).
-9. (Reto) Amplía el `awk` anterior para que, además, calcule y muestre el porcentaje de cobertura (`$4/$13*100`) de cada gen, con un decimal. ¿Qué gen tiene la cobertura más baja?
+1. Escribe un script `contar_observaciones.sh` que reciba un CSV como argumento (`$1`) y muestre cuántas filas de datos tiene, sin contar las líneas de cabecera. Pruébalo con `species_observations.csv` (que tiene 3 líneas de cabecera antes de los datos).
+2. Usando la forma de `for` con una lista de valores escritos a mano (`for site in SiteA SiteB SiteC SiteD SiteE`), escribe un script que cree un directorio por cada sitio y guarde dentro un archivo `observaciones.csv` solo con las filas de `species_observations.csv` de ese sitio.
+3. Usando `gene_expression.csv`, escribe un `awk` que muestre, para cada gen, su identificador y el cambio entre `sample_A` y `sample_B` (`sample_A/sample_B`), con dos decimales.
+4. Tienes fotos de cámara trampa con nombres como `IMG_2024-05-12_CameraA_0001.jpg`. Escribe un script que recorra con `for` todos los archivos `IMG_*.jpg` de un directorio y los renombre conservando solo la cámara y el número (`CameraA_0001.jpg`).
+5. (Reto) Convierte el `awk` de la cobertura en un script `cobertura.sh` que reciba el archivo BLAST tabular como argumento (`$1`), de modo que puedas ejecutarlo como `./cobertura.sh blast_tabular.tsv`.
 
 ## Soluciones
 
-1. `grep -c "^>" sequences.fasta`
+1.
+   ```bash
+   #!/bin/bash
+   total=$(tail -n +4 "$1" | wc -l)
+   echo "$1 tiene $total observaciones"
+   ```
+   ```
+   ~$ chmod +x contar_observaciones.sh
+   ~$ ./contar_observaciones.sh species_observations.csv
+   species_observations.csv tiene 117 observaciones
+   ```
 2.
    ```bash
    #!/bin/bash
-   grep -c "^>" "$1"
-   ```
-   ```
-   ~$ chmod +x contar_secuencias.sh
-   ~$ ./contar_secuencias.sh sequences.fasta
-   4
+   for site in SiteA SiteB SiteC SiteD SiteE
+   do
+     mkdir -p "$site"
+     grep "$site" species_observations.csv > "$site/observaciones.csv"
+   done
    ```
 3.
-   ```bash
-   #!/bin/bash
-   archivo=$1
-   total=$(grep -c "^>" "$archivo")
-   echo "El archivo $archivo tiene $total secuencias"
    ```
+   ~$ tail -n +4 gene_expression.csv | awk '{printf "%s\t%.2f\n", $1, $2/$3}'
+   P12345	0.82
+   P67890	0.00
+   Q12345	0.90
+   P23456	0.92
+   P34567	1.11
+   P45678	1.14
    ```
-   ~$ ./contar_secuencias.sh sequences.fasta
-   El archivo sequences.fasta tiene 4 secuencias
-   ```
+   `tail -n +4` se salta la cabecera antes de pasar el archivo a `awk`; como `gene_expression.csv` ya usa espacios como separador, no hace falta `-F`.
 4.
    ```bash
    #!/bin/bash
-   cut -d',' -f3 "$1" | tail -n +2 | tr '[:upper:]' '[:lower:]' | sed 's/ *$//' | sort | uniq -c
-   ```
-   ```
-   ~$ chmod +x limpiar_localidades.sh
-   ~$ ./limpiar_localidades.sh registro_campo_bruto.csv
-         3 el escorial
-         3 picos de europa
-         4 sierra de gredos
-         2 sierra de guadarrama
+   for file in IMG_*.jpg
+   do
+     nuevo=$(echo "$file" | cut -d'_' -f3,4 --output-delimiter='_')
+     mv "$file" "$nuevo"
+   done
    ```
 5.
    ```bash
-   for site in $(cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u);
-   do
-     n=$(grep -c "$site" species_observations.csv)
-     echo "$site: $n observaciones"
-   done
-   ```
-6.
-   ```bash
    #!/bin/bash
-   for archivo in RUN*.fastq.gz;
-   do
-     nuevo=$(echo "$archivo" | cut -d'_' -f3,6 --output-delimiter='_')
-     mv "$archivo" "$nuevo"
-   done
+   awk -F'\t' '{printf "%s\t%.1f%%\n", $1, ($4/$13)*100}' "$1"
    ```
-7.
-   ```bash
-   #!/bin/bash
-   for archivo in RUN*.fastq.gz;
-   do
-     muestra=$(echo "$archivo" | cut -d'_' -f3)
-     especie=$(echo "$archivo" | cut -d'_' -f4,5 --output-delimiter='_')
-     echo "$muestra,$especie"
-     nuevo=$(echo "$archivo" | cut -d'_' -f3,6 --output-delimiter='_')
-     mv "$archivo" "$nuevo"
-   done
    ```
-8. `awk -F'\t' '{print $1, $3}' blast_tabular.tsv`
-9.
+   ~$ chmod +x cobertura.sh
+   ~$ ./cobertura.sh blast_tabular.tsv
+   pka	90.0%
+   fos	93.8%
+   cox	100.0%
+   lac	45.0%
+   p53	100.0%
+   rna	100.0%
    ```
-   ~$ awk -F'\t' '{printf "%s\t%.1f\n", $1, ($4/$13)*100}' blast_tabular.tsv
-   pka	90.0
-   fos	93.8
-   cox	100.0
-   lac	45.0
-   p53	100.0
-   rna	100.0
-   ```
-   `lac` tiene la cobertura más baja, un 45%.
+
