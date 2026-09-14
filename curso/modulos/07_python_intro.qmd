@@ -58,7 +58,6 @@ print(f"{nombre} tiene {edad} años. Es bióloga: {es_biologa}.")
 `f"..."` es una **f-string**: una cadena de texto donde `{variable}` se sustituye por el valor de esa variable. Es la forma más cómoda de construir un mensaje combinando texto fijo con datos.
 :::
 
-
 ## Las variables no son fijas
 
 Las variables en Python pueden cambiar su valor durante la ejecución del programa. Por ejemplo:
@@ -82,6 +81,22 @@ print("Se llama: ", "nombre")
 print(f"Tienee {"edad"} años.")
 ```
 :::
+
+# Tipos de datos
+
+En Python, las variables pueden contener diferentes tipos de datos. Algunos de los más comunes son:
+
+- `str` (string): texto
+- `int` (integer): números enteros
+- `float`: números decimales
+- `bool` (boolean): valores lógicos (`True` o `False`)
+
+```python
+nombre = "Alicia"  # str
+edad = 20          # int
+altura = 1.68      # float
+es_biologa = True  # bool
+```
 
 
 
