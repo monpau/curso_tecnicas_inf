@@ -4,13 +4,13 @@ title: "Programación en shell"
 
 # Scripts de shell
 
-Los *scripts* (archivo con un conjunto de órdenes) permiten automatizar y acelerar el trabajo.
+Los *scripts* (archivos con un conjunto de órdenes) permiten automatizar y acelerar el trabajo.
 
-Vamos a crear nuestro primer script. Para ello en un editor de texto escribiremos lo siguente y lo guardaremos con el nombre hola.sh.
+Vamos a crear nuestro primer script. Para ello en un editor de texto escribiremos lo siguiente y lo guardaremos con el nombre hola.sh.
 
 ```bash
 #!/bin/bash
-# Este es nuestro primer progrma
+# Este es nuestro primer programa
 echo Hola Mundo
 ```
 
@@ -19,7 +19,7 @@ A continuación iremos a la terminal y lo ejecutaremos:
 ```{.bash}
 ~$ ./hola.sh
 ```
-La primera línea (la *shebang*, `#!/bin/bash`) que le dice al sistema con qué programa ejecutarlo. La segunda es un comentario para consumo humano ya que va precedido de `#`. La tercera línea es la que incia que queremos imprimir en pantalla (`echo)
+La primera línea (la *shebang*, `#!/bin/bash`) es la que le dice al sistema con qué programa ejecutarlo. La segunda es un comentario para consumo humano ya que va precedido de `#`. La tercera línea es la que indica qué queremos imprimir en pantalla (`echo`)
 
 :::{.callout-tip title=Cuestión}
 ¿Podrías crear un script que tomara un archivo FASTA y contara el número de secuencias?
@@ -65,7 +65,7 @@ Los nombres de variable solo pueden contener letras, números y `_`, y por conve
 - La salida de un comando: `for variable in $(comando)` 
 
 :::{.callout-tip title=Cuestión}
-¿Qué qué valores iría tomando `var1` en los siguientes casos?
+¿Qué valores iría tomando `var1` en los siguientes casos?
 
 - `for var1 in $(ls *.txt)`
 - `for var1 in $(grep '>' sequences.fasta)`
@@ -128,11 +128,11 @@ do
    direct=$(echo "$file" | cut -d'_' -f 6 | cut -d'.' -f1)
    
    new_file="${sample}_${direct}.fastq.gz"
-   mv "$file" "new_file"
+   mv "$file" "$new_file"
 done
 ``` 
 
-Siempre, siempre, SIEMPRE, antes de lanzar un `for` (especialmente si hace uso de `rm`) asegúrate con `echo` que los nombres son los que esperas. 
+Siempre, siempre, SIEMPRE, antes de lanzar un `for` (especialmente si hace uso de `rm`) asegúrate con `echo` de que los nombres son los que esperas.
 :::
 
 # `awk`: procesar texto por columnas
@@ -163,7 +163,7 @@ rna ref_rna_Athaliana
 
 ## Calcular una división: porcentaje de cobertura
 
-Cada fila de `blast_tabular.tsv` trae, entre otras, la columna 4 (`length`, la longitud del alineamiento) y la columna 13 (`qlen`, la longitud total del gen consultado). La cobertura del gen es qué proporción de su longitud total ha quedado cubierta por el alineamiento: `length / qlen`. `awk` hace aritmética con `+ - * /` directamente sobre los campos:
+Cada fila de `blast_tabular.tsv` trae, entre otras, la columna 4 (`length`, la longitud del alineamiento) y la columna 13 (`qlen`, la longitud total del gen consultado). La cobertura del gen es la proporción de su longitud total que ha quedado cubierta por el alineamiento: `length / qlen`. `awk` hace aritmética con `+ - * /` directamente sobre los campos:
 
 ```{.bash}
 ~$ awk -F'\t' '{printf "%s\t%.1f%%\n", $1, ($4/$13)*100}' blast_tabular.tsv
