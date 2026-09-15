@@ -5,7 +5,9 @@ format: live-html
 
 # De la terminal a Python
 
-Hasta ahora le has dado órdenes a la terminal una a una (o encadenadas en pipelines) y hemos visto como crear pequeños scripts en `bash`. Sin embargo, para hacer análisis de datos más complejos, `bash` se queda corto: no tiene tipos de datos más allá de cadenas y números, no tiene librerías para trabajar con datos biológicos o realizar análisis estadísticos. Por ello, para poder hacer análisis más complejos, vamos a aprender a usar un lenguaje de programación de propósito general: **Python**.
+Hasta ahora le has dado órdenes a la terminal una a una (o encadenadas en pipelines) y hemos visto como crear pequeños scripts en `bash`. Sin embargo, para hacer análisis de datos más complejos, `bash` se queda corto: no tiene tipos de datos más allá de cadenas y números, no tiene librerías para trabajar con datos biológicos o realizar análisis estadísticos. Por ello, para poder hacer análisis más complejos, vamos a aprender a usar un lenguaje de programación de propósito general:
+
+![](https://www.python.org/static/community_logos/python-logo-master-v3-TM.png){width=300px}
 
 Python es una buena opción para este curso porque:
 
@@ -29,158 +31,12 @@ Esto mismo lo puedes ejecutar directamente en el intérprete de Python, o bien g
 `print(...)` muestra un texto por pantalla. `python3 hola.py` le dice a la terminal: "ejecuta el intérprete de Python 3 sobre este archivo".
 
 ```{pyodide-python}
-#Crea un script que imprima tu nombre
-#Las líneas que empiezan por # son comentarios: Python las ignora, pero sirven para explicar el código.
+# Crea un script que imprima tu nombre
+# Las líneas que empiezan por # son comentarios: 
+# Python las ignora, pero sirven para explicar el código.
 ```
 
 :::{.callout-tip title="Cuestión"}
 ¿Por qué falla si escribes `print(Hola)` sin comillas?
 :::
 
-# Variables
-
-Una variable es un nombre que apunta a un valor (la etiqueta de una caja que contiene un dato). 
-
-En Python el valor de una variable se lo asigna directamente con el operador `=`:
-
-```{pyodide-python}
-#Aquí tienes diferentes variables con distintos tipos de datos
-nombre = "Alicia"
-edad = 20
-es_biologa = True
-
-#Podemos imprimirlas una a una
-print(nombre)
-print(edad)
-print(es_biologa)
-
-#Todas a la vez, separadas por comas
-print(nombre, edad, es_biologa)
-
-#O bien combinarlas en un mensaje con una f-string
-print(f"{nombre} tiene {edad} años. Es bióloga: {es_biologa}.")
-```
-
-:::{.callout-tip title="Cuestión"}
-- Prueba a cambiar los valores de las variables y vuelve a ejecutar el script. 
-- ¿Qué pasa si intentas imprimir una variable que no has definido? Intenta llamar a `print(altura)` sin haber definido `altura` antes.
-- Define altura como un número decimal y vuelve a ejecutar el script. 
-:::
-
-:::{.callout-note}
-`f"..."` es una **f-string**: una cadena de texto donde `{variable}` se sustituye por el valor de esa variable. Es la forma más cómoda de construir un mensaje combinando texto fijo con datos.
-:::
-
-## Las variables no son fijas
-
-Las variables en Python pueden cambiar su valor durante la ejecución del programa. Por ejemplo:
-
-```{pyodide-python}
-x = 5
-print(x)  # Imprime 5
-
-x = 10
-print(x)  # Imprime 10
-```
-## Las variables no son cadenas de texto
-
-:::{.callout-tip title="Cuestión"}
-Arrega el siguiente código para que imprima correctamente el mensaje "Alicia tiene 20 años":
-
-```python
-nombre = "Alicia"
-edad = 20
-print("Se llama: ", "nombre")
-print(f"Tienee {"edad"} años.")
-```
-:::
-
-# Tipos de datos
-
-En Python, las variables pueden contener diferentes tipos de datos. Algunos de los más comunes son:
-
-- `str` (string): texto
-- `int` (integer): números enteros
-- `float`: números decimales
-- `bool` (boolean): valores lógicos (`True` o `False`)
-
-```python
-nombre = "Alicia"  # str
-edad = 20          # int
-altura = 1.68      # float
-es_biologa = True  # bool
-```
-
-
-## Comentarios
-
-Cualquier línea que empiece por `#` es un comentario: Python la ignora por completo. Se usa para explicar el porqué de una decisión, no el qué (el código ya dice el qué):
-
-```python
-# la altura se guarda en metros, no en centímetros
-altura_m = 1.68
-```
-
-# Un script real: contar líneas de un archivo
-
-Vas a escribir un script que abra `species_observations.csv` y cuente cuántas líneas tiene — el equivalente en Python de `wc -l` del módulo 3:
-
-```python
-with open("species_observations.csv") as f:
-    lineas = f.readlines()
-
-print(f"El archivo tiene {len(lineas)} lineas.")
-```
-
-```
-~$ python3 contar_lineas.py
-El archivo tiene 6 lineas.
-```
-
-`open("...")` abre el archivo; `with ... as f:` es una construcción que además se encarga de cerrarlo automáticamente al salir del bloque indentado, aunque ocurra un error a mitad de la lectura (volverás sobre `open` con más detalle en el módulo 10). `f.readlines()` devuelve una lista con una línea de texto por elemento, y `len(...)` cuenta cuántos elementos tiene esa lista.
-
-::: {.callout-note}
-Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espacios porque está **dentro** del bloque `with`. En Python la indentación no es un detalle de estilo — es la sintaxis que marca qué instrucciones pertenecen a cada bloque. Usa siempre 4 espacios (no tabulaciones) y sé consistente.
-:::
-
-# Ejercicios
-
-1. Escribe y ejecuta un script `hola.py` que muestre "Hola, bióloga/o" (o un saludo con tu propio nombre).
-2. Crea dos variables, `nombre` y `especie_favorita`, e imprime un mensaje que las combine usando una f-string.
-3. Escribe un script `contar_lineas.py` que abra `species_observations.csv` y muestre cuántas líneas tiene.
-4. Escribe un script que cuente cuántas secuencias hay en `sequences.fasta`, recorriendo el archivo línea a línea con un bucle `for linea in f:` y comprobando si cada línea empieza por `>` con `linea.startswith(">")`. Compara el resultado con el que obtuviste en el módulo 5 usando `grep -c "^>"`.
-
-# Soluciones
-
-::: {.callout-note title="1" collapse="true"} 
-   ```python
-   print("Hola, bióloga/o")   
-   ```
-:::
-
-::: {.callout-note title="2" collapse="true"}
-   ```python
-   nombre = "Alicia"
-   especie_favorita = "Quercus robur"
-   print(f"A {nombre} le gusta {especie_favorita}")
-   ```
-:::
-
-::: {.callout-note title="3" collapse="true"}
-   ```python
-   with open("species_observations.csv") as f:
-       lineas = f.readlines()
-   print(f"El archivo tiene {len(lineas)} lineas.")
-   ```
-:::
-
-::: {.callout-note title="4" collapse="true"}   
-   ```python
-   contador = 0
-   with open("sequences.fasta") as f:
-       for linea in f:
-           if linea.startswith(">"):
-               contador = contador + 1
-   print(f"Numero de secuencias: {contador}")
-   ```
-:::

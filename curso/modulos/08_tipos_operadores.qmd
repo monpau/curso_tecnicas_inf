@@ -1,6 +1,183 @@
 ---
 title: "Tipos y operadores"
+format: live-html
 ---
+
+# Variables
+
+Una variable es un nombre que apunta a un valor (la etiqueta de una caja que contiene un dato). 
+
+En Python el valor de una variable se lo asigna directamente con el operador `=`:
+
+```{pyodide-python}
+# Aquí tienes diferentes variables con distintos tipos de datos
+nombre = "Alicia"
+edad = 20
+es_biologa = True
+
+# Podemos imprimirlas una a una
+print(nombre)
+print(edad)
+print(es_biologa)
+
+# Todas a la vez, separadas por comas
+print(nombre, edad, es_biologa)
+
+# O bien combinarlas en un mensaje con una f-string
+print(f"{nombre} tiene {edad} años. Es bióloga: {es_biologa}.")
+```
+
+:::{.callout-tip title="Cuestión"}
+- Prueba a cambiar los valores de las variables y vuelve a ejecutar el script. 
+- ¿Qué pasa si intentas imprimir una variable que no has definido? Intenta llamar a `print(altura)` sin haber definido `altura` antes.
+- Define altura como un número decimal y vuelve a ejecutar el script. 
+:::
+
+:::{.callout-note}
+`f"..."` es una **f-string**: una cadena de texto donde `{variable}` se sustituye por el valor de esa variable. Es la forma más cómoda de construir un mensaje combinando texto fijo con datos.
+:::
+
+*Python* permite hacer asignaciones múltiples en una sola línea:
+
+```{pyodide-python}
+x, y, z = 1, 2, 3
+print(x, y, z)
+a = b = c = 0
+print(a, b, c)
+```
+
+## Las variables no son cadenas de texto
+
+Las variables no son cadenas de texto: son nombres que apuntan a un valor. Por eso, si quieres imprimir el valor de una variable, no debes ponerlo entre comillas:
+
+```{pyodide-python}
+nombre = "Alicia"
+print(nombre)  # Imprime "Alicia"
+print("nombre")  # Imprime "nombre"
+```
+Arregla el siguiente código para que imprima correctamente el mensaje "Alicia tiene 20 años":
+
+```{pyodide-python}
+nombre = "Alicia"
+edad = 20
+print("Se llama: ", "nombre")
+print(f"Tiene {"edad"} años.")
+```
+
+# Flujo de ejecución
+
+Los programas se ejecutan de arriba a abajo, línea a línea. Este orden es fundamental para entender cómo se comportan los programas. Por ejemplo:
+
+```{pyodide-python}
+print("Primera línea")
+print("Segunda línea")
+print("Tercera línea")
+```
+
+```{pyodide-python}
+# Puedes arreglar este código
+print(f"Hola, {nombre}!")
+nombre = "Alicia"
+```
+
+## Las variables no son fijas
+
+Las variables en Python pueden cambiar su valor durante la ejecución del programa. Por ejemplo:
+
+```{pyodide-python}
+x = 5
+print(x)  # Imprime 5
+
+x = 10
+print(x)  # Imprime 10
+```
+
+# Tipos de datos
+
+En Python, las variables pueden contener diferentes tipos de datos. Algunos de los más comunes son:
+
+- `str` (string): texto
+- `int` (integer): números enteros
+- `float`: números decimales
+- `bool` (boolean): valores lógicos (`True` o `False`)
+
+```{pyodide-python}
+nombre = "Alicia"  # str
+edad = 20          # int
+altura = 1.68      # float
+es_biologa = True  # bool
+```
+A diferencia de otros lenguajes, Python no requiere declarar el tipo de una variable: lo infiere automáticamente del valor que le asignas. Por eso puedes cambiar el tipo de una variable simplemente asignándole un valor de otro tipo:
+
+```{pyodide-python}
+x = 5        # int
+print(f'{x} es de tipo {type(x)}') 
+x = "cinco"  # str
+print(f'{x} es de tipo {type(x)}')    
+```
+## Int y float
+
+Son números, pero con diferencias importantes: `int` son enteros, mientras que `float` son decimales. Por ejemplo:
+
+```{pyodide-python}
+a = 1    # int
+b = 1.0  # float
+print(f'{a} es de tipo {type(a)}')
+print(f'{b} es de tipo {type(b)}')
+```
+
+Los ordenadores almacenan y representan los `float` como una **aproximación** binaria, lo que puede dar lugar a resultados inesperados al hacer operaciones con ellos:
+
+:::{callout-tip title="Cuestión"}
+   
+- ¿Qué valor imprimirá el siguiente código? 
+```{pyodide-python}
+x = 0.1 + 0.2
+print(x)  # Imprime 0.30000000000000004
+```
+
+- ¿Son iguales `0.1 + 0.2` y `0.3`? 
+```{pyodide-python}
+a = 0.1 + 0.2
+b = 0.3
+# Comprueba si son iguales con `==`.
+```
+:::
+
+
+
+
+
+
+
+
+
+
+
+# Un script real: contar líneas de un archivo
+
+Vas a escribir un script que abra `species_observations.csv` y cuente cuántas líneas tiene — el equivalente en Python de `wc -l` del módulo 3:
+
+```{pyodide-python}
+with open("species_observations.csv") as f:
+    lineas = f.readlines()
+
+print(f"El archivo tiene {len(lineas)} lineas.")
+```
+
+```
+~$ python3 contar_lineas.py
+El archivo tiene 6 lineas.
+```
+
+`open("...")` abre el archivo; `with ... as f:` es una construcción que además se encarga de cerrarlo automáticamente al salir del bloque indentado, aunque ocurra un error a mitad de la lectura (volverás sobre `open` con más detalle en el módulo 10). `f.readlines()` devuelve una lista con una línea de texto por elemento, y `len(...)` cuenta cuántos elementos tiene esa lista.
+
+::: {.callout-note}
+Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espacios porque está **dentro** del bloque `with`. En Python la indentación no es un detalle de estilo — es la sintaxis que marca qué instrucciones pertenecen a cada bloque. Usa siempre 4 espacios (no tabulaciones) y sé consistente.
+:::
+
+
+
 
 # Un problema real: todo lo que lees de un archivo es texto
 
@@ -56,7 +233,9 @@ Cada vez que leas un valor de un CSV, un FASTA o cualquier archivo de texto, rec
 
 Con números, los operadores aritméticos habituales: `+ - * /` (división con decimales), `//` (división entera), `%` (resto), `**` (potencia). Con cadenas, `+` concatena y `*` repite (como acabas de ver, a veces por accidente). Los operadores de comparación (`== != < > <= >=`) funcionan igual en ambos y devuelven `True`/`False` — los usarás mucho en el módulo siguiente para condicionales.
 
-# Listas: colecciones ordenadas
+# Listas y diccionarios
+
+## Listas: colecciones ordenadas
 
 ```python
 especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"]
@@ -67,7 +246,7 @@ print(especies[:2])                 # ['Quercus_robur', 'Pinus_sylvestris'] — 
 
 `especies[:2]` es *slicing*: `[inicio:fin]` extrae un tramo de la lista, sin incluir el índice `fin`. Omitir `inicio` significa "desde el principio".
 
-# Diccionarios: de clave a valor
+## Diccionarios: de clave a valor
 
 Un diccionario asocia claves con valores — útil para traducir un código a su significado:
 
@@ -89,6 +268,13 @@ SiteC: Parcela experimental
 `.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
 
 # Ejercicios
+
+
+1. Escribe y ejecuta un script `hola.py` que muestre "Hola, bióloga/o" (o un saludo con tu propio nombre).
+2. Crea dos variables, `nombre` y `especie_favorita`, e imprime un mensaje que las combine usando una f-string.
+3. Escribe un script `contar_lineas.py` que abra `species_observations.csv` y muestre cuántas líneas tiene.
+4. Escribe un script que cuente cuántas secuencias hay en `sequences.fasta`, recorriendo el archivo línea a línea con un bucle `for linea in f:` y comprobando si cada línea empieza por `>` con `linea.startswith(">")`. Compara el resultado con el que obtuviste en el módulo 5 usando `grep -c "^>"`.
+
 
 1. A partir de `linea = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"`, usa `.split(",")` y accede al campo de la especie por índice.
 2. Extrae el campo del número de individuos, e imprime `type()` antes y después de convertirlo con `int()`.
