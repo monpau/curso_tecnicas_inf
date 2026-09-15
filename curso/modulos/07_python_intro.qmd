@@ -9,27 +9,33 @@ Hasta ahora le has dado órdenes a la terminal una a una (o encadenadas en pipel
 
 Python es una buena opción para este curso porque:
 
-- sintaxis es relativamente sencilla y legible.
+- tiene una sintaxis relativamente sencilla y legible.
 - es gratuito y multiplataforma. 
 - es uno de los lenguajes de programación más utilizados, especialmente en biología y otras disciplinas científicas. 
 - cuenta con una comunidad muy amplia y numerosas librerías para trabajar con datos, estadística, visualización y bioinformática. 
 
 # Tu primer script
 
-Abre `gedit`, escribe esto, y guárdalo como `hola.py`:
-
-```python
+```{pyodide-python}
 print("Hola mundo")
 ```
 
-Ejecútalo desde la terminal, en el mismo directorio donde lo guardaste:
+Esto mismo lo puedes ejecutar directamente en el intérprete de Python, o bien guardarlo en un archivo y ejecutarlo desde la terminal. Ejecútalo desde la terminal, en el mismo directorio donde lo guardaste:
 
 ```python
 ~$ python3 hola.py
-Hola mundo
 ```
 
-`print(...)` muestra un texto por pantalla. `python3 hola.py` le dice a la terminal: "ejecuta el intérprete de Python 3 sobre este archivo" — el mismo patrón que `./script.sh` del módulo anterior, pero para Python en vez de para `bash`.
+`print(...)` muestra un texto por pantalla. `python3 hola.py` le dice a la terminal: "ejecuta el intérprete de Python 3 sobre este archivo".
+
+```{pyodide-python}
+#Crea un script que imprima tu nombre
+#Las líneas que empiezan por # son comentarios: Python las ignora, pero sirven para explicar el código.
+```
+
+:::{.callout-tip title="Cuestión"}
+¿Por qué falla si escribes `print(Hola)` sin comillas?
+:::
 
 # Variables
 
@@ -38,21 +44,27 @@ Una variable es un nombre que apunta a un valor (la etiqueta de una caja que con
 En Python el valor de una variable se lo asigna directamente con el operador `=`:
 
 ```{pyodide-python}
+#Aquí tienes diferentes variables con distintos tipos de datos
 nombre = "Alicia"
 edad = 20
 es_biologa = True
 
+#Podemos imprimirlas una a una
 print(nombre)
 print(edad)
 print(es_biologa)
+
+#Todas a la vez, separadas por comas
 print(nombre, edad, es_biologa)
+
+#O bien combinarlas en un mensaje con una f-string
 print(f"{nombre} tiene {edad} años. Es bióloga: {es_biologa}.")
 ```
 
 :::{.callout-tip title="Cuestión"}
 - Prueba a cambiar los valores de las variables y vuelve a ejecutar el script. 
 - ¿Qué pasa si intentas imprimir una variable que no has definido? Intenta llamar a `print(altura)` sin haber definido `altura` antes.
-- Crea un programita donde definas nombre y apellido y luego imprimas un mensaje que los combine, por ejemplo: "Hola, me llamo Alicia Pérez".
+- Define altura como un número decimal y vuelve a ejecutar el script. 
 :::
 
 :::{.callout-note}
