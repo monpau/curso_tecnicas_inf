@@ -1,5 +1,6 @@
 ---
 title: "Introducción a la programación y Python"
+format: live-html
 ---
 
 # De la terminal a Python
@@ -36,7 +37,7 @@ Una variable es un nombre que apunta a un valor (la etiqueta de una caja que con
 
 En Python el valor de una variable se lo asigna directamente con el operador `=`:
 
-```python
+```{pyodide-python}
 nombre = "Alicia"
 edad = 20
 es_biologa = True
@@ -62,7 +63,7 @@ print(f"{nombre} tiene {edad} años. Es bióloga: {es_biologa}.")
 
 Las variables en Python pueden cambiar su valor durante la ejecución del programa. Por ejemplo:
 
-```python
+```{pyodide-python}
 x = 5
 print(x)  # Imprime 5
 
@@ -97,8 +98,6 @@ edad = 20          # int
 altura = 1.68      # float
 es_biologa = True  # bool
 ```
-
-
 
 
 ## Comentarios
@@ -141,23 +140,29 @@ Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espac
 
 # Soluciones
 
-1.
+::: {.callout-note title="1" collapse="true"} 
    ```python
-   print("Hola, bióloga/o")
+   print("Hola, bióloga/o")   
    ```
-2.
+:::
+
+::: {.callout-note title="2" collapse="true"}
    ```python
    nombre = "Alicia"
    especie_favorita = "Quercus robur"
    print(f"A {nombre} le gusta {especie_favorita}")
    ```
-3.
+:::
+
+::: {.callout-note title="3" collapse="true"}
    ```python
    with open("species_observations.csv") as f:
        lineas = f.readlines()
    print(f"El archivo tiene {len(lineas)} lineas.")
    ```
-4.
+:::
+
+::: {.callout-note title="4" collapse="true"}   
    ```python
    contador = 0
    with open("sequences.fasta") as f:
@@ -166,4 +171,4 @@ Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espac
                contador = contador + 1
    print(f"Numero de secuencias: {contador}")
    ```
-   Debe coincidir con el `4` que obtuviste antes con `grep -c "^>" sequences.fasta`.
+:::

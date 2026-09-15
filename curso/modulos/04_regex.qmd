@@ -139,59 +139,45 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
 
 ## Soluciones
 
-1.
+:::{.callout-note title="1" collapse="true"}
    ```{.bash}
    ~$ grep -E "Quercus_robur|Fragaria_vesca" sequences.fasta
    >seq2|Quercus_robur|matK
    >seq4|Fragaria_vesca|trnL
    ```
-
-::: {.callout-note collapse="true"}
-La alternancia `|` no necesita anclas aquí: basta con que la cabecera contenga uno de los dos textos en cualquier parte de la línea.
 :::
 
-2.
+:::{.callout-note title="2" collapse="true"}
    ```{.bash}
    ~$ grep -Ei "sierra de gredos" registro_campo_bruto.csv | wc -l
    4
    ```
-
-::: {.callout-note collapse="true"}
-`-i` ignora mayúsculas/minúsculas, así que coincide con `Sierra de Gredos`, `sierra de gredos` y `Sierra De Gredos` a la vez — sin `-i` se te escaparían tres de las cuatro filas.
 :::
 
-3.
+:::{.callout-note title="3" collapse="true"}
    ```{.bash}
    ~$ sed -E 's/silvestris/sylvestris/g' registro_campo_bruto.csv > registro_campo_limpio.csv
    ```
 
-::: {.callout-note collapse="true"}
-Como cada fila tiene como máximo una aparición de `silvestris`, la `g` (global) no es estrictamente necesaria en este caso, pero es buena costumbre incluirla siempre que sustituyas texto, para no depender de cuántas veces aparezca. Fíjate en que esto **no** toca `Fagus silvatica` (fila `S111`): es una palabra distinta (`silvatica`, no `silvestris`), así que el patrón no la reconoce — esa habría que corregirla aparte.
 :::
 
-4.
+:::{.callout-note title="4" collapse="true"}
    ```{.bash}
    ~$ grep -Ei "betula pendula" registro_campo_bruto.csv | sed -E 's/.*/\L&/'
    s107,2024-04-10,sierra de guadarrama,betula pendula,hoja amarillenta
    s108,2024-04-10,sierra de guadarrama,betula pendula,cerca del arroyo
    ```
-
-::: {.callout-note collapse="true"}
-Primero `grep -Ei` se queda solo con las filas que mencionan `Betula pendula` en cualquier combinación de mayúsculas/minúsculas; después esas filas (ya filtradas) pasan por `sed`, que sustituye toda la línea (`.*`) por sí misma en minúsculas. `\L` es una extensión de GNU `sed` que convierte a minúsculas todo lo que sigue, y `&` representa lo que ha coincidido con el patrón — en este caso, la línea entera.
 :::
 
-5.
+:::{.callout-note title="5" collapse="true"}
    ```{.bash}
    ~$ grep -E -B 1 "ATG[ACGT]{94,}(TAA|TAG|TGA)" orfs.fasta
    >orf1|posible_ORF_largo
    CCGGCCATGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGTAACCGGCC
    ```
-
-::: {.callout-note collapse="true"}
-El fragmento completo (`ATG` + relleno + codón de parada) debe medir al menos 100 pb; como `ATG` y el codón de parada ya suman 6, el relleno intermedio (`[ACGT]{94,}`) necesita como mínimo 94 caracteres. De las otras tres secuencias: `orf2` sí tiene `ATG` y un codón de parada, pero el fragmento entero mide solo 46 pb (demasiado corta); `orf3` empieza por `ATG` pero no contiene ningún `TAA`/`TAG`/`TGA` (sin codón de parada); `orf4` no contiene `ATG` en absoluto (sin codón de inicio).
 :::
 
-6.
+:::{.callout-note title="6" collapse="true"}
    ```{.bash}
    ~$ grep '^>' uniprot_headers.fasta | sed -E 's/^>(sp|tr)\|([A-Z0-9]+)\|([A-Z0-9]+)_([A-Z]+).*/\2\t\3\t\4/'
    P12345	KPCA	HUMAN
@@ -201,12 +187,9 @@ El fragmento completo (`ATG` + relleno + codón de parada) debe medir al menos 1
    P45678	P53	HUMAN
    P34567	RPB1	ARATH
    ```
-
-::: {.callout-note collapse="true"}
-`grep '^>'` se queda solo con las líneas de cabecera. Después, cada uno de los tres grupos de captura recoge una parte: `([A-Z0-9]+)` el código tras el primer `|`, otro `([A-Z0-9]+)` la proteína (antes del `_`) y `([A-Z]+)` la especie (después del `_`, hasta el espacio). El `.*` final consume el resto de la descripción sin capturarla, y `(sp|tr)` en el primer grupo permite que la cabecera empiece por cualquiera de los dos sin necesidad de dos patrones distintos — aunque no lo usemos en el reemplazo.
 :::
 
-7.
+:::{.callout-note title="7" collapse="true"}
    ```{.bash}
    ~$ echo "gen,cromosoma,posicion,funcion"
    ~$ grep -P '\tgene\t' anotacion.gff3 | sed -E 's/^([^\t]+)\t[^\t]+\tgene\t([0-9]+)\t([0-9]+)\t.*Name=([^;]+);function=([^\t]+)$/\4,\1,\2-\3,\5/'
@@ -216,7 +199,4 @@ El fragmento completo (`ATG` + relleno + codón de parada) debe medir al menos 1
    MATK1,chr2,305-1890,Maturase K
    TRNL1,chr2,4400-4950,Transfer RNA-Leu
    ```
-
-::: {.callout-note collapse="true"}
-`grep -P '\tgene\t'` se queda solo con las líneas cuya tercera columna es `gene` (así se descartan `mRNA` y `exon`). El `sed` captura, en orden, el cromosoma (primer campo), el inicio y el fin (columnas 4 y 5), y dentro de la columna de atributos el nombre (`Name=([^;]+)`, hasta el `;`) y la función (`function=([^\t]+)`, hasta el final de la línea). `[^\t]+` y `[^;]+` significan "cualquier carácter que no sea tabulador/punto y coma", que es la forma habitual de capturar "hasta el siguiente separador" sin tener que enumerar qué caracteres sí son válidos.
 :::
