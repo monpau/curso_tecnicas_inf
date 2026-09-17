@@ -1,6 +1,8 @@
 ---
 title: "Introducción a la programación y Python"
-format: live-html
+format:
+  live-html:
+    toc: true
 ---
 
 # De la terminal a Python

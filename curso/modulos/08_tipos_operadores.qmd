@@ -1,6 +1,8 @@
 ---
 title: "Tipos y operadores"
-format: live-html
+format:
+  live-html:
+    toc: true
 ---
 
 # Variables
