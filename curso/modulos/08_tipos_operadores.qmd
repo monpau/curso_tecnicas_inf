@@ -198,16 +198,6 @@ print()
 ## Dos tipos compuestos: listas y diccionarios
 
 
-
-
-
-
-# Operadores esenciales
-
-Con números, los operadores aritméticos habituales: `+ - * /` (división con decimales), `//` (división entera), `%` (resto), `**` (potencia). Con cadenas, `+` concatena y `*` repite (como acabas de ver, a veces por accidente). Los operadores de comparación (`== != < > <= >=`) funcionan igual en ambos y devuelven `True`/`False` — los usarás mucho en el módulo siguiente para condicionales.
-
-# Listas y diccionarios
-
 ## Listas: colecciones ordenadas
 
 ```python
@@ -239,6 +229,61 @@ SiteC: Parcela experimental
 ```
 
 `.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
+
+
+# Operadores
+
+
+## Numéricos
+
+
+Con números, los operadores aritméticos habituales: `+ - * /` (división con decimales), `//` (división entera), `%` (resto), `**` (potencia). Con cadenas, `+` concatena y `*` repite (como acabas de ver, a veces por accidente). Los operadores de comparación (`== != < > <= >=`) funcionan igual en ambos y devuelven `True`/`False` — los usarás mucho en el módulo siguiente para condicionales.
+
+
+## Comparación
+
+Los operadores de comparación devuelven un valor booleano: `True` o `False`.
+
+| Operador | Significado | Ejemplo | Resultado |
+|---|---|---|---|
+| `==` | igual a | `5 == 5` | `True` |
+| `<` | menor que | `2 < 5` | `True` |
+| `<=` | menor o igual que | `5 <= 5` | `True` |
+| `>` | mayor que | `7 > 3` | `True` |
+| `>=` | mayor o igual que | `4 >= 4` | `True` |
+| `!=` | distinto de | `3 != 5` | `True` |
+
+
+## Lógicos
+
+Los operadores lógicos combinan condiciones booleanas:
+- `and`: Devuelve `True` si ambas condiciones son `True`.
+- `or`: Devuelve `True` si al menos una de las condiciones es `True`.
+- `not`: Devuelve el valor opuesto de la condición.   
+
+## Métodos de cadenas
+
+Las cadenas tienen muchos métodos útiles para manipularlas:
+- `.upper()`: Convierte la cadena a mayúsculas.
+- `.lower()`: Convierte la cadena a minúsculas.
+- `.strip()`: Elimina espacios en blanco al principio y al final.
+- `.replace(old, new)`: Reemplaza una subcadena por otra.
+- `.split(sep)`: Divide la cadena en una lista usando un separador.
+- `.join(iterable)`: Une los elementos de un iterable con la cadena como separador.
+
+Además, puedes usar `len(cadena)` para obtener la longitud de la cadena.
+
+Las cadenas también se pueden indexar y hacer slicing, como las listas:
+```python
+texto = "Hola, bióloga/o"
+print(texto[0])      # H
+print(texto[-1])     # o
+print(texto[0:4])    # Hola
+print(texto[5:])     # bióloga/o
+print(texto[:4])     # Hola
+print(texto[::2])    # Hlaióga/
+```
+
 
 # Ejercicios
 
