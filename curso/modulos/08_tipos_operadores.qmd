@@ -128,7 +128,7 @@ print(f'{b} es de tipo {type(b)}')
 
 Los ordenadores almacenan y representan los `float` como una **aproximación** binaria, lo que puede dar lugar a resultados inesperados al hacer operaciones con ellos:
 
-:::{callout-tip title="Cuestión"}
+:::{.callout-tip title="Cuestión"}
    
 - ¿Qué valor imprimirá el siguiente código? 
 ```{pyodide-python}

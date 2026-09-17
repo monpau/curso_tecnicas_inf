@@ -64,6 +64,16 @@ En MacOS, el terminal de comandos está disponible por defecto y permite ejecuta
 19. Cartografía de la biodiversidad — 2 h
 20. Resolución de casos en Biodiversidad II — 4 h
 
+
+## Profesorado
+
+- Javier Montero (javier.montero@uv.es): coordinación, Linux, shell y Python
+- Ricardo Graña (ricardo.grana@uv.es): Caso práctico de Bioquímica
+- Ignasi Lucas (j.ignacio.lucas@uv.es): Caso práctico de Genética
+- Juan Antonio Balbuena (j.a.balbuena@uv.es): Caso práctico de Biodiversidad I
+- Paco Ruiz (francisco.ruiz@uv.es): GIS y caso práctico de Biodiversidad II 
+
+
 ## Evaluación
 
 La evaluación de la asignatura consistirá:
