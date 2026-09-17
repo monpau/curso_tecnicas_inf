@@ -109,6 +109,7 @@ edad = 20          # int
 altura = 1.68      # float
 es_biologa = True  # bool
 ```
+
 A diferencia de otros lenguajes, Python no requiere declarar el tipo de una variable: lo infiere automáticamente del valor que le asignas. Por eso puedes cambiar el tipo de una variable simplemente asignándole un valor de otro tipo:
 
 ```{pyodide-python}
@@ -135,7 +136,7 @@ Los ordenadores almacenan y representan los `float` como una **aproximación** b
 - ¿Qué valor imprimirá el siguiente código? 
 ```{pyodide-python}
 x = 0.1 + 0.2
-print(x)  # Imprime 0.30000000000000004
+print(x)
 ```
 
 - ¿Son iguales `0.1 + 0.2` y `0.3`? 
@@ -146,90 +147,60 @@ b = 0.3
 ```
 :::
 
+## Bool y None
+
+Las variables booleanas (`bool`) solo pueden tener dos valores: `True` o `False`. Se usan para representar condiciones y tomar decisiones en el flujo del programa.
 
 
-
-
-
-
-
-
-
-
-# Un script real: contar líneas de un archivo
-
-Vas a escribir un script que abra `species_observations.csv` y cuente cuántas líneas tiene — el equivalente en Python de `wc -l` del módulo 3:
+La variable `None` es un valor especial en Python que representa la ausencia de un valor. Se usa para indicar que una variable no tiene un valor asignado, o para representar un valor nulo en ciertos contextos.
 
 ```{pyodide-python}
-with open("species_observations.csv") as f:
-    lineas = f.readlines()
-
-print(f"El archivo tiene {len(lineas)} lineas.")
+x = None
+print(x)
 ```
 
+## Convertir entre tipos
+
+A veces necesitas convertir un valor de un tipo a otro, esto se llama **conversión de tipos** o **casting**. Por ejemplo, si tienes un número como cadena de texto y quieres hacer cálculos con él, debes convertirlo a un tipo numérico.
+
+```{pyodide-python}
+# Convertir de str a int
+x = "5"
+print(x + 1)
+x = int(x)  #Lo conviertes a int
+print(x + 1)
+x = float(x) #Lo conviertes a float
+print(x + 1) 
+x = str(x) #Lo conviertes a str
+print(x + "1")
 ```
-~$ python3 contar_lineas.py
-El archivo tiene 6 lineas.
+También podemos convertir a `bool`:
+
+```{pyodide-python}
+print(bool(42))
+print(bool(0))
+print(bool("hola"))
 ```
 
-`open("...")` abre el archivo; `with ... as f:` es una construcción que además se encarga de cerrarlo automáticamente al salir del bloque indentado, aunque ocurra un error a mitad de la lectura (volverás sobre `open` con más detalle en el módulo 10). `f.readlines()` devuelve una lista con una línea de texto por elemento, y `len(...)` cuenta cuántos elementos tiene esa lista.
+:::{.callout-tip title="Cuestión"}
+- ¿Qué cadena de texto representa el valor `False` en Python?
 
-::: {.callout-note}
-Fíjate en la indentación: la línea `lineas = f.readlines()` empieza con espacios porque está **dentro** del bloque `with`. En Python la indentación no es un detalle de estilo — es la sintaxis que marca qué instrucciones pertenecen a cada bloque. Usa siempre 4 espacios (no tabulaciones) y sé consistente.
+```{pyodide-python}
+print()
+```
+
+- ¿Puedes hacer un **cast** a entero de un booleano?
+```{pyodide-python}
+# Convierte True y False a int y comprueba el resultado.
+```
 :::
 
+## Dos tipos compuestos: listas y diccionarios
 
 
 
-# Un problema real: todo lo que lees de un archivo es texto
 
-Recupera la línea de `species_observations.csv` que viste en el módulo anterior, y divídela por comas con `.split(",")`:
 
-```python
-linea = "S001,2024-05-12,SiteA,40.123,-3.456,Quercus_robur,3,Adultos en borde de camino"
-campos = linea.split(",")
-print(campos)
-```
-
-```
-['S001', '2024-05-12', 'SiteA', '40.123', '-3.456', 'Quercus_robur', '3', 'Adultos en borde de camino']
-```
-
-`campos` es una **lista** (`list`): una colección ordenada de valores, donde accedes a cada uno por su posición (empezando en 0) con corchetes: `campos[5]` es `'Quercus_robur'`.
-
-Ahora fíjate en `campos[6]`, el número de individuos observados: es el texto `'3'`, no el número `3`. Python los distingue con el tipo `str` (cadena de texto) frente a `int` (entero). La función `type()` te dice el tipo de cualquier valor. Esto tiene una consecuencia peligrosa:
-
-```python
-count = campos[6]
-print(type(count), count * 2)
-```
-
-```
-<class 'str'> 33
-```
-
-`count * 2` no calcula "3 por 2" — repite el texto `'3'` dos veces seguidas, dando `'33'`. No hay ningún error, ningún aviso: el programa sigue funcionando y produce un resultado incorrecto en silencio. Este es exactamente el tipo de fallo que puede colarse en un análisis real sin que nadie se dé cuenta. La solución es convertir explícitamente el texto a número con `int()` (o `float()` si tiene decimales) antes de operar con él:
-
-```python
-count = int(count)
-print(type(count), count * 2)
-```
-
-```
-<class 'int'> 6
-```
-
-Cada vez que leas un valor de un CSV, un FASTA o cualquier archivo de texto, recuerda: **llega como `str`, y tú decides si convertirlo**.
-
-# Tipos básicos
-
-| Tipo | Ejemplo | Uso típico en este curso |
-|---|---|---|
-| `str` | `"Quercus_robur"` | nombres de especie, localidades, secuencias |
-| `int` | `3` | número de individuos, posiciones |
-| `float` | `40.123` | coordenadas, medidas |
-| `list` | `["Quercus_robur", "Pinus_sylvestris"]` | varias observaciones o secuencias juntas |
-| `dict` | `{"SiteA": "Bosque mixto"}` | traducir un código a su significado |
 
 # Operadores esenciales
 
