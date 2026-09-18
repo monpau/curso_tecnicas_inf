@@ -195,17 +195,25 @@ print()
 ```
 :::
 
-## Dos tipos compuestos: listas y diccionarios
+# Dos tipos compuestos: listas y diccionarios
 
+ Los tipos compuestos son estructuras que pueden almacenar múltiples valores o elementos bajo un solo nombre de variable. Los dos tipos compuestos más comunes en Python son las **listas** y los **diccionarios**.
 
 ## Listas: colecciones ordenadas
 
+Las listas son colecciones ordenadas de elementos, que pueden ser de diferentes tipos. Se definen usando corchetes `[]` y los elementos se separan por comas. Que sean ordenadas significa que cada elemento siempre ocupa la misma posición dentro de la lista, y por tanto se le puede asignar un índice.
+
 ```python
-especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"]
-especies.append("Betula_pendula")   # añade al final
-print(especies[2])                  # Fragaria_vesca (índice 2 = tercer elemento)
-print(especies[:2])                 # ['Quercus_robur', 'Pinus_sylvestris'] — los dos primeros
+# Ejemplos de una lista
+especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"] # lista de strings
+alturas = [1.5, 2.0, 0.3] # lista de floats
+numero_individuos = [5, 10, 3] # lista de ints
+estan_sanos = [True, False, True] # lista de bools
+datos_muestreo = ["Quercus_robur", 1.5, 5, True] # lista mixta
+datos_muestero = [especies, alturas, numero_individuos, estan_sanos] # lista de listas
 ```
+
+
 
 `especies[:2]` es *slicing*: `[inicio:fin]` extrae un tramo de la lista, sin incluir el índice `fin`. Omitir `inicio` significa "desde el principio".
 
