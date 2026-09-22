@@ -102,12 +102,14 @@ En Python, las variables pueden contener diferentes tipos de datos. Algunos de l
 - `int` (integer): números enteros
 - `float`: números decimales
 - `bool` (boolean): valores lógicos (`True` o `False`)
+- `None`: ausencia de valor
 
 ```{pyodide-python}
 nombre = "Alicia"  # str
 edad = 20          # int
 altura = 1.68      # float
 es_biologa = True  # bool
+threshold = None      # None
 ```
 
 A diferencia de otros lenguajes, Python no requiere declarar el tipo de una variable: lo infiere automáticamente del valor que le asignas. Por eso puedes cambiar el tipo de una variable simplemente asignándole un valor de otro tipo:
@@ -118,46 +120,9 @@ print(f'{x} es de tipo {type(x)}')
 x = "cinco"  # str
 print(f'{x} es de tipo {type(x)}')    
 ```
-## Int y float
 
-Son números, pero con diferencias importantes: `int` son enteros, mientras que `float` son decimales. Por ejemplo:
+Las variables se pueden manipular y comparar con **operadores**. Por ejemplo, `+` suma, `-` resta, `*` multiplica, `/` divide, y `==` compara si dos valores son iguales.
 
-```{pyodide-python}
-a = 1    # int
-b = 1.0  # float
-print(f'{a} es de tipo {type(a)}')
-print(f'{b} es de tipo {type(b)}')
-```
-
-Los ordenadores almacenan y representan los `float` como una **aproximación** binaria, lo que puede dar lugar a resultados inesperados al hacer operaciones con ellos:
-
-:::{.callout-tip title="Cuestión"}
-   
-- ¿Qué valor imprimirá el siguiente código? 
-```{pyodide-python}
-x = 0.1 + 0.2
-print(x)
-```
-
-- ¿Son iguales `0.1 + 0.2` y `0.3`? 
-```{pyodide-python}
-a = 0.1 + 0.2
-b = 0.3
-# Comprueba si son iguales con `==`.
-```
-:::
-
-## Bool y None
-
-Las variables booleanas (`bool`) solo pueden tener dos valores: `True` o `False`. Se usan para representar condiciones y tomar decisiones en el flujo del programa.
-
-
-La variable `None` es un valor especial en Python que representa la ausencia de un valor. Se usa para indicar que una variable no tiene un valor asignado, o para representar un valor nulo en ciertos contextos.
-
-```{pyodide-python}
-x = None
-print(x)
-```
 
 ## Convertir entre tipos
 
@@ -193,6 +158,223 @@ print()
 ```{pyodide-python}
 # Convierte True y False a int y comprueba el resultado.
 ```
+:::
+
+# int y float
+
+Son números, pero con diferencias importantes: `int` son enteros, mientras que `float` son decimales. Por ejemplo:
+
+```{pyodide-python}
+a = 1    # int
+b = 1.0  # float
+print(f'{a} es de tipo {type(a)}')
+print(f'{b} es de tipo {type(b)}')
+```
+
+Los ordenadores almacenan y representan los `float` como una **aproximación** binaria, lo que puede dar lugar a resultados inesperados al hacer operaciones con ellos:
+
+:::{.callout-tip title="Cuestión"}
+   
+- ¿Qué valor imprimirá el siguiente código? 
+```{pyodide-python}
+x = 0.1 + 0.2
+print(x)
+```
+
+- ¿Son iguales `0.1 + 0.2` y `0.3`? 
+```{pyodide-python}
+a = 0.1 + 0.2
+b = 0.3
+# Comprueba si son iguales con `==`.
+```
+:::
+
+## Operadores aritméticos
+
+Los operadores aritméticos más habituales: 
+
+|Operador|Significado|
+|---|---|
+|`+`|suma|
+|`-`|resta|
+|`*`|multiplicación|
+|`/`|división con decimales|
+|`//`|división entera|
+|`%`|resto|
+|`**`|potencia|
+
+:::{.callout-tip title="Cuestión"}
+¿Qué resultado devuelve cada operación?
+
+```{pyodide-python}
+a = 5
+b = 6
+c = 2
+print(a + b)
+print(a - b)
+print(a * b)
+print(b / a)
+print(a // c)
+print(b // c)
+print(a % c)
+print(b % c)
+print(a ** c)
+``` 
+:::
+
+También existen **operadores unarios** que actúan sobre un solo operando (en contraposición a los anteriores que son binarios, porque actúan sobre dos operandos):
+
+```{pyodide-python}
+# Estas dos operaciones son equivalentes
+
+a = 10
+a = a + 1
+print(a)
+
+a = 10
+a += 1
+print(a)
+```
+Exsten varios operadores de asignación combinados con operaciones aritméticas, aunque los más usados son `+=` y `-=`. 
+
+|Operador|Significado|
+|---|---|
+|`+=`|suma y asignación|
+|`-=`|resta y asignación|
+|`*=`|multiplicación y asignación|
+|`/=`|división y asignación|
+|`//=`|división entera y asignación|
+|`%=`|resto y asignación|
+|`**=`|potencia y asignación|
+
+```{pyodide-python}
+# Convierte el siguiente código usando un operador unario:
+
+my_age = 22
+my_age = my_age + 1
+print("El próximo año mi edad será ", my_age)
+
+number_of_items = 10
+number_of_items = number_of_items - 1
+print("Tras vender un artículo, el número de artículos será ", number_of_items)
+```
+
+## Comparación
+
+Los operadores de comparación devuelven un valor booleano: `True` o `False`.
+
+| Operador | Significado | Ejemplo | Resultado |
+|---|---|---|---|
+| `==` | igual a | `5 == 5` | `True` |
+| `<` | menor que | `2 < 5` | `True` |
+| `<=` | menor o igual que | `5 <= 5` | `True` |
+| `>` | mayor que | `7 > 3` | `True` |
+| `>=` | mayor o igual que | `4 >= 4` | `True` |
+| `!=` | distinto de | `3 != 5` | `True` |
+
+
+
+
+
+
+# Bool y None
+
+Las variables booleanas (`bool`) solo pueden tener dos valores: `True` o `False`. Se usan para representar condiciones y tomar decisiones en el flujo del programa.
+
+
+## Operadores lógicos
+
+Los operadores lógicos combinan condiciones booleanas:
+
+- `and`: Devuelve `True` si ambas condiciones son `True`.
+- `or`: Devuelve `True` si al menos una de las condiciones es `True`.
+- `not`: Devuelve el valor opuesto de la condición.   
+
+
+:::{.callout-tip title="Cuestión"}
+¿Qué resultado devuelve cada operación?
+
+```{pyodide-python}
+#| exercise: bools
+print("True or False: ", True or False)
+# True and False
+# False and False
+# not True
+# True and not False
+# False or True
+# False or False
+# not False or False
+# 4 <= 4 and True
+# 3 > 2 and 4 > 8
+# 3 > 2 or 4 > 8
+# (3 > 2 or 4 > 8) and not (3 > 2 and 4 > 8)
+```
+:::
+
+::: { .solution exercise="bools" }
+```{pyodide-python}
+print("True or False:", True or False)
+print("True and False:", True and False)
+print("not True:", not True)
+print("True and not False:", True and not False)
+print("False or True:", False or True)
+print("False or False:", False or False)
+print("not False or False:", not False or False)
+print("4 <= 4 and True:", 4 <= 4 and True)
+print("3 > 2 and 4 > 8:", 3 > 2 and 4 > 8)
+print("3 > 2 or 4 > 8:", 3 > 2 or 4 > 8)
+print("(3 > 2 or 4 > 8) and not (3 > 2 and 4 > 8):", (3 > 2 or 4 > 8) and not (3 > 2 and 4 > 8))
+```
+:::
+
+La variable `None` es un valor especial en Python que representa la ausencia de un valor. Se usa para indicar que una variable no tiene un valor asignado, o para representar un valor nulo en ciertos contextos.
+
+```{pyodide-python}
+import random 
+
+# Uso típico de None, donde la variable se inicializa sin un valor concreto
+threshold = None
+
+# Más adelante, se le asigna un valor, por ejemplo, resultado de un cálculo o una entrada del usuario
+threshold = random.random()  # Asignamos un valor aleatorio entre 0 y 1
+
+print(threshold)
+```
+
+Para la comparación de `None` con otras variables, se recomienda usar el operador `is` en lugar de `==`.  
+
+```{pyodide-python}
+threshold = None
+print(threshold is None) 
+print(threshold is not None)
+```
+
+# Cadenas de texto
+
+ Las cadenas de texto ( `str`) son secuencias de caracteres encerradas entre comillas simples `'` o dobles `"`. Se usan para representar texto y se pueden manipular con diversos métodos.
+
+ ```{pyodide-python}
+saludo1 = "Hola caracola"
+saludo2 = 'Hola caracola'
+print(saludo1, "y", saludo2, "son exactamente iguales:", saludo1 == saludo2)
+```
+Como has visto se pueden comparar con *`==`* para comprobar si son iguales. También se pueden concatenar con el operador `+` y repetir con `*`:
+
+```{pyodide-python}
+print(saludo1 + " " + saludo2)
+print(saludo1 * 3)
+```
+
+:::{.callout-tip title="Cuestión"}
+Escribe un programa que dado un número n devuelva n + nn + nnn
+```{pyodide-python}
+#| exercise: str_concat
+n = 5
+# El resultado debería ser 5 + 55 + 555 -> 615
+```
+:::{ .hint exercise="str_concat"}
+Igual puedes hacer un *cast* de `int` a `str` y viceversa.
+:::
 :::
 
 # Dos tipos compuestos: listas y diccionarios
@@ -239,35 +421,7 @@ SiteC: Parcela experimental
 `.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
 
 
-# Operadores
 
-
-## Numéricos
-
-
-Con números, los operadores aritméticos habituales: `+ - * /` (división con decimales), `//` (división entera), `%` (resto), `**` (potencia). Con cadenas, `+` concatena y `*` repite (como acabas de ver, a veces por accidente). Los operadores de comparación (`== != < > <= >=`) funcionan igual en ambos y devuelven `True`/`False` — los usarás mucho en el módulo siguiente para condicionales.
-
-
-## Comparación
-
-Los operadores de comparación devuelven un valor booleano: `True` o `False`.
-
-| Operador | Significado | Ejemplo | Resultado |
-|---|---|---|---|
-| `==` | igual a | `5 == 5` | `True` |
-| `<` | menor que | `2 < 5` | `True` |
-| `<=` | menor o igual que | `5 <= 5` | `True` |
-| `>` | mayor que | `7 > 3` | `True` |
-| `>=` | mayor o igual que | `4 >= 4` | `True` |
-| `!=` | distinto de | `3 != 5` | `True` |
-
-
-## Lógicos
-
-Los operadores lógicos combinan condiciones booleanas:
-- `and`: Devuelve `True` si ambas condiciones son `True`.
-- `or`: Devuelve `True` si al menos una de las condiciones es `True`.
-- `not`: Devuelve el valor opuesto de la condición.   
 
 ## Métodos de cadenas
 
@@ -295,49 +449,15 @@ print(texto[::2])    # Hlaióga/
 
 # Ejercicios
 
+1. Calcula la letra de un DNI. 
 
-1. Escribe y ejecuta un script `hola.py` que muestre "Hola, bióloga/o" (o un saludo con tu propio nombre).
-2. Crea dos variables, `nombre` y `especie_favorita`, e imprime un mensaje que las combine usando una f-string.
-3. Escribe un script `contar_lineas.py` que abra `species_observations.csv` y muestre cuántas líneas tiene.
-4. Escribe un script que cuente cuántas secuencias hay en `sequences.fasta`, recorriendo el archivo línea a línea con un bucle `for linea in f:` y comprobando si cada línea empieza por `>` con `linea.startswith(">")`. Compara el resultado con el que obtuviste en el módulo 5 usando `grep -c "^>"`.
+```{pyodide-python}
+# La letra se obtiene calculando el resto de dividir el número entre 23
+# y usando ese resto como índice en la cadena `"TRWAGMYFPDXBNJZSQVHLCKE"`. 
+codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
+```
+2. Extraer la especie de una línea de datos.
 
-
-1. A partir de `linea = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"`, usa `.split(",")` y accede al campo de la especie por índice.
-2. Extrae el campo del número de individuos, e imprime `type()` antes y después de convertirlo con `int()`.
-3. Crea una lista `especies` con al menos 3 nombres de especie, añade una cuarta con `.append()`, e imprime el elemento en la posición 1.
-4. Usa slicing para obtener, de esa misma lista, todos los elementos excepto el primero.
-5. Crea un diccionario que traduzca los códigos `SiteA`, `SiteB`, `SiteC` a una descripción del hábitat, y usa `.get()` para consultar uno.
-6. (Reto) Recorre el diccionario del ejercicio anterior con `.items()` en un bucle `for`, e imprime cada par como `"<código> -> <descripción>"`.
-
-# Soluciones
-
-1.
-   ```python
-   linea = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
-   campos = linea.split(",")
-   print(campos[5])
-   ```
-2.
-   ```python
-   count = campos[6]
-   print(type(count))
-   count = int(count)
-   print(type(count))
-   ```
-3.
-   ```python
-   especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"]
-   especies.append("Betula_pendula")
-   print(especies[1])
-   ```
-4. `print(especies[1:])` — omitir el `fin` significa "hasta el final".
-5.
-   ```python
-   habitats = {"SiteA": "Bosque mixto", "SiteB": "Claro de bosque", "SiteC": "Parcela experimental"}
-   print(habitats.get("SiteA"))
-   ```
-6.
-   ```python
-   for codigo, descripcion in habitats.items():
-       print(f"{codigo} -> {descripcion}")
-   ```
+```{pyodide-python}
+line = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
+```

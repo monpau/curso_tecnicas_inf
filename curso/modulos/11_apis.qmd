@@ -1,5 +1,8 @@
 ---
 title: "Acceso a datos en línea vía APIs"
+format:
+  live-html:
+    toc: true
 ---
 
 

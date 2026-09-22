@@ -1,5 +1,8 @@
 ---
 title: "Bucles y condicionales"
+format:
+  live-html:
+    toc: true
 ---
 
 # Condicionales: `if` / `elif` / `else`

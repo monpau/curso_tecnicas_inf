@@ -1,5 +1,8 @@
 ---
 title: "Lectura, modificación y escritura de archivos"
+format:
+  live-html:
+    toc: true
 ---
 
 
