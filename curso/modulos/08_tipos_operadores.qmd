@@ -78,8 +78,8 @@ print("Tercera línea")
 
 ```{pyodide-python}
 # Puedes arreglar este código
-print(f"Hola, {nombre}!")
-nombre = "Alicia"
+print(f"Hola, {name}!")
+name = "Alicia"
 ```
 
 ## Las variables no son fijas
@@ -273,10 +273,6 @@ Los operadores de comparación devuelven un valor booleano: `True` o `False`.
 | `!=` | distinto de | `3 != 5` | `True` |
 
 
-
-
-
-
 # Bool y None
 
 Las variables booleanas (`bool`) solo pueden tener dos valores: `True` o `False`. Se usan para representar condiciones y tomar decisiones en el flujo del programa.
@@ -456,7 +452,7 @@ print(texto[::2])    # Hlaióga/
 # y usando ese resto como índice en la cadena `"TRWAGMYFPDXBNJZSQVHLCKE"`. 
 codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
 ```
-2. Extraer la especie de una línea de datos.
+2. Extraer la especie de la siguiente línea de datos.
 
 ```{pyodide-python}
 line = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
