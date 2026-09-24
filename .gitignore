@@ -2,6 +2,11 @@
 .agent.md
 claude_prompt.txt
 subir_a_uv.sh
+flatly-revealjs.scss
+presentacion.html
+presentacion.qmd
+presentacion_files/
+
 
 # Archivos internos de Quarto
 curso/.quarto/

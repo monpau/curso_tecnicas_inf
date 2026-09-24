@@ -284,3 +284,24 @@ Quedarse "atrapado" en `vim` sin saber cómo salir es casi un rito de iniciació
 8. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar).
 9. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. ¿Cuántas secuencias hay en cada fichero? Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)
 10. Disponemos de un [fichero](../datasets/tomate.sam) con el resultado de un mapeo en formato SAM ¿Cuántas secuencias se han mapeado? ¿Cuántas se han mapeado en dirección reversa (mirad la segunda columna: 0 forward; 16 reverse)? ¿Cuántos y cuáles son los unigenes a los que se ha podido mapear alguna secuencia? Ordena los nombres de secuencias mapeadas con el orden del unigene y la posición en el unigene.
+11. Trabaja con [variantes.vcf](../datasets/variantes.vcf), un fichero VCF con variantes detectadas en 6 individuos (`S01`-`S06`).
+    - ¿Cuántos SNPs hay en el archivo (sin contar los INDELs)?
+    - De esos SNPs, ¿cuáles tienen al menos un individuo heterocigoto?
+    - De esos SNPs heterocigotos, ¿cuáles están anotados con una enzima de restricción?
+    - Tienes además un listado de las [enzimas más baratas y habituales del laboratorio](../datasets/enzimas_baratas.txt). 
+    - ¿Cuántos SNPs se pueden detectar con EcoRI? ¿Y con HindIII? ¿Y con ambas?
+12. [genotipos_poblaciones.csv](../datasets/genotipos_poblaciones.csv) recoge el genotipo de 32 individuos en 5 loci, repartidos en cuatro poblaciones (`Norte`, `Centro`, `Sur`, `Este`); los datos que no se pudieron amplificar aparecen como `NA`.
+    - ¿Cuántos individuos se han muestreado en cada población?
+    - ¿Cuántos genotipos `NA` hay en total? ¿En qué locus hay más datos perdidos? ¿Qué podría indicar eso sobre ese marcador?
+    - Extrae en un archivo aparte solo los individuos de la población `Sur`.
+    - En el `locus1`, ¿cuántos individuos son heterocigotos y cuántos homocigotos?
+13. [camera_trap_records.csv](../datasets/camera_trap_records.csv) recoge las detecciones de fauna de 5 cámaras trampa durante dos semanas.
+    - ¿Cuántos registros hay por cámara?
+    - Tenemos la duda que debido a error en el sensor, algunos eventos se han registrado por duplicado. ¿Cuáles son, y cuántos eventos de detección únicos hay realmente si los descuentas?
+    - Contando solo esos eventos únicos, ¿qué especie ha sido detectada más veces?
+    - Guarda en un archivo aparte solo los registros de `Gato_montes`, especie de interés especial en el estudio.
+14. [calidad_agua_rio.csv](../datasets/calidad_agua_rio.csv) recoge mediciones de calidad del agua en cuatro estaciones de muestreo a lo largo de tres meses; la columna `estado` marca cada medición como `OK`, `ALERTA` o `ERROR` (fallo del sensor).
+    - ¿Cuántas mediciones hay por estación?
+    - ¿Cuántas mediciones han dado `ERROR`? ¿En qué estación(es) ha ocurrido?
+    - Extrae únicamente las filas marcadas como `ALERTA` y guárdalas en un archivo aparte.
+    - Ordena las mediciones de `RioSur` por turbidez de mayor a menor. ¿Cuál es la de mayor turbidez, y coincide con alguna alerta?
