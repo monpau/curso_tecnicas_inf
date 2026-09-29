@@ -47,7 +47,7 @@ En MacOS, el terminal de comandos está disponible por defecto y permite ejecuta
 2. [Navegación y manejo de directorios en la terminal](modulos/02_terminal.qmd) — 2 h
 3. [Manejo de archivos de texto mediante línea de comandos](modulos/03_texto.qmd) — 4 h
 4. [Expresiones regulares](modulos/04_regex.qmd) — 2 h
-5. [Pipelines y programación en shell](modulos/05_pipelines.qmd) — 2 h
+5. [Programación en shell](modulos/05_bash.qmd) — 2 h
 6. Resolución de casos en Bioquímica — 4 h
 7. [Introducción a la programación y Python](modulos/07_python_intro.qmd) — 2 h
 8. [Tipos y operadores](modulos/08_tipos_operadores.qmd) — 2 h
