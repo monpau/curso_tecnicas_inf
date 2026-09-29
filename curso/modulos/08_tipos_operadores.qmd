@@ -207,6 +207,23 @@ Los operadores aritméticos más habituales:
 ¿Qué resultado devuelve cada operación?
 
 ```{pyodide-python}
+#| exercise: arithmetic
+a = 5
+b = 6
+c = 2
+# a + b
+# a - b
+# a * b
+# b / a
+# a // c
+# b // c
+# a % c
+# b % c
+# a ** c
+``` 
+
+:::{.solution exercise="arithmetic"}
+```{pyodide-python}
 a = 5
 b = 6
 c = 2
@@ -219,7 +236,9 @@ print(b // c)
 print(a % c)
 print(b % c)
 print(a ** c)
-``` 
+```
+:::
+
 :::
 
 También existen **operadores unarios** que actúan sobre un solo operando (en contraposición a los anteriores que son binarios, porque actúan sobre dos operandos):
@@ -386,13 +405,84 @@ Las cadenas tienen muchos métodos útiles para manipularlas:
 - `.endswith(suffix)`: Comprueba si la cadena termina con un sufijo.
 - `.join(iterable)`: Une los elementos de un iterable con la cadena como separador.
 
-
-
-
-
+```{pyodide-python}
+texto = " Hola incauto aprendiz de biólogo "
+print(texto.upper())
+print(texto.lower())
+print(texto.strip())
+print(texto.split(" "))
+print(texto.replace("incauto", "desgraciado"))
+print(texto.startswith(" Hola"))
+print(texto.endswith("biólogo "))
+```
 
 Además, puedes usar `len(cadena)` para obtener la longitud de la cadena.
 
+Para cualquier variable puedes conocer los métodos disponibles con `dir(variable)`, y para ver la documentación de un método puedes usar `help(variable.metodo)`.
+
+```{pyodide-python}
+dir(texto)
+``` 
+
+```{pyodide-python}
+help(texto.upper)
+```
+
+:::{.callout-tip title="Cuestión"}
+
+```{pyodide-python}
+#| exercise: a_content
+# Puedes escribir un pequeño escript que calcule e imprima el porcentaje de adeninas de la siguiente secuencia de ADN:
+adn = "ATGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC"
+```
+
+:::{.hint exercise="a_content"}
+Igual existe un método para contar. Compruébalo.
+:::
+:::
+
+
+:::{.callout-tip title="Cuestión"}
+
+```{pyodide-python}
+# Y si la secuencia es así::
+adn = "ATgCgTacGTaGCTAgCTaGCTagcTAGCTAGCTagcTAGCTAGCTAGCTAGC"
+```
+:::
+
+:::{.callout-tip title="Cuestión"}
+
+Un poco más difícil: calcula el contenido de GC de la siguiente secuencia de ADN.
+
+```{pyodide}
+#| exercise: gc_content
+adn = "CGT AGC TAT CGA TGC TAG TCG TAG TCT AGC TAG TCA"
+
+print("El contenido en GC es: ")
+```
+
+::: { .hint exercise="gc_content"}
+
+Igual hay que eliminar los espacios en blanco.
+:::
+
+::: { .solution exercise="gc_content"}
+```{pyodide}
+adn = "CGT AGC TAT CGA TGC TAG TCG TAG TCT AGC TAG TCA"
+adn = adn.replace(" ", "")
+num_gcs = adn.count("C") + adn.count("G")
+print("El contenido en GC es: ", num_gcs / len(adn) * 100)
+```
+:::
+:::
+
+:::{.callout-tip title="Cuestión"}
+Extrae la especie de la siguiente línea de datos y represéntalo sin el `_`.
+
+```{pyodide-python}
+line = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
+```
+:::
 
 
 ## Slicing de cadenas
@@ -400,13 +490,30 @@ Además, puedes usar `len(cadena)` para obtener la longitud de la cadena.
 El slicing de cadenas es una técnica para extraer una parte de una cadena. Se utiliza la sintaxis `[inicio:fin]` donde `inicio` es el índice del primer carácter a incluir y `fin` es el índice del primer carácter a excluir.
 
 ```{pyodide-python}
+#| exercise: slicing
+# ¿Cuál será el resultado de cada operación?
 texto = "Hola, bióloga/o"
-print(texto[0:4])    # Hola
-print(texto[5:])     # bióloga/o
-print(texto[:4])     # Hola
-print(texto[::2])    # Hl,bóoao
-print(texto[::-1])    # o/agolóib ,aloH
+# texto[0]      
+# texto[5])      
+# texto[0:4]    
+# texto[5:]     
+# texto[:4]     
+# texto[::2]    
+# texto[::-1]   
 ```
+:::{.solution exercise="slicing"}
+```{pyodide-python}
+texto = "Hola, bióloga/o"
+print(texto[0])      
+print(texto[5])      
+print(texto[0:4])    
+print(texto[5:])     
+print(texto[:4])     
+print(texto[::2])    
+print(texto[::-1])
+``` 
+:::
+
 
 :::{.callout-warning title="¡Atención!"}
 
@@ -415,6 +522,16 @@ print(texto[::-1])    # o/agolóib ,aloH
 
 :::
 
+:::{.callout-tip title="Cuestión"}
+
+Calcula la letra de un DNI. 
+
+```{pyodide-python}
+# La letra se obtiene calculando el resto de dividir el número entre 23
+# y usando ese resto como índice en la cadena `"TRWAGMYFPDXBNJZSQVHLCKE"`. 
+codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
+```
+:::
 
 
 # Dos tipos compuestos: listas y diccionarios
@@ -459,21 +576,3 @@ SiteC: Parcela experimental
 ```
 
 `.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
-
-
-
-
-# Ejercicios
-
-1. Calcula la letra de un DNI. 
-
-```{pyodide-python}
-# La letra se obtiene calculando el resto de dividir el número entre 23
-# y usando ese resto como índice en la cadena `"TRWAGMYFPDXBNJZSQVHLCKE"`. 
-codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
-```
-2. Extraer la especie de la siguiente línea de datos.
-
-```{pyodide-python}
-line = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
-```
