@@ -373,6 +373,50 @@ Igual puedes hacer un *cast* de `int` a `str` y viceversa.
 :::
 :::
 
+## Métodos de cadenas
+
+Las cadenas tienen muchos métodos útiles para manipularlas:
+
+- `.upper()`: Convierte la cadena a mayúsculas.
+- `.lower()`: Convierte la cadena a minúsculas.
+- `.strip()`: Elimina espacios en blanco al principio y al final.
+- `.split(sep)`: Divide la cadena en una lista usando un separador.
+- `.replace(old, new)`: Reemplaza una subcadena por otra.
+- `.startswith(prefix)`: Comprueba si la cadena empieza con un prefijo.
+- `.endswith(suffix)`: Comprueba si la cadena termina con un sufijo.
+- `.join(iterable)`: Une los elementos de un iterable con la cadena como separador.
+
+
+
+
+
+
+Además, puedes usar `len(cadena)` para obtener la longitud de la cadena.
+
+
+
+## Slicing de cadenas
+
+El slicing de cadenas es una técnica para extraer una parte de una cadena. Se utiliza la sintaxis `[inicio:fin]` donde `inicio` es el índice del primer carácter a incluir y `fin` es el índice del primer carácter a excluir.
+
+```{pyodide-python}
+texto = "Hola, bióloga/o"
+print(texto[0:4])    # Hola
+print(texto[5:])     # bióloga/o
+print(texto[:4])     # Hola
+print(texto[::2])    # Hl,bóoao
+print(texto[::-1])    # o/agolóib ,aloH
+```
+
+:::{.callout-warning title="¡Atención!"}
+
+- Los índices en Python empiezan en 0, por lo que el primer carácter de una cadena tiene índice 0, el segundo índice 1, y así sucesivamente.
+- El índice `-1` se refiere al último carácter, `-2` al penúltimo, y así sucesivamente.
+
+:::
+
+
+
 # Dos tipos compuestos: listas y diccionarios
 
  Los tipos compuestos son estructuras que pueden almacenar múltiples valores o elementos bajo un solo nombre de variable. Los dos tipos compuestos más comunes en Python son las **listas** y los **diccionarios**.
@@ -417,30 +461,6 @@ SiteC: Parcela experimental
 `.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
 
 
-
-
-## Métodos de cadenas
-
-Las cadenas tienen muchos métodos útiles para manipularlas:
-- `.upper()`: Convierte la cadena a mayúsculas.
-- `.lower()`: Convierte la cadena a minúsculas.
-- `.strip()`: Elimina espacios en blanco al principio y al final.
-- `.replace(old, new)`: Reemplaza una subcadena por otra.
-- `.split(sep)`: Divide la cadena en una lista usando un separador.
-- `.join(iterable)`: Une los elementos de un iterable con la cadena como separador.
-
-Además, puedes usar `len(cadena)` para obtener la longitud de la cadena.
-
-Las cadenas también se pueden indexar y hacer slicing, como las listas:
-```python
-texto = "Hola, bióloga/o"
-print(texto[0])      # H
-print(texto[-1])     # o
-print(texto[0:4])    # Hola
-print(texto[5:])     # bióloga/o
-print(texto[:4])     # Hola
-print(texto[::2])    # Hlaióga/
-```
 
 
 # Ejercicios

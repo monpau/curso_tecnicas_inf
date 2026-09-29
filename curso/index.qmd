@@ -67,7 +67,7 @@ En MacOS, el terminal de comandos está disponible por defecto y permite ejecuta
 
 ## Profesorado
 
-- Javier Montero (javier.montero@uv.es): coordinación, Linux, shell y Python
+- Javier Montero (javier.montero@uv.es): Coordinación, Linux, shell y Python
 - Ricardo Graña (ricardo.grana@uv.es): Caso práctico de Bioquímica
 - Ignasi Lucas (j.ignacio.lucas@uv.es): Caso práctico de Genética
 - Juan Antonio Balbuena (j.a.balbuena@uv.es): Caso práctico de Biodiversidad I
