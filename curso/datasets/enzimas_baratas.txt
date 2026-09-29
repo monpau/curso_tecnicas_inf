@@ -1,0 +1,5 @@
+EcoRI
+HindIII
+BamHI
+PstI
+HaeIII
