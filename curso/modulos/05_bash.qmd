@@ -131,6 +131,9 @@ do
    mv "$file" "$new_file"
 done
 ``` 
+:::
+
+:::{.callout-warning title=¡Cuidado!}
 
 Siempre, siempre, SIEMPRE, antes de lanzar un `for` (especialmente si hace uso de `rm`) asegúrate con `echo` de que los nombres son los que esperas.
 :::
@@ -166,20 +169,17 @@ rna ref_rna_Athaliana
 Cada fila de `blast_tabular.tsv` trae, entre otras, la columna 4 (`length`, la longitud del alineamiento) y la columna 13 (`qlen`, la longitud total del gen consultado). La cobertura del gen es la proporción de su longitud total que ha quedado cubierta por el alineamiento: `length / qlen`. `awk` hace aritmética con `+ - * /` directamente sobre los campos:
 
 ```{.bash}
-~$ awk -F'\t' '{printf "%s\t%.1f%%\n", $1, ($4/$13)*100}' blast_tabular.tsv
-pka	90.0%
-fos	93.8%
-cox	100.0%
-lac	45.0%
-p53	100.0%
-rna	100.0%
+~$ awk -F'\t' '{printf "%s\t%.1f%\n", $1, ($4/$13)*100}' blast_tabular.tsv
+pka	90.0
+fos	93.8
+cox	100.0
+lac	45.0
+p53	100.0
+rna	100.0
 ```
 
 `printf` (en vez de `print`) permite controlar el formato: `%s` inserta el nombre del gen como texto, `%.1f%%` inserta el número con un decimal seguido de un `%` literal (por eso va doblado, `%%`), y `\t`/`\n` separan con un tabulador y saltan de línea al final, igual que en los `echo`/`sed` que ya conoces.
 
-::: {.callout-note}
-Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje de identidad) alto no basta para confiar en un hit de BLAST — un alineamiento muy parecido pero muy corto respecto al gen completo puede ser un dominio compartido o una coincidencia parcial, no el gen entero.
-:::
 
 # Ejercicios
 
@@ -191,7 +191,7 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
 
 ## Soluciones
 
-1.
+:::{.callout-note title="1" collapse="true"}
    ```bash
    #!/bin/bash
    total=$(tail -n +4 "$1" | wc -l)
@@ -202,7 +202,9 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
    ~$ ./contar_observaciones.sh species_observations.csv
    species_observations.csv tiene 117 observaciones
    ```
-2.
+:::
+
+:::{.callout-note title="2" collapse="true"}
    ```bash
    #!/bin/bash
    for site in SiteA SiteB SiteC SiteD SiteE
@@ -211,7 +213,9 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
      grep "$site" species_observations.csv > "$site/observaciones.csv"
    done
    ```
-3.
+:::
+
+:::{.callout-note title="3" collapse="true"}
    ```
    ~$ tail -n +4 gene_expression.csv | awk '{printf "%s\t%.2f\n", $1, $2/$3}'
    P12345	0.82
@@ -222,7 +226,9 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
    P45678	1.14
    ```
    `tail -n +4` se salta la cabecera antes de pasar el archivo a `awk`; como `gene_expression.csv` ya usa espacios como separador, no hace falta `-F`.
-4.
+:::
+
+:::{.callout-note title="4" collapse="true"}
    ```bash
    #!/bin/bash
    for file in IMG_*.jpg
@@ -231,7 +237,9 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
      mv "$file" "$nuevo"
    done
    ```
-5.
+:::
+
+:::{.callout-note title="5" collapse="true"}
    ```bash
    #!/bin/bash
    awk -F'\t' '{printf "%s\t%.1f%%\n", $1, ($4/$13)*100}' "$1"
@@ -246,4 +254,4 @@ Fíjate en `lac`: solo un 45% de cobertura. Un `pident` (columna 3, porcentaje d
    p53	100.0%
    rna	100.0%
    ```
-
+:::
