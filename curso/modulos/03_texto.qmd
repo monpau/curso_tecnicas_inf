@@ -283,7 +283,7 @@ Quedarse "atrapado" en `vim` sin saber cómo salir es casi un rito de iniciació
 7. Corrige el archivo para que se ajuste al número de sitios y guárdalo corregido.
 8. Abre `informe.txt` con `nano`, escribe una línea de texto cualquiera, guárdala y sal. Vuelve a abrirlo con `vim`, añade una segunda línea (recuerda entrar en modo inserción con `i` y volver a modo normal con `Esc` antes de guardar).
 9. Descomprime [muestras_fastq.zip](../datasets/muestras_fastq.zip) que contiene varios archivos `.fastq`. ¿Cuántas secuencias hay en cada fichero? Une todos los archivos en uno solo. ¿Cuantas secuencias hay en total? (para descomprimir puedes hacerlo sobre el .zip con el botón derecho del ratón o bien ejecuta `unzip muestras_fastq.zip` en la terminal)
-10. Disponemos de un [fichero](../datasets/tomate.sam) con el resultado de un mapeo en formato SAM ¿Cuántas secuencias se han mapeado? ¿Cuántas se han mapeado en dirección reversa (mirad la segunda columna: 0 forward; 16 reverse)? ¿Cuántos y cuáles son los unigenes a los que se ha podido mapear alguna secuencia? Ordena los nombres de secuencias mapeadas con el orden del unigene y la posición en el unigene.
+10. Disponemos de un [fichero](../datasets/tomate.sam) con el resultado de un mapeo en formato SAM ¿Cuántas secuencias se han mapeado? ¿Cuántas se han mapeado en dirección reversa (mirad la segunda columna: 0 forward; 16 reverse)? ¿Cuántos y cuáles son los unigenes a los que se ha podido mapear alguna secuencia? 
 11. Trabaja con [variantes.vcf](../datasets/variantes.vcf), un fichero VCF con variantes detectadas en 6 individuos (`S01`-`S06`).
     - ¿Cuántos SNPs hay en el archivo (sin contar los INDELs)?
     - De esos SNPs, ¿cuáles tienen al menos un individuo heterocigoto?

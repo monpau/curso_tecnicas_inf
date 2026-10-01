@@ -129,7 +129,7 @@ regex101 no es idéntico a `grep -P`/`sed -E`: son "dialectos" de expresiones re
 :::
 
 
-## Ejercicios
+# Ejercicios
 
 Si te atascas con un patrón, prototípalo primero en [regex101.com](https://regex101.com/) (flavor Python) pegando las líneas relevantes del archivo, y cuando funcione cópialo a la terminal.
 
@@ -144,7 +144,7 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
 9. [uniprot_headers.fasta](../datasets/uniprot_headers.fasta) contiene cabeceras de UniProt con el formato `>sp|CÓDIGO|PROT_ESPECIE descripción...` (o `tr|` en vez de `sp|`). Genera una tabla con tres columnas separadas por tabulador: `codigo`, `prot` y `sp` (la especie).
 10. [anotacion.gff3](../datasets/anotacion.gff3) contiene, para cada gen, una línea de tipo `gene` (con su nombre y función en la columna de atributos, `Name=...;function=...`). Genera un CSV con las columnas `gen,cromosoma,posicion,funcion`, donde `posicion` tenga el formato `inicio-fin`.
 
-## Soluciones
+# Soluciones
 
 :::{.callout-note title="1" collapse="true"}
    ```{.bash}

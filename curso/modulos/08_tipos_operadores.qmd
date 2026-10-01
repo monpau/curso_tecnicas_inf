@@ -534,7 +534,7 @@ codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
 :::
 
 
-# Dos tipos compuestos: listas y diccionarios
+# Tipos compuestos: listas y diccionarios
 
  Los tipos compuestos son estructuras que pueden almacenar múltiples valores o elementos bajo un solo nombre de variable. Los dos tipos compuestos más comunes en Python son las **listas** y los **diccionarios**.
 
@@ -552,9 +552,155 @@ datos_muestreo = ["Quercus_robur", 1.5, 5, True] # lista mixta
 datos_muestero = [especies, alturas, numero_individuos, estan_sanos] # lista de listas
 ```
 
+### Crear listas
+
+Las listas se pueden crear de varias maneras:
+
+- Usando corchetes `[]` y separando los elementos con comas.
+- Usando la función `list()` para convertir un iterable en una lista (un iterable es cualquier objeto que se puede recorrer, como una cadena de texto o un rango de números).
+
+```{pyodide-python}
+# Crear una lista vacía
+lista_vacia = []
+
+# Crear una lista con elementos
+lista_con_elementos = [1, 2, 3, 4, 5]
+
+# Crear una lista a partir de un iterable
+cadena = "Hola"
+lista_desde_cadena = list(cadena)
+
+# Crear una lista a partir de un rango
+lista_desde_rango = list(range(5))
+
+print(lista_vacia)
+print(lista_con_elementos)
+print(lista_desde_cadena)
+print(lista_desde_rango)
+```
+
+### Acceder a elementos de una lista
+
+De manera similar a las cadenas de texto, puedes acceder a los elementos de una lista usando índices. 
+
+:::{.callout-warning title="¡Atención!"}
+Recuerda que en Python, el primer elemento tiene índice 0, el segundo índice 1, y así sucesivamente. También puedes usar índices negativos para acceder a los elementos desde el final de la lista.
+:::
+
+:::{.callout-tip title="Cuestión"} 
+Usando la lista personajes, intenta hacer lo siguiente:
+```{pyodide-python}
+personajes = ["Phyneas", "Ferb", "Perry", "Candace", "Isabella"]
+
+# Imprime Perry
+...
+
+# Imprime el último personaje
+...
+
+# Imprime los dos primeros personajes
+...
+
+# Usando la lista numeros, imprime los pares
+numeros = list(range(10))
+...
+
+```
+:::
+
+Las listas son **mutables**, lo que significa que puedes cambiar sus elementos después de haberlas creado. Por ejemplo, puedes modificar un elemento existente, añadir nuevos elementos o eliminar elementos.
+
+```{pyodide-python}
+#| exercise: list_mutable_errors
+# Corrige el siguiente código para que imprima la lista de la compra
+# Accede a lista_compra para que contenga "pan" en lugar de "leche"
+lista_compra = ["huevos", cerezas", "leche", "manzanas"]
+
+print("lista_compa")
+```
+:::{.hint exercise="list_mutable_errors"}
+# Recuerda que las listas son mutables, así que puedes cambiar un elemento directamente usando su índice.
+# Igual sobran y faltan comillas
+# ¿Están bien escritos las variables?
+:::
 
 
-`especies[:2]` es *slicing*: `[inicio:fin]` extrae un tramo de la lista, sin incluir el índice `fin`. Omitir `inicio` significa "desde el principio".
+
+### Métodos y operadores con listas
+
+Algunos de los métodos más comunes para trabajar con listas son:
+
+- `.append()`: Añade un elemento al final de la lista.
+- `.extend()`: Añade varios elementos al final de la lista.
+- `.pop()`: Elimina y devuelve el elemento en la posición especificada.
+
+```{pyodide-python}
+
+fondo_bikini = ["Bob", "Patricio", "Calamardo"]
+print(fondo_bikini)
+
+# Añado un elemento al final de la lista
+fondo_bikini.append("Arenita")
+print(fondo_bikini)
+
+# Añados varios elementos al final de la lista (o lo que es lo mismo, concateno otra lista)
+fondo_bikini.extend(["Plankton", "Gary"])
+print(fondo_bikini)
+
+# ¿A quién elimino?
+fondo_bikini.pop(2)
+
+# ¿Puedes añadir a fondo_bikini un personaje que no sea de la serie?
+...
+
+# ¿Y añadir a varios personajes a la vez?
+extras = []
+...
+print("fondo_bikini")
+``` 
+
+
+- `sorted()` o `.sort()`: Ordena la lista en orden ascendente.
+- `reversed()` o `.reverse()`: Invierte el orden de los elementos en la lista.
+
+Estos dos métodos pueden **devolver** una nueva lista ordenada o invertida sin modificar la lista original (`sorted` y `reversed`) o bien modificar la lista original (**inplace**) (`.sort()` y `.reverse()`).
+
+```{pyodide-python}
+numeros = [5, 2, 9, 1, 5, 6]
+
+# Ordena la lista en orden ascendente (crea una nueva lista)
+numeros_ordenados = sorted(numeros)
+print("Lista original:", numeros)
+print("Lista ordenada:", numeros_ordenados)
+
+# Invierte el orden de los elementos en la lista (crea una nueva lista)
+numeros_invertidos = list(reversed(numeros)) ## Revesed devuelve un iterador, así que lo convertimos a lista
+print("Lista original:", numeros)
+print("Lista invertida:", numeros_invertidos)
+
+# Ordena la lista en orden ascendente (modifica la lista original)
+numeros_ordenados = numeros.sort()
+print("Lista original:", numeros)
+print("Lista ordenada:", numeros_ordenados)
+
+# Invierte el orden de los elementos en la lista (modifica la lista original)
+numeros_invertidos = numeros.reverse()
+print("Lista original:", numeros)
+print("Lista invertida:", numeros_invertidos)
+```
+
+- `len()`: Devuelve el número de elementos en la lista.
+- `min()`: Devuelve el valor mínimo de la lista.
+- `max()`: Devuelve el valor máximo de la lista.
+- `sum()`: Devuelve la suma de los elementos de la lista.
+- `.count()`: Devuelve el número de elementos con el valor especificado.
+- `in`: Comprueba si un elemento está en la lista.'
+
+```{pyodide-python}
+
+```
+
+
 
 ## Diccionarios: de clave a valor
 
