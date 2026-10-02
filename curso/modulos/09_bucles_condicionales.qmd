@@ -3,11 +3,37 @@ title: "Bucles y condicionales"
 format:
   live-html:
     toc: true
+    include-after-body: ../toggle-solution.html
 ---
+
+# Control de flujo
+
+En Python, el control de flujo permite alterar el orden en que se ejecutan las instrucciones del programa. Esto se logra mediante estructuras de control como las condicionales (`if`, `elif`, `else`) y los bucles (`for`, `while`):
+
+- **Condicionales**: permiten ejecutar un bloque de código solo si se cumple una condición determinada. Se utilizan para tomar decisiones en el programa. 
+
+```text
+    si valor > umbral:
+        hacer acción A
+    sino:
+        hacer acción B
+```
+
+- **Bucles**: permiten repetir un bloque de código varias veces. Se utilizan para automatizar tareas repetitivas.
+
+```text
+    para cada elemento de un conjunto de elementos:
+        hacer acción con elemento
+```
+
+```text
+    mientras condición sea verdadera:
+        hacer acción
+``` 
 
 # Condicionales: `if` / `elif` / `else`
 
-```python
+```{pyodide-python}
 count = 12
 
 if count > 10:
@@ -20,9 +46,7 @@ else:
 print(categoria)
 ```
 
-```
-abundante
-```
+
 
 Python evalúa las condiciones en orden: si `count > 10` es verdadero, usa esa rama y se salta el resto; si no, prueba `elif count > 3`; si ninguna se cumple, usa `else`. Solo se ejecuta **una** de las ramas.
 
@@ -110,7 +134,7 @@ for base in secuencia_mixta:
         conteo[base] = conteo[base] + 1
 
 print(conteo)
-print(sum(conteo.values()), "de", len(secuencia_mixta), "caracteres")
+print(sum(conteo.values())S, "de", len(secuencia_mixta), "caracteres")
 ```
 
 ```
