@@ -1,0 +1,39 @@
+<script>
+// Convierte el botón "Show Solution" de quarto-live en un interruptor
+// que permite mostrar y volver a ocultar la solución.
+(function () {
+  function patch(btn) {
+    if (btn.dataset.toggle) return;
+    btn.dataset.toggle = "1";
+    const original = btn.onclick;
+    const label = btn.querySelector(".btn-label-exercise-editor");
+    let solutions = null;
+    let visible = false;
+
+    const toggle = function (ev) {
+      if (ev.type === "keydown" && ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault();
+      if (solutions === null) {
+        // Primera vez: deja que quarto-live muestre la solución, pero sin
+        // eliminar el botón, y guarda qué elementos ha hecho visibles.
+        const hidden = [...document.querySelectorAll(".exercise-solution.d-none")];
+        original.call({ remove() {} }, ev);
+        solutions = hidden.filter((el) => !el.classList.contains("d-none"));
+        visible = true;
+      } else {
+        visible = !visible;
+        solutions.forEach((el) => el.classList.toggle("d-none", !visible));
+      }
+      const text = visible ? "Hide Solution" : "Show Solution";
+      if (label) label.innerText = text;
+      btn.setAttribute("aria-label", text);
+    };
+    btn.onclick = toggle;
+    btn.onkeydown = toggle;
+  }
+
+  const scan = () => document.querySelectorAll(".btn-exercise-solution").forEach(patch);
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+  scan();
+})();
+</script>

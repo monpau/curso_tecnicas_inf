@@ -3,6 +3,7 @@ title: "Tipos y operadores"
 format:
   live-html:
     toc: true
+    include-after-body: ../toggle-solution.html
 ---
 
 # Variables
@@ -534,16 +535,17 @@ codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
 :::
 
 
-# Tipos compuestos: listas y diccionarios
+# Tipos compuestos
 
  Los tipos compuestos son estructuras que pueden almacenar múltiples valores o elementos bajo un solo nombre de variable. Los dos tipos compuestos más comunes en Python son las **listas** y los **diccionarios**.
 
-## Listas: colecciones ordenadas
+## Listas
 
-Las listas son colecciones ordenadas de elementos, que pueden ser de diferentes tipos. Se definen usando corchetes `[]` y los elementos se separan por comas. Que sean ordenadas significa que cada elemento siempre ocupa la misma posición dentro de la lista, y por tanto se le puede asignar un índice.
+Las listas son colecciones **ordenadas** de elementos, que pueden ser de diferentes tipos. Se definen usando corchetes `[]` y los elementos se separan por comas. Que sean ordenadas significa que cada elemento siempre ocupa la misma posición dentro de la lista, y por tanto se le puede asignar un índice.
 
 ```python
 # Ejemplos de una lista
+lista_vacia = []  # lista vacía
 especies = ["Quercus_robur", "Pinus_sylvestris", "Fragaria_vesca"] # lista de strings
 alturas = [1.5, 2.0, 0.3] # lista de floats
 numero_individuos = [5, 10, 3] # lista de ints
@@ -723,6 +725,8 @@ l = []
 - Recuerda que puedes usar `bool()` para convertir un valor a booleano.
 :::
 
+:::
+
 :::{.callout-tip title="Cuestión"}
 ```{pyodide-python}
 #| exercise: list_exercise
@@ -757,21 +761,127 @@ temperaturas =
 
 ## Diccionarios
 
-Un diccionario asocia claves con valores — útil para traducir un código a su significado:
+Los diccionarios son colecciones de pares clave-valor . Mientras que en las listas los elementos se acceden por su posición, en los diccionarios se acceden por su clave. 
 
-```python
+Se definen usando llaves `{}` y los elementos se separan por comas. Cada elemento tiene una **clave ÚNICA** que se usa para acceder a su **valor** correspondiente.
+
+```{pyodide-python}
+# Diccionario vacío
+diccionario_vacio = {}
+print(diccionario_vacio)
+
+# Accediendo a un diccionario con claves y valores
 sitios = {"SiteA": "Bosque mixto", "SiteB": "Claro de bosque", "SiteC": "Parcela experimental"}
-print(sitios.get("SiteB"))          # Claro de bosque
+print(sitios)
+print(sitios["SiteB"])
 
-for codigo, nombre in sitios.items():
-    print(f"{codigo}: {nombre}")
+# Podemos almacenar diferentes tipos de valores en un diccionario
+informacion_sitio = {
+    "nombre": "SiteA",
+    "tipo": "Bosque mixto",
+    "coordenadas": (40.123, -3.456),
+    "altitud": 500,
+    "is_conserved": True}
+
+print(informacion_sitio)
 ```
 
-```
-Claro de bosque
-SiteA: Bosque mixto
-SiteB: Claro de bosque
-SiteC: Parcela experimental
+:::{.callout-warning title="¡Atención!"}
+
+Fíjate que no he escrito el diccionario en una sola línea, sino que he usado varias líneas para que sea más legible. Esto es posible porque Python permite dividir una expresión en varias líneas si está dentro de paréntesis, corchetes o llaves. 
+:::
+
+Los diccionarios y las listas también pueden contener otros diccionarios y listas como valores, lo que permite crear estructuras de datos más complejas.
+
+```{pyodide-python}
+# Lista de diccionarios
+pacientes = [
+    {"nombre": "Alice", "edad": 30, "diagnostico": "Gripe"},
+    {"nombre": "Bob", "edad": 25, "diagnostico": "Resfriado"},
+    {"nombre": "Charlie", "edad": 35, "diagnostico": "Fiebre"}
+]
+print(pacientes)
+
+# Diccionarios de diccionarios
+informacion_sitio_completo = {
+    "SiteA": {
+        "tipo": "Bosque mixto",
+        "coordenadas": [40.123, -3.456],
+        "altitud": 500,
+        "is_conserved": True},
+    "SiteB": {
+        "tipo": "Claro de bosque",
+        "coordenadas": [40.789, -3.987],
+        "altitud": 600,
+        "is_conserved": False}
+}
+print(informacion_sitio_completo) 
 ```
 
-`.get("SiteB")` busca la clave `"SiteB"` y devuelve su valor. `.items()` recorre el diccionario devolviendo pares `(clave, valor)`, útil en un bucle `for`.
+Los diccionarios son **mutables**, lo que significa que puedes cambiar sus elementos después de haberlos creado. Por ejemplo, puedes modificar un valor existente, añadir nuevos pares clave-valor o eliminar pares clave-valor.
+
+```{pyodide-python}
+informacion_sitio = {"nombre": "SiteA", "altitud": 500}
+print(informacion_sitio)
+
+# Modificar un valor existente
+informacion_sitio["altitud"] = 550
+print(informacion_sitio)
+
+# Añadir un nuevo par clave-valor
+informacion_sitio["tipo"] = "Bosque mixto"
+print(informacion_sitio)
+
+# Eliminar un par clave-valor
+del informacion_sitio["altitud"]
+print(informacion_sitio)
+```
+
+:::{.callout-tip title="Cuestión"}
+- Crea un diccionario `motivo_dna`que contenga la información de la secuencia de ADN `dna_seq` y su `id`
+
+- Añade al diccionario `motivo_dna` la secuencia de ARN usando un diccionario para convertir entre DNA y RNA
+
+- Añade al diccionario `motivo_dna` la secuencia reversa y complementaria. Para crearla usa un diccionario que contenga la información de los nucleótidos complementarios.
+
+```{pyodide-python}
+#| exercise: dict_complementary
+
+motif_id = "motivo1"
+dna_seq = "ACTG"
+
+rna_translation = {"A": "U", "C": "G", "T": "A", "G": "C"}
+```
+:::{.solution exercise="dict_complementary"}
+```{pyodide-python}
+motivo_dna = {"id": motif_id, "dna_seq": dna_seq}
+
+motivo_dna["rna_seq"] = ""
+motivo_dna["rna_seq"] += rna_translation[dna_seq[0]]
+motivo_dna["rna_seq"] += rna_translation[dna_seq[1]]
+motivo_dna["rna_seq"] += rna_translation[dna_seq[2]]
+motivo_dna["rna_seq"] += rna_translation[dna_seq[3]]
+
+complementary = {"A": "T", "C": "G", "T": "A", "G": "C"}
+motivo_dna["reverse_complement"] = ""
+motivo_dna["reverse_complement"] += complementary[dna_seq[-1]]
+motivo_dna["reverse_complement"] += complementary[dna_seq[-2]]
+motivo_dna["reverse_complement"] += complementary[dna_seq[-3]]
+motivo_dna["reverse_complement"] += complementary[dna_seq[-4]]
+
+print(motivo_dna)
+```
+
+:::
+:::
+
+### Métodos y operadores con diccionarios
+
+Los diccionarios tienen varios métodos útiles para trabajar con ellos. Los más comunes son: 
+
+- `.keys()`: Devuelve una vista de las claves del diccionario.
+- `.values()`: Devuelve una vista de los valores del diccionario.
+- `.items()`: Devuelve una vista de los pares clave-valor del diccionario.
+
+
+
