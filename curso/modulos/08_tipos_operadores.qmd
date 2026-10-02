@@ -619,12 +619,10 @@ lista_compra = ["huevos", cerezas", "leche", "manzanas"]
 print("lista_compa")
 ```
 :::{.hint exercise="list_mutable_errors"}
-# Recuerda que las listas son mutables, así que puedes cambiar un elemento directamente usando su índice.
-# Igual sobran y faltan comillas
-# ¿Están bien escritos las variables?
+- Recuerda que las listas son mutables, así que puedes cambiar un elemento directamente usando su índice.
+- Igual sobran y faltan comillas
+- ¿Están bien escritos las variables?
 :::
-
-
 
 ### Métodos y operadores con listas
 
@@ -658,7 +656,6 @@ extras = []
 ...
 print("fondo_bikini")
 ``` 
-
 
 - `sorted()` o `.sort()`: Ordena la lista en orden ascendente.
 - `reversed()` o `.reverse()`: Invierte el orden de los elementos en la lista.
@@ -694,15 +691,71 @@ print("Lista invertida:", numeros_invertidos)
 - `max()`: Devuelve el valor máximo de la lista.
 - `sum()`: Devuelve la suma de los elementos de la lista.
 - `.count()`: Devuelve el número de elementos con el valor especificado.
+
+```{pyodide-python}
+numeros = [5, 2, 9, 1, 5, 6]
+print("Número de elementos:", len(numeros))
+print("Valor mínimo:", min(numeros))
+print("Valor máximo:", max(numeros))
+print("Suma de los elementos:", sum(numeros))
+# Cuenta cuántas veces aparece el número 5 en la lista
+print("Número de veces que aparece el 5:", numeros.count(5))  
+```
+
 - `in`: Comprueba si un elemento está en la lista.'
 
 ```{pyodide-python}
+asignaturas = ["Biología", "Química", "Física", "Matemáticas"]
+print("¿Está Biología en la lista?", "Biología" in asignaturas)
+print("¿Está Historia en la lista?", "Historia" in asignaturas) 
 
 ```
 
+:::{.callout-tip title="Cuestión"}
+¿Una lista vacía es `False` o `True`? ¿Y con elementos?
+
+```{pyodide-python}
+#| exercise: list_bool
+l = []
+```
+
+:::{.hint exercise="list_bool"}
+- Recuerda que puedes usar `bool()` para convertir un valor a booleano.
+:::
+
+:::{.callout-tip title="Cuestión"}
+```{pyodide-python}
+#| exercise: list_exercise
+# Ttenemos la siguiente línea de datos de un muestreo de temperatura:
+line = "SitioA,01/10/26,37.1,39.3,38.1"
+
+# Divide la línea en una lista de elementos 
 
 
-## Diccionarios: de clave a valor
+# Guarda los datos en variables separadas
+sito =
+fecha =
+temperaturas =
+
+# En la fecha, cambia el formato de día/mes/año a año-mes-día y guárdalo en otra variable
+
+
+# Convierte las temperaturas a float y guárdalas en una lista de floats
+
+# Añade a las temperaturas otra: 37.2
+
+# Añade dos temperaturas más: [36.5, 37.3]
+
+# Calcula la media de las temperaturas y guárdala en una variable
+
+# Ordena las temperaturas de menor a mayor y guárdalas en otra variable
+
+# Calcula el rango de temperaturas (máxima - mínima) y guárdalo en otra variable
+```
+:::
+
+
+## Diccionarios
 
 Un diccionario asocia claves con valores — útil para traducir un código a su significado:
 
