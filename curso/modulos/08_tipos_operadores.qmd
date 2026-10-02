@@ -10,7 +10,7 @@ format:
 
 Una variable es un nombre que apunta a un valor (la etiqueta de una caja que contiene un dato). 
 
-En Python el valor de una variable se lo asigna directamente con el operador `=`:
+En Python el valor de una variable se le asigna directamente con el operador `=`:
 
 ```{pyodide-python}
 # Aquí tienes diferentes variables con distintos tipos de datos
@@ -69,7 +69,7 @@ print(f"Tiene {"edad"} años.")
 
 # Flujo de ejecución
 
-Los programas se ejecutan de arriba a abajo, línea a línea. Este orden es fundamental para entender cómo se comportan los programas. Por ejemplo:
+Los programas se ejecutan de arriba abajo, línea a línea. Este orden es fundamental para entender cómo se comportan los programas. Por ejemplo:
 
 ```{pyodide-python}
 print("Primera línea")
@@ -127,7 +127,7 @@ Las variables se pueden manipular y comparar con **operadores**. Por ejemplo, `+
 
 ## Convertir entre tipos
 
-A veces necesitas convertir un valor de un tipo a otro, esto se llama **conversión de tipos** o **casting**. Por ejemplo, si tienes un número como cadena de texto y quieres hacer cálculos con él, debes convertirlo a un tipo numérico.
+A veces necesitas convertir un valor de un tipo a otro; esto se llama **conversión de tipos** o **casting**. Por ejemplo, si tienes un número como cadena de texto y quieres hacer cálculos con él, debes convertirlo a un tipo numérico.
 
 ```{pyodide-python}
 # Convertir de str a int
@@ -242,7 +242,7 @@ print(a ** c)
 
 :::
 
-También existen **operadores unarios** que actúan sobre un solo operando (en contraposición a los anteriores que son binarios, porque actúan sobre dos operandos):
+También existen **operadores unariosos** que actúan sobre un solo operando (en contraposición a los anteriores que son binarios, porque actúan sobre dos operandos):
 
 ```{pyodide-python}
 # Estas dos operaciones son equivalentes
@@ -255,7 +255,7 @@ a = 10
 a += 1
 print(a)
 ```
-Exsten varios operadores de asignación combinados con operaciones aritméticas, aunque los más usados son `+=` y `-=`. 
+Existen varios operadores de asignación combinados con operaciones aritméticas, aunque los más usados son `+=` y `-=`. 
 
 |Operador|Significado|
 |---|---|
@@ -367,14 +367,14 @@ print(threshold is not None)
 
 # Cadenas de texto
 
- Las cadenas de texto ( `str`) son secuencias de caracteres encerradas entre comillas simples `'` o dobles `"`. Se usan para representar texto y se pueden manipular con diversos métodos.
+Las cadenas de texto (`str`) son secuencias de caracteres encerradas entre comillas simples `'` o dobles `"`. Se usan para representar texto y se pueden manipular con diversos métodos.
 
- ```{pyodide-python}
+```{pyodide-python}
 saludo1 = "Hola caracola"
 saludo2 = 'Hola caracola'
 print(saludo1, "y", saludo2, "son exactamente iguales:", saludo1 == saludo2)
 ```
-Como has visto se pueden comparar con *`==`* para comprobar si son iguales. También se pueden concatenar con el operador `+` y repetir con `*`:
+Como has visto, se pueden comparar con *`==`* para comprobar si son iguales. También se pueden concatenar con el operador `+` y repetir con `*`:
 
 ```{pyodide-python}
 print(saludo1 + " " + saludo2)
@@ -382,7 +382,7 @@ print(saludo1 * 3)
 ```
 
 :::{.callout-tip title="Cuestión"}
-Escribe un programa que dado un número n devuelva n + nn + nnn
+Escribe un programa que, dado un número `n`, devuelva `n + nn + nnn`.
 ```{pyodide-python}
 #| exercise: str_concat
 n = 5
@@ -433,7 +433,7 @@ help(texto.upper)
 
 ```{pyodide-python}
 #| exercise: a_content
-# Puedes escribir un pequeño escript que calcule e imprima el porcentaje de adeninas de la siguiente secuencia de ADN:
+# Puedes escribir un pequeño script que calcule e imprima el porcentaje de adeninas de la siguiente secuencia de ADN:
 adn = "ATGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC"
 ```
 
@@ -446,7 +446,7 @@ Igual existe un método para contar. Compruébalo.
 :::{.callout-tip title="Cuestión"}
 
 ```{pyodide-python}
-# Y si la secuencia es así::
+# ¿Y si la secuencia es así?
 adn = "ATgCgTacGTaGCTAgCTaGCTagcTAGCTAGCTagcTAGCTAGCTAGCTAGC"
 ```
 :::
@@ -478,7 +478,7 @@ print("El contenido en GC es: ", num_gcs / len(adn) * 100)
 :::
 
 :::{.callout-tip title="Cuestión"}
-Extrae la especie de la siguiente línea de datos y represéntalo sin el `_`.
+Extrae la especie de la siguiente línea de datos y represéntala sin el `_`.
 
 ```{pyodide-python}
 line = "S002,2024-05-12,SiteA,40.123,-3.456,Pinus_sylvestris,5,Plantación cercana"
@@ -495,7 +495,7 @@ El slicing de cadenas es una técnica para extraer una parte de una cadena. Se u
 # ¿Cuál será el resultado de cada operación?
 texto = "Hola, bióloga/o"
 # texto[0]      
-# texto[5])      
+# texto[5]      
 # texto[0:4]    
 # texto[5:]     
 # texto[:4]     
@@ -537,7 +537,7 @@ codigo_letras = "TRWAGMYFPDXBNJZSQVHLCKE"
 
 # Tipos compuestos
 
- Los tipos compuestos son estructuras que pueden almacenar múltiples valores o elementos bajo un solo nombre de variable. Los dos tipos compuestos más comunes en Python son las **listas** y los **diccionarios**.
+Los tipos compuestos son estructuras que pueden almacenar múltiples valores o elementos bajo un solo nombre de variable. Los dos tipos compuestos más comunes en Python son las **listas** y los **diccionarios**.
 
 ## Listas
 
@@ -551,7 +551,7 @@ alturas = [1.5, 2.0, 0.3] # lista de floats
 numero_individuos = [5, 10, 3] # lista de ints
 estan_sanos = [True, False, True] # lista de bools
 datos_muestreo = ["Quercus_robur", 1.5, 5, True] # lista mixta
-datos_muestero = [especies, alturas, numero_individuos, estan_sanos] # lista de listas
+datos_muestreo = [especies, alturas, numero_individuos, estan_sanos] # lista de listas
 ```
 
 ### Crear listas
@@ -590,9 +590,9 @@ Recuerda que en Python, el primer elemento tiene índice 0, el segundo índice 1
 :::
 
 :::{.callout-tip title="Cuestión"} 
-Usando la lista personajes, intenta hacer lo siguiente:
+Usando la lista `personajes`, intenta hacer lo siguiente:
 ```{pyodide-python}
-personajes = ["Phyneas", "Ferb", "Perry", "Candace", "Isabella"]
+personajes = ["Phineas", "Ferb", "Perry", "Candace", "Isabella"]
 
 # Imprime Perry
 ...
@@ -622,8 +622,8 @@ print("lista_compa")
 ```
 :::{.hint exercise="list_mutable_errors"}
 - Recuerda que las listas son mutables, así que puedes cambiar un elemento directamente usando su índice.
-- Igual sobran y faltan comillas
-- ¿Están bien escritos las variables?
+- Igual sobran y faltan comillas.
+- ¿Están bien escritas las variables?
 :::
 
 ### Métodos y operadores con listas
@@ -643,7 +643,7 @@ print(fondo_bikini)
 fondo_bikini.append("Arenita")
 print(fondo_bikini)
 
-# Añados varios elementos al final de la lista (o lo que es lo mismo, concateno otra lista)
+# Añado varios elementos al final de la lista (o lo que es lo mismo, concateno otra lista)
 fondo_bikini.extend(["Plankton", "Gary"])
 print(fondo_bikini)
 
@@ -673,7 +673,7 @@ print("Lista original:", numeros)
 print("Lista ordenada:", numeros_ordenados)
 
 # Invierte el orden de los elementos en la lista (crea una nueva lista)
-numeros_invertidos = list(reversed(numeros)) ## Revesed devuelve un iterador, así que lo convertimos a lista
+numeros_invertidos = list(reversed(numeros)) ## reversed devuelve un iterador, así que lo convertimos a lista
 print("Lista original:", numeros)
 print("Lista invertida:", numeros_invertidos)
 
@@ -704,7 +704,7 @@ print("Suma de los elementos:", sum(numeros))
 print("Número de veces que aparece el 5:", numeros.count(5))  
 ```
 
-- `in`: Comprueba si un elemento está en la lista.'
+- `in`: Comprueba si un elemento está en la lista.
 
 ```{pyodide-python}
 asignaturas = ["Biología", "Química", "Física", "Matemáticas"]
@@ -730,14 +730,14 @@ l = []
 :::{.callout-tip title="Cuestión"}
 ```{pyodide-python}
 #| exercise: list_exercise
-# Ttenemos la siguiente línea de datos de un muestreo de temperatura:
+# Tenemos la siguiente línea de datos de un muestreo de temperatura:
 line = "SitioA,01/10/26,37.1,39.3,38.1"
 
 # Divide la línea en una lista de elementos 
 
 
 # Guarda los datos en variables separadas
-sito =
+sitio =
 fecha =
 temperaturas =
 
@@ -761,7 +761,7 @@ temperaturas =
 
 ## Diccionarios
 
-Los diccionarios son colecciones de pares clave-valor . Mientras que en las listas los elementos se acceden por su posición, en los diccionarios se acceden por su clave. 
+Los diccionarios son colecciones de pares clave-valor. Mientras que en las listas los elementos se acceden por su posición, en los diccionarios se acceden por su clave. 
 
 Se definen usando llaves `{}` y los elementos se separan por comas. Cada elemento tiene una **clave ÚNICA** que se usa para acceder a su **valor** correspondiente.
 
@@ -838,9 +838,9 @@ print(informacion_sitio)
 ```
 
 :::{.callout-tip title="Cuestión"}
-- Crea un diccionario `motivo_dna`que contenga la información de la secuencia de ADN `dna_seq` y su `id`
+- Crea un diccionario `motivo_dna` que contenga la información de la secuencia de ADN `dna_seq` y su `id`
 
-- Añade al diccionario `motivo_dna` la secuencia de ARN usando un diccionario para convertir entre DNA y RNA
+- Añade al diccionario `motivo_dna` la secuencia de ARN usando un diccionario para convertir entre ADN y ARN
 
 - Añade al diccionario `motivo_dna` la secuencia reversa y complementaria. Para crearla usa un diccionario que contenga la información de los nucleótidos complementarios.
 
@@ -879,9 +879,49 @@ print(motivo_dna)
 
 Los diccionarios tienen varios métodos útiles para trabajar con ellos. Los más comunes son: 
 
-- `.keys()`: Devuelve una vista de las claves del diccionario.
-- `.values()`: Devuelve una vista de los valores del diccionario.
-- `.items()`: Devuelve una vista de los pares clave-valor del diccionario.
+- `.keys()`: Devuelve un iterador de las claves del diccionario.
+- `.values()`: Devuelve un iterador de los valores del diccionario.
+- `.items()`: Devuelve un iterador de los pares clave-valor del diccionario.
 
 
+```{pyodide-python}
+expresion_genica = {"gene1": 10.5, "gene2": 5.2, "gene3": 7.8}
+print(expresion_genica.keys())
+print(list(expresion_genica.keys()))  # Convertimos el iterador a lista para imprimirlo
+print(expresion_genica.values())
+print(list(expresion_genica.values()))  # Convertimos el iterador a lista para imprimirlo   
+print(expresion_genica.items())
+print(list(expresion_genica.items()))  # Convertimos el iterador a lista para imprimirlo
+```
 
+- `len()`: Devuelve el número de pares clave-valor en el diccionario.
+- `in`: Comprueba si una clave está en el diccionario.
+
+:::{.callout-tip title="Cuestión"}
+Crea un diccionario a partir de las listas `individuos` y `edades`, donde cada individuo sea una clave y su edad el valor correspondiente. Luego, comprueba:
+
+- ¿Cuántos individuos hay en el diccionario?
+- ¿Está "Alice" en el diccionario?
+- ¿Cuál es la edad media?
+
+```{pyodide-python}
+#| exercise: dict_from_lists
+individuos = ["Alice", "Bob", "Charlie", "David"]
+edades = [25, 30, 35, 40]
+
+```
+
+:::{.solution exercise="dict_from_lists"}
+```{pyodide-python}
+individuos = ["Alice", "Bob", "Charlie", "David"]
+edades = [25, 30, 35, 40]
+
+diccionario = dict(zip(individuos, edades))
+print(diccionario)
+
+print(f"El número de individuos en el diccionario es: {len(diccionario)}")
+print(f"¿Está 'Alice' en el diccionario? { 'Alice' in diccionario }")
+print(f"La edad media es: {sum(diccionario.values()) / len(diccionario)}")
+```
+
+:::
