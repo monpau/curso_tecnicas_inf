@@ -388,7 +388,7 @@ Escribe un programa que, dado un número `n`, devuelva `n + nn + nnn`.
 n = 5
 # El resultado debería ser 5 + 55 + 555 -> 615
 ```
-:::{ .hint exercise="str_concat"}
+:::{.hint exercise="str_concat"}
 Igual puedes hacer un *cast* de `int` a `str` y viceversa.
 :::
 :::

@@ -15,7 +15,7 @@ En Python, el control de flujo permite alterar el orden en que se ejecutan las i
 ```text
     si valor > umbral:
         hacer acción A
-    sino:
+    si no:
         hacer acción B
 ```
 
@@ -33,195 +33,699 @@ En Python, el control de flujo permite alterar el orden en que se ejecutan las i
 
 # Condicionales: `if` / `elif` / `else`
 
+## `if`
+
+El bloque `if` evalúa una condición y ejecuta un bloque de código si la condición es verdadera. 
+
+:::{.callout-tip title='Cuestión'}
+¿Qué imprimirá el siguiente código?
+
+```{pyodide-python}
+value = 12
+threshold = 10
+
+if value > threshold:
+    print("El valor es mayor que el umbral")
+```
+:::
+
+
+Si no se cumple la condición, el bloque `if` se omite y no se ejecuta ninguna acción.
+
+```{pyodide-python}
+es_dna = False
+if es_dna:
+    print("La secuencia es ADN")
+
+print("Fin del programa")
+
+```
+
+:::{.callout-tip title='Cuestión'}
+Corrige el siguiente código:
+```{pyodide-python}
+species = "human"
+
+if species = 'human'
+    print("La especie es un mono")
+```
+:::
+
+## `else`
+
+El bloque `else` se ejecuta si la condición del `if` no se cumple. Es una forma de manejar el caso contrario.
+
+:::{.callout-tip title='Cuestión'}
+¿Qué imprimirá el siguiente código? ¿Por qué? ¿Lo puedes corregir?
+
+```{pyodide-python}
+value = 12
+threshold = 10
+
+if value > threshold:
+    print("El valor es mayor que el umbral")
+
+print("El valor es menor o igual que el umbral")
+```
+:::
+
+:::{.callout-tip title='Cuestión'}
+Crea un código que evalúe si una secuencia tiene un posible codón de inicio (ATG) y si tiene un codón de parada (TAA o TGA). Si tiene inicio y parada, imprime "Secuencia completa", si solo tiene el codón de inicio, imprime "Secuencia sin parada" y si no tiene inicio, "Secuencia sin inicio". 
+
+```{pyodide-python}
+#| exercise: sequence_check
+secuencia = "AATGCGTATCTAAGGC"
+```
+
+:::{.hint exercise="sequence_check"}
+- Recuerda que puedes usar `in` para comprobar si una subcadena está en otra cadena.
+- Puedes usar `and` y `or` para combinar condiciones.
+:::
+
+:::{.solution exercise="sequence_check"}
+```{pyodide-python}
+secuencia = "AATGCGTATCTAAGGC"
+
+if "ATG" in secuencia: 
+    if ("TAA" in secuencia or "TGA" in secuencia):
+        print("Secuencia completa")
+    else:
+        print("Secuencia sin parada")
+else:
+    print("Secuencia sin inicio")
+```
+:::
+:::
+
+
+:::{.callout-tip title='Cuestión'}
+Corrige el siguiente código:
+
+```{pyodide-python}
+#| exercise: multiple_of_2
+number = 453
+
+if number % 2:
+print("The number is multiple of 2")
+else:
+print("The number is not multiple of 2")
+```
+
+
+:::{.hint exercise="multiple_of_2"}
+¿Por qué number % 2 evalúa a True o False? 
+:::
+
+:::
+
+## `elif`
+
+El bloque `elif` (abreviatura de "else if") permite evaluar múltiples condiciones de manera secuencial. Si la primera condición no se cumple, se evalúa la siguiente, y así sucesivamente. Solo se ejecuta el bloque correspondiente a la primera condición verdadera.
+
+```{pyodide-python}
+codon = "TGA"
+
+if codon == "ATG":
+    print("Codón de inicio (metionina)")
+elif codon in ["TAA", "TAG", "TGA"]:
+    print("Codón de parada")
+elif "N" in codon:
+    print("Codón ambiguo: contiene una base indeterminada")
+else:
+    print("Codón codificante")
+```
+
+:::{.callout-tip title='Cuestión'}
+¿Qué imprimirá el siguiente código? ¿Por qué? ¿Lo puedes corregir?
+
 ```{pyodide-python}
 count = 12
 
-if count > 10:
-    categoria = "abundante"
-elif count > 3:
+if count > 3:
     categoria = "frecuente"
+elif count > 10:
+    categoria = "abundante"
 else:
     categoria = "escaso"
 
 print(categoria)
 ```
+:::
 
 
+# Bucles: `for` y `while`
 
-Python evalúa las condiciones en orden: si `count > 10` es verdadero, usa esa rama y se salta el resto; si no, prueba `elif count > 3`; si ninguna se cumple, usa `else`. Solo se ejecuta **una** de las ramas.
+## `for`
 
-# Bucles `for`: repetir un número conocido de veces
+Recorre un iterable (como una lista, un diccionario o una cadena) y ejecuta un bloque de código para cada elemento del iterable. 
 
-Ya usaste `for linea in f:` en el módulo 7 para recorrer un archivo, y `for id_seq, seq in secuencias.items():` en el módulo 8 para recorrer un diccionario. `for` también recorre directamente los caracteres de una cadena:
+```{pyodide-python}
+for element in ["Bob", "Patricio", "Arenita"]:
+    print(element)
+```
 
-```python
+```{pyodide-python}
+for i in range(5):
+    print(i)
+```
+
+```{pyodide-python}
+expresion = {"gen1": 2.5, "gen2": 3.1, "gen3": 1.8}
+
+for gen in expresion:
+    print(f"{gen}: {expresion[gen]}")
+
+for gen, valor in expresion.items():
+    print(f"{gen}: {valor}")
+```
+
+```{pyodide-python}
 secuencia = "ATGC"
 for base in secuencia:
     print(base)
 ```
 
-# Bucles `while`: repetir hasta que se cumpla una condición
-
-A diferencia de `for`, con `while` no sabes de antemano cuántas vueltas dará — sigue repitiendo mientras la condición sea verdadera. Es la herramienta correcta cuando buscas *algo* sin saber dónde está, por ejemplo la posición del codón de inicio `ATG` en una secuencia:
-
-```python
-secuencia = "GGGATGCCTTAA"
-i = 0
-while i < len(secuencia) and secuencia[i:i+3] != "ATG":
-    i += 1
-
-print(f"Codon de inicio encontrado en la posicion {i}")
+:::{.callout-tip title='Cuestión'}
+¿Podrías imprimir el nombre de cada paciente y su diagnóstico usando un bucle `for`?
+```{pyodide-python}
+#| exercise: pacientes
+pacientes = [
+    {"nombre": "Alice", "edad": 30, "diagnostico": "Gripe"},
+    {"nombre": "Bob", "edad": 25, "diagnostico": "Resfriado"},
+    {"nombre": "Charlie", "edad": 35, "diagnostico": "Fiebre"}]
 ```
 
+:::{.hint exercise="pacientes"}
+- Fíjate en que es una lista de diccionarios.
+:::
+
+:::{.solution exercise="pacientes"}
+```{pyodide-python}
+pacientes = [
+    {"nombre": "Alice", "edad": 30, "diagnostico": "Gripe"},
+    {"nombre": "Bob", "edad": 25, "diagnostico": "Resfriado"},
+    {"nombre": "Charlie", "edad": 35, "diagnostico": "Fiebre"}] 
+
+for info in pacientes:
+    print(f"{info['nombre']}: {info['diagnostico']}")
 ```
-Codon de inicio encontrado en la posicion 3
-```
+:::
+:::
 
-En cada vuelta, `i += 1` avanza una posición (es la forma corta de escribir `i = i + 1`), y `secuencia[i:i+3]` mira los 3 caracteres a partir de esa posición. El bucle para en cuanto encuentra `"ATG"`, o si llega al final de la secuencia sin encontrarlo (por eso la condición comprueba primero `i < len(secuencia)`: sin ese límite, si `"ATG"` no apareciera nunca, el bucle no terminaría jamás).
 
-# Parsear un FASTA a mano
+## `while`
 
-Con `for`, `if` y un diccionario (módulo 8), ya tienes todo lo necesario para convertir un archivo FASTA en una estructura de datos que puedas consultar: un diccionario que asocie cada identificador con su secuencia completa.
+`while` repite un bloque de código mientras se cumpla una condición. Se usa cuando no sabes de antemano cuántas veces necesitas repetir el bloque, y la condición puede cambiar durante la ejecución del bucle.
 
-```python
-secuencias = {}
-id_actual = None
+```{pyodide-python}
+# Cálculo del tiempo para que un cultivo de E. coli supere el millón de células asumiendo que se duplica cada 20 minutos
 
-with open("sequences.fasta") as f:
-    for linea in f:
-        linea = linea.strip()
-        if linea.startswith(">"):
-            id_actual = linea[1:]
-            secuencias[id_actual] = ""
-        else:
-            secuencias[id_actual] += linea
+poblacion = 100       # células iniciales
+minutos = 0
 
-for id_seq, seq in secuencias.items():
-    print(id_seq, len(seq))
-```
+while poblacion < 1_000_000:
+    poblacion = poblacion * 2
+    minutos += 20
 
-```
-seq1|Arabidopsis_thaliana|rbcL 50
-seq2|Quercus_robur|matK 49
-seq3|Pinus_sylvestris|rbcL 45
-seq4|Fragaria_vesca|trnL 34
-```
-
-`linea.strip()` elimina el salto de línea del final (si no lo hicieras, se colaría dentro de tus secuencias). Cuando la línea es una cabecera, `linea[1:]` se queda con todo menos el primer carácter (el `>`), y abre una entrada nueva en el diccionario con secuencia vacía. Cuando no es cabecera, es una línea de secuencia, y se añade (`+=`) a la entrada que se abrió más recientemente.
-
-# Filtrar por longitud
-
-Con el diccionario ya construido, filtrar es solo un `for` con un `if` dentro:
-
-```python
-for id_seq, seq in secuencias.items():
-    if len(seq) > 40:
-        print(f"{id_seq}: secuencia larga ({len(seq)} bases)")
-    else:
-        print(f"{id_seq}: secuencia corta ({len(seq)} bases)")
+print(f"Tras {minutos} minutos hay {poblacion} células")
 ```
 
-# Contar bases — y un error típico al hacerlo
+## `break` y `continue`
 
-Quieres contar cuántas veces aparece cada base en una secuencia:
+`break` se usa para salir de un bucle antes de que se complete su ejecución normal. `continue` se usa para saltar a la siguiente iteración del bucle.
 
-```python
-secuencia_mixta = "ATGccTAGgtA"
-
-conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
-for base in secuencia_mixta:
-    if base in conteo:
-        conteo[base] = conteo[base] + 1
-
-print(conteo)
-print(sum(conteo.values())S, "de", len(secuencia_mixta), "caracteres")
+```{pyodide-python}
+for i in range(10):
+    if i == 5:
+        break
+    print(i)
 ```
 
-```
-{'A': 3, 'C': 0, 'G': 2, 'T': 2}
-7 de 11 caracteres
-```
-
-Solo se han contado 7 de las 11 bases, y sin ningún error ni aviso — el mismo tipo de fallo silencioso que viste en el módulo 8. La causa: muchos archivos reales de secuencias usan minúsculas para marcar regiones de baja confianza o repetitivas (*soft-masking*), y `"c"` no es igual que `"C"` para Python, así que `if base in conteo` los descarta sin más. La solución es normalizar cada base con `.upper()` antes de comprobarla:
-
-```python
-conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
-for base in secuencia_mixta:
-    base = base.upper()
-    if base in conteo:
-        conteo[base] = conteo[base] + 1
-
-print(conteo)
-print(sum(conteo.values()), "de", len(secuencia_mixta), "caracteres")
+```{pyodide-python}
+for i in range(10):
+    if i == 5:
+        continue
+    print(i)
 ```
 
+# Ejemplo: combinando bucles y condiciones
+
+Combinando `for` e `if` podemos resolver problemas más completos. Tenemos las alturas de los árboles de una parcela en un diccionario cuya clave es `especie_individuo`. El valor `99` indica que el árbol no se pudo medir. Queremos agrupar las alturas por especie, descartar los `99` y calcular la altura media de cada especie.
+
+```{pyodide-python}
+#| exercise: alturas_arboles
+alturas = {
+    "pino_1": 12.4, "pino_2": 99, "pino_3": 15.1, "pino_4": 13.8,
+    "encina_1": 8.2, "encina_2": 7.5, "encina_3": 99,
+    "haya_1": 99, "haya_2": 22.3, "haya_3": 25.0, "haya_4": 19.6,
+}
 ```
-{'A': 3, 'C': 2, 'G': 3, 'T': 3}
-11 de 11 caracteres
+
+:::{.hint exercise="alturas_arboles"}
+- Fíjate en que es un diccionario.
+- Lo primero sería extraer la especie de cada individuo usando `.split()`.
+- Igual podemos crear un diccionario vacío para ir guardando las alturas por especie.
+- Para calcular la media de una lista de números podemos usar `sum(lista) / len(lista)`.
+:::
+
+:::{.solution  exercise="alturas_arboles"}
+```{pyodide-python}
+alturas = {
+    "pino_1": 12.4, "pino_2": 99, "pino_3": 15.1, "pino_4": 13.8,
+    "encina_1": 8.2, "encina_2": 7.5, "encina_3": 99,
+    "haya_1": 99, "haya_2": 22.3, "haya_3": 25.0, "haya_4": 19.6,
+}
+
+# 1. Agrupar las alturas por especie, descartando los valores 99
+alturas_por_especie = {}
+
+for individuo, altura in alturas.items():
+    especie = individuo.split("_")[0]   # "pino_1" -> "pino"
+
+    if altura != 99:
+        if especie not in alturas_por_especie:
+            alturas_por_especie[especie] = []   # primera vez que vemos la especie
+        alturas_por_especie[especie].append(altura)
+
+print(alturas_por_especie)
+
+# 2. Calcular la altura media de cada especie
+for especie, lista_alturas in alturas_por_especie.items():
+    media = sum(lista_alturas) / len(lista_alturas)
+    print(f"{especie}: {media:.2f} m (n = {len(lista_alturas)})")
 ```
+:::
+
+
+
 
 # Ejercicios
 
-1. Dado `count = 7`, usa `if`/`elif`/`else` para clasificarlo como `"abundante"` (>10), `"frecuente"` (>3) o `"escaso"`, e imprime el resultado.
-2. Usa un bucle `while` para encontrar la posición del primer codón de parada `"TAA"` en la secuencia `"ATGCGTATCTAAGGC"`.
-3. Recorre con `for` la secuencia `"ATGCGT"` e imprime cada base junto con su posición (pista: usa `enumerate(secuencia)`, que en cada vuelta te da `(indice, base)`).
-4. Parsea `sequences.fasta` a mano con el patrón visto (`for` + `if` + diccionario), guardando el resultado en una variable `secuencias`.
-5. A partir del diccionario `secuencias` del ejercicio anterior, imprime solo las secuencias con más de 40 bases.
-6. Cuenta las bases A/C/G/T de `secuencias["seq2|Quercus_robur|matK"]`.
-7. Repite el conteo de bases sobre la cadena `"atgCCGgtNa"` **sin** normalizar mayúsculas/minúsculas. Comprueba que la suma de tu conteo no coincide con la longitud total de la cadena.
-8. (Reto) Corrige el ejercicio anterior normalizando cada base con `.upper()`. ¿Sigue sin coincidir la suma con la longitud? ¿Por qué (pista: `"N"` es una base ambigua, no A/C/G/T)?
+## 1. Pacientes con fiebre
 
-## Soluciones
+Tenemos la temperatura corporal (en °C) de los pacientes ingresados en una planta del hospital. Imprime solo las temperaturas que indican fiebre (mayores de 37.5 °C).
 
-1.
-   ```python
-   count = 7
-   if count > 10:
-       categoria = "abundante"
-   elif count > 3:
-       categoria = "frecuente"
-   else:
-       categoria = "escaso"
-   print(categoria)
-   ```
-2.
-   ```python
-   secuencia = "ATGCGTATCTAAGGC"
-   i = 0
-   while i < len(secuencia) and secuencia[i:i+3] != "TAA":
-       i += 1
-   print(i)
-   ```
-3.
-   ```python
-   secuencia = "ATGCGT"
-   for i, base in enumerate(secuencia):
-       print(i, base)
-   ```
-4. Igual que el ejemplo de la sección "Parsear un FASTA a mano".
-5.
-   ```python
-   for id_seq, seq in secuencias.items():
-       if len(seq) > 40:
-           print(id_seq, len(seq))
-   ```
-6.
-   ```python
-   secuencia = secuencias["seq2|Quercus_robur|matK"]
-   conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
-   for base in secuencia:
-       if base in conteo:
-           conteo[base] = conteo[base] + 1
-   print(conteo)
-   ```
-7.
-   ```python
-   secuencia_mixta = "atgCCGgtNa"
-   conteo = {"A": 0, "C": 0, "G": 0, "T": 0}
-   for base in secuencia_mixta:
-       if base in conteo:
-           conteo[base] = conteo[base] + 1
-   print(sum(conteo.values()), "de", len(secuencia_mixta))
-   ```
-   La suma es mucho menor que la longitud: casi todo se descarta por estar en minúsculas.
-8. Añadiendo `base = base.upper()` dentro del bucle, antes del `if`, la suma sigue sin coincidir del todo, porque `"N"` (base ambigua, "podría ser cualquiera") no es ninguna de las cuatro claves del diccionario — y eso es correcto: `N` no es A, C, G ni T, así que no debe contarse como ninguna de ellas.
+```{pyodide-python}
+#| exercise: fiebre
+temperaturas = [36.6, 37.9, 36.8, 38.4, 37.2, 39.1, 36.9]
+```
+
+:::{.hint exercise="fiebre"}
+- Recorre la lista con `for` y, dentro del bucle, usa un `if` para decidir si imprimes o no.
+:::
+
+:::{.solution exercise="fiebre"}
+```{pyodide-python}
+temperaturas = [36.6, 37.9, 36.8, 38.4, 37.2, 39.1, 36.9]
+
+for temperatura in temperaturas:
+    if temperatura > 37.5:
+        print(temperatura)
+```
+:::
+
+## 2. Contar una especie en un transecto
+
+Durante un transecto de aves se ha anotado cada individuo observado. ¿Cuántos gorriones se han visto?
+
+```{pyodide-python}
+#| exercise: conteo_gorriones
+observaciones = ["gorrion", "mirlo", "gorrion", "paloma", "jilguero", "gorrion", "mirlo", "Gorrion", "petirrojo"]
+```
+
+:::{.hint exercise="conteo_gorriones"}
+- Crea una variable `contador = 0` antes del bucle.
+- Cada vez que encuentres un `"gorrion"`, súmale 1.
+- Ten en cuenta las mayúsculas y minúsculas.
+:::
+
+:::{.solution exercise="conteo_gorriones"}
+```{pyodide-python}
+observaciones = ["gorrion", "mirlo", "gorrion", "paloma", "jilguero", "gorrion", "mirlo", "Gorrion", "petirrojo"]
+
+contador = 0
+for especie in observaciones:
+    if especie.lower() == "gorrion":
+        contador += 1
+
+print(f"Se han observado {contador} gorriones")
+```
+:::
+
+## 3. pH de lagunas
+
+Se ha medido el pH del agua en varias lagunas. Para cada medida imprime si el agua es `"ácida"` (pH < 6.5), `"neutra"` (entre 6.5 y 7.5, ambos incluidos) o `"básica"` (pH > 7.5).
+
+```{pyodide-python}
+#| exercise: ph_lagunas
+ph = [5.8, 7.0, 8.2, 6.5, 7.6, 4.9]
+```
+
+:::{.hint exercise="ph_lagunas"}
+- Dentro del `for` necesitas un `if` / `elif` / `else`.
+- Piensa en qué orden comprobar las condiciones para que cada valor caiga en una sola categoría.
+:::
+
+:::{.solution exercise="ph_lagunas"}
+```{pyodide-python}
+ph = [5.8, 7.0, 8.2, 6.5, 7.6, 4.9]
+
+for valor in ph:
+    if valor < 6.5:
+        print(f"{valor}: ácida")
+    elif valor <= 7.5:
+        print(f"{valor}: neutra")
+    else:
+        print(f"{valor}: básica")
+```
+:::
+
+## 4. Filtrar ratones por peso
+
+En un experimento solo se pueden incluir ratones que pesen al menos 25 g. Crea una **nueva lista** `aptos` que contenga únicamente los pesos que cumplen el criterio, e imprime cuántos ratones son aptos.
+
+```{pyodide-python}
+#| exercise: ratones
+pesos = [22.1, 26.4, 25.0, 19.8, 28.3, 24.9, 30.2]
+```
+
+:::{.hint exercise="ratones"}
+- Empieza con una lista vacía: `aptos = []`.
+- Usa `.append()` para añadir los pesos que cumplan la condición.
+- `len()` te da el número de elementos de una lista.
+:::
+
+:::{.solution exercise="ratones"}
+```{pyodide-python}
+pesos = [22.1, 26.4, 25.0, 19.8, 28.3, 24.9, 30.2]
+
+aptos = []
+for peso in pesos:
+    if peso >= 25:
+        aptos.append(peso)
+
+print(aptos)
+print(f"Ratones aptos: {len(aptos)} de {len(pesos)}")
+```
+:::
+
+## 5. Media con datos faltantes
+
+Se ha medido la longitud del ala (en mm) de varias mariposas, pero algunas medidas no se pudieron tomar y aparecen como `"NA"`. Calcula la longitud media **ignorando** los `"NA"`.
+
+```{pyodide-python}
+#| exercise: alas_mariposa
+alas = [32.5, "NA", 30.1, 35.8, "NA", 33.2, 31.4]
+```
+
+:::{.hint exercise="alas_mariposa"}
+- Puedes hacerlo creando una lista nueva o bien usando dos acumuladores.
+- Usa `if medida != "NA":` para ignorar los valores faltantes. 
+:::
+
+:::{.solution exercise="alas_mariposa"}
+```{pyodide-python}
+alas = [32.5, "NA", 30.1, 35.8, "NA", 33.2, 31.4]
+
+suma = 0
+n = 0
+for medida in alas:
+    if medida != "NA":
+        suma += medida
+        n += 1
+
+media = suma / n
+print(f"Longitud media del ala: {media:.2f} mm (n = {n})")
+```
+:::
+
+## 6. Frecuencia cardíaca máxima
+
+Un colibrí lleva un sensor que registra su frecuencia cardíaca (pulsaciones por minuto) cada minuto. Encuentra el valor máximo y el minuto en que se registró **sin usar** la función `max()`.
+
+```{pyodide-python}
+#| exercise: colibri
+frecuencias = [480, 520, 610, 1050, 1230, 990, 650, 510]
+```
+
+:::{.hint exercise="colibri"}
+- Guarda en una variable el máximo encontrado hasta el momento (puedes empezar con el primer valor de la lista).
+- Recorre la lista con `for i in range(len(frecuencias))` para tener a la vez la posición y el valor (`frecuencias[i]`).
+- Si el valor actual es mayor que el máximo guardado, actualiza el máximo y su posición.
+:::
+
+:::{.solution exercise="colibri"}
+```{pyodide-python}
+frecuencias = [480, 520, 610, 1050, 1230, 990, 650, 510]
+
+maximo = frecuencias[0]
+minuto_maximo = 0
+for i in range(len(frecuencias)):
+    if frecuencias[i] > maximo:
+        maximo = frecuencias[i]
+        minuto_maximo = i
+
+print(f"Máximo de {maximo} ppm en el minuto {minuto_maximo}")
+```
+:::
+
+## 7. Censo de aves con dos listas
+
+En un humedal se han contado las aves de varias especies. Los nombres están en una lista y los recuentos, en el mismo orden, en otra. Imprime las especies con más de 50 individuos y, al final, el número total de individuos de esas especies.
+
+```{pyodide-python}
+#| exercise: censo_humedal
+especies = ["flamenco", "garza real", "ánade real", "cigüeñuela", "focha"]
+recuentos = [320, 12, 85, 47, 150]
+```
+
+:::{.hint exercise="censo_humedal"}
+- Las dos listas tienen la misma longitud: puedes recorrer las posiciones con `range(len(especies))` y usar el mismo índice en ambas.
+- Necesitarás un acumulador para el total.
+:::
+
+:::{.solution exercise="censo_humedal"}
+```{pyodide-python}
+especies = ["flamenco", "garza real", "ánade real", "cigüeñuela", "focha"]
+recuentos = [320, 12, 85, 47, 150]
+
+total = 0
+for i in range(len(especies)):
+    if recuentos[i] > 50:
+        print(f"{especies[i]}: {recuentos[i]}")
+        total += recuentos[i]
+
+print(f"Total de individuos en especies abundantes: {total}")
+```
+:::
+
+## 8. Especies amenazadas
+
+El diccionario `estado` recoge la categoría de la Lista Roja de la UICN de varias especies ibéricas. Imprime solo las especies **amenazadas**, que son las de categoría `"VU"` (vulnerable), `"EN"` (en peligro) o `"CR"` (en peligro crítico).
+
+```{pyodide-python}
+#| exercise: uicn
+estado = {
+    "lince ibérico": "VU",
+    "jabalí": "LC",
+    "urogallo cantábrico": "CR",
+    "águila imperial ibérica": "VU",
+    "conejo europeo": "EN",
+    "zorro": "LC",
+    "oso pardo": "LC",
+}
+```
+
+:::{.hint exercise="uicn"}
+- Recorre el diccionario con `.items()` para tener a la vez la especie y su categoría.
+- En lugar de encadenar tres `or`, puedes comprobar si la categoría está `in` una lista de categorías amenazadas.
+:::
+
+:::{.solution exercise="uicn"}
+```{pyodide-python}
+estado = {
+    "lince ibérico": "VU",
+    "jabalí": "LC",
+    "urogallo cantábrico": "CR",
+    "águila imperial ibérica": "VU",
+    "conejo europeo": "EN",
+    "zorro": "LC",
+    "oso pardo": "LC",
+}
+
+amenazadas = ["VU", "EN", "CR"]
+for especie, categoria in estado.items():
+    if categoria in amenazadas:
+        print(f"{especie} ({categoria})")
+```
+:::
+
+## 9. Grupos sanguíneos de donantes
+
+Un banco de sangre ha registrado el grupo sanguíneo de los donantes de una jornada. Construye un diccionario que indique cuántos donantes hay de cada grupo. No sabemos de antemano qué grupos aparecerán.
+
+```{pyodide-python}
+#| exercise: grupos_sanguineos
+donantes = ["A+", "O+", "B+", "O+", "A-", "O+", "AB+", "A+", "O-", "B+", "O+"]
+```
+
+:::{.hint exercise="grupos_sanguineos"}
+- Empieza con un diccionario vacío.
+- Si el grupo todavía no es una clave del diccionario, créala con valor 1; si ya existe, súmale 1.
+:::
+
+:::{.solution exercise="grupos_sanguineos"}
+```{pyodide-python}
+donantes = ["A+", "O+", "B+", "O+", "A-", "O+", "AB+", "A+", "O-", "B+", "O+"]
+
+conteo = {}
+for grupo in donantes:
+    if grupo not in conteo:
+        conteo[grupo] = 1
+    else:
+        conteo[grupo] += 1
+
+print(conteo)
+```
+:::
+
+## 10. Clasificar glucemias
+
+Tenemos la glucosa en ayunas (mg/dL) de un grupo de pacientes. Clasifica cada valor como `"normal"` (< 100), `"prediabetes"` (100–125) o `"diabetes"` (≥ 126) y cuenta cuántos pacientes hay en cada categoría. Al final imprime también el **porcentaje** de cada categoría.
+
+```{pyodide-python}
+#| exercise: glucemia
+glucosa = [88, 104, 131, 95, 99, 126, 117, 142, 82, 100, 91, 110]
+```
+
+:::{.hint exercise="glucemia"}
+- Prepara el diccionario con las tres categorías a 0: `{"normal": 0, "prediabetes": 0, "diabetes": 0}`.
+- Dentro del bucle usa `if` / `elif` / `else` para decidir qué categoría incrementar.
+- Para los porcentajes necesitas un segundo bucle sobre el diccionario.
+:::
+
+:::{.solution exercise="glucemia"}
+```{pyodide-python}
+glucosa = [88, 104, 131, 95, 99, 126, 117, 142, 82, 100, 91, 110]
+
+categorias = {"normal": 0, "prediabetes": 0, "diabetes": 0}
+for valor in glucosa:
+    if valor < 100:
+        categorias["normal"] += 1
+    elif valor <= 125:
+        categorias["prediabetes"] += 1
+    else:
+        categorias["diabetes"] += 1
+
+for categoria, n in categorias.items():
+    porcentaje = n / len(glucosa) * 100
+    print(f"{categoria}: {n} pacientes ({porcentaje:.1f} %)")
+```
+:::
+
+## 11. Primera hora de hipoxia
+
+Un sensor mide cada hora el oxígeno disuelto (mg/L) en un estanque de cría de truchas. Por debajo de 5 mg/L los peces sufren hipoxia. Encuentra la **primera** hora en la que el oxígeno cae por debajo de ese umbral y deja de recorrer la lista en cuanto la encuentres. Si en ningún momento baja de 5 mg/L, imprime `"Sin episodios de hipoxia"`.
+
+```{pyodide-python}
+#| exercise: hipoxia
+oxigeno = [8.1, 7.6, 7.0, 6.2, 5.4, 4.8, 4.1, 5.5, 6.3]
+```
+
+:::{.hint exercise="hipoxia"}
+- Usa `break` para salir del bucle en cuanto encuentres el primer valor por debajo de 5.
+- Para saber al final si se encontró o no, puedes usar una variable que empiece valiendo `False` y cambie a `True` al encontrarlo.
+- Prueba tu código también con una lista en la que nunca se baje de 5.
+:::
+
+:::{.solution exercise="hipoxia"}
+```{pyodide-python}
+oxigeno = [8.1, 7.6, 7.0, 6.2, 5.4, 4.8, 4.1, 5.5, 6.3]
+
+encontrado = False
+for hora in range(len(oxigeno)):
+    if oxigeno[hora] < 5:
+        encontrado = True
+        break
+
+if encontrado:
+    print(f"Hipoxia a partir de la hora {hora}: {oxigeno[hora]} mg/L")
+else:
+    print("Sin episodios de hipoxia")
+```
+:::
+
+## 12. Tallas mínimas de pesca
+
+En un muestreo pesquero se ha medido la longitud de cada pez capturado. Cada especie tiene una talla mínima legal (diccionario `talla_minima`). Construye un diccionario `resumen` que indique, para cada especie, cuántos peces son **legales** (longitud ≥ talla mínima) y cuántos **inmaduros**, con esta forma:
+
+```text
+{"merluza": {"legal": 2, "inmaduro": 2}, "sardina": {...}, ...}
+```
+
+Después, imprime las especies en las que más de la mitad de los peces capturados eran inmaduros.
+
+```{pyodide-python}
+#| exercise: tallas_peces
+capturas = [
+    {"especie": "merluza", "longitud": 31},
+    {"especie": "sardina", "longitud": 9},
+    {"especie": "merluza", "longitud": 24},
+    {"especie": "dorada", "longitud": 22},
+    {"especie": "sardina", "longitud": 13},
+    {"especie": "merluza", "longitud": 18},
+    {"especie": "dorada", "longitud": 16},
+    {"especie": "sardina", "longitud": 10},
+    {"especie": "merluza", "longitud": 40},
+    {"especie": "dorada", "longitud": 25},
+]
+
+talla_minima = {"merluza": 27, "sardina": 11, "dorada": 23}
+```
+
+:::{.hint exercise="tallas_peces"}
+- `capturas` es una lista de diccionarios: en cada vuelta, `pez["especie"]` y `pez["longitud"]` te dan los datos de un pez.
+- La talla mínima de ese pez es `talla_minima[pez["especie"]]`.
+- La primera vez que aparece una especie, crea su entrada: `resumen[especie] = {"legal": 0, "inmaduro": 0}`.
+- Para la segunda parte, recorre `resumen` y compara los inmaduros con el total de esa especie.
+:::
+
+:::{.solution exercise="tallas_peces"}
+```{pyodide-python}
+capturas = [
+    {"especie": "merluza", "longitud": 31},
+    {"especie": "sardina", "longitud": 9},
+    {"especie": "merluza", "longitud": 24},
+    {"especie": "dorada", "longitud": 22},
+    {"especie": "sardina", "longitud": 13},
+    {"especie": "merluza", "longitud": 18},
+    {"especie": "dorada", "longitud": 16},
+    {"especie": "sardina", "longitud": 10},
+    {"especie": "merluza", "longitud": 40},
+    {"especie": "dorada", "longitud": 25},
+]
+
+talla_minima = {"merluza": 27, "sardina": 11, "dorada": 23}
+
+# 1. Contar legales e inmaduros por especie
+resumen = {}
+for pez in capturas:
+    especie = pez["especie"]
+
+    if especie not in resumen:
+        resumen[especie] = {"legal": 0, "inmaduro": 0}
+
+    if pez["longitud"] >= talla_minima[especie]:
+        resumen[especie]["legal"] += 1
+    else:
+        resumen[especie]["inmaduro"] += 1
+
+print(resumen)
+
+# 2. Especies con más de la mitad de inmaduros
+for especie, conteo in resumen.items():
+    total = conteo["legal"] + conteo["inmaduro"]
+    if conteo["inmaduro"] > total / 2:
+        print(f"{especie}: {conteo['inmaduro']} de {total} inmaduros")
+```
+:::
