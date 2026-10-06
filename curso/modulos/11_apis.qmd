@@ -1,10 +1,250 @@
 ---
-title: "Acceso a datos en línea vía APIs"
+title: "Funciones, paquetes y APIs"
 format:
   live-html:
     toc: true
+    include-after-body: ../toggle-solution.html
 ---
 
+# Funciones
+
+Sin darte cuenta, llevas todo el curso usando funciones: `print()`, `len()`, `type()`, `int()`, `sum()`... Una **función** es un bloque de código con nombre que hace una tarea concreta. Para usarla (**llamarla**) escribes su nombre seguido de paréntesis, y dentro le pasas los datos con los que tiene que trabajar: sus **argumentos**. La función hace su trabajo y **devuelve** un resultado, que puedes guardar en una variable.
+
+```{pyodide-python}
+secuencia = "ATGCGTACGT"
+longitud = len(secuencia)   # len recibe un argumento y devuelve un int
+print(longitud)
+```
+
+## Argumentos posicionales y con nombre
+
+Algunas funciones aceptan varios argumentos. Los **posicionales** se identifican por su orden; los argumentos **con nombre** se escriben como `nombre=valor` y suelen ser opcionales, porque tienen un valor por defecto:
+
+```{pyodide-python}
+print(round(3.14159))      # un argumento: redondea al entero
+print(round(3.14159, 2))   # dos argumentos posicionales: el número y los decimales
+
+temperaturas = [37.1, 39.3, 38.1]
+print(sorted(temperaturas))                # orden ascendente (por defecto)
+print(sorted(temperaturas, reverse=True))  # argumento con nombre
+
+print("SitioA", "01/10/26", "37.1", sep=";")  # sep cambia el separador de print
+```
+
+## Devolver no es lo mismo que imprimir
+
+`print()` **muestra** un valor en pantalla, pero no lo devuelve: si guardas su resultado en una variable, obtienes `None`. En cambio, `len()` **devuelve** un valor con el que puedes seguir trabajando.
+
+```{pyodide-python}
+a = len("ATGC")
+b = print("ATGC")
+print("a vale:", a)
+print("b vale:", b)
+```
+
+## Definir tus propias funciones
+
+Cuando repites el mismo cálculo varias veces, conviene convertirlo en una función. Se definen con `def`, el nombre de la función, sus **parámetros** entre paréntesis y dos puntos. El cuerpo de la función va indentado (igual que en un `if` o un `for`), y `return` indica qué valor devuelve:
+
+```{pyodide-python}
+def contenido_gc(adn):
+    """Devuelve el porcentaje de G y C de una secuencia de ADN."""
+    num_gc = adn.count("G") + adn.count("C")
+    return num_gc / len(adn) * 100
+
+print(contenido_gc("ATGCGTACGT"))
+print(contenido_gc("GGGCCCAT"))
+```
+
+Fíjate en que hemos escrito el cálculo **una sola vez** y lo podemos reutilizar con cualquier secuencia. El texto entre triples comillas es la **docstring**: una descripción de la función que aparece al usar `help(contenido_gc)`.
+
+Los parámetros también pueden tener un valor por defecto, que se usa si al llamar a la función no se indica otro:
+
+```{pyodide-python}
+def tiene_fiebre(temperatura, umbral=38.0):
+    return temperatura >= umbral
+
+print(tiene_fiebre(38.5))              # usa el umbral por defecto
+print(tiene_fiebre(38.5, umbral=39.0)) # usa otro umbral
+```
+
+:::{.callout-warning title="¡Atención!"}
+Las variables que creas dentro de una función (como `num_gc`) solo existen dentro de ella. Si intentas usarlas fuera, Python dará un error `NameError`. Lo que quieras sacar de la función, devuélvelo con `return`.
+:::
+
+:::{.callout-tip title="Cuestión"}
+Mejora la función `contenido_gc` para que funcione aunque la secuencia tenga minúsculas y espacios en blanco. Añade un parámetro `decimales` (por defecto, 2) para redondear el resultado.
+
+```{pyodide-python}
+#| exercise: func_gc
+def contenido_gc(adn):
+    num_gc = adn.count("G") + adn.count("C")
+    return num_gc / len(adn) * 100
+
+print(contenido_gc("CGT agc TAT cga"))
+```
+
+:::{.hint exercise="func_gc"}
+Recuerda los métodos de cadenas `.upper()` y `.replace()`, y la función `round()`.
+:::
+
+:::{.solution exercise="func_gc"}
+```{pyodide-python}
+def contenido_gc(adn, decimales=2):
+    adn = adn.upper().replace(" ", "")
+    num_gc = adn.count("G") + adn.count("C")
+    return round(num_gc / len(adn) * 100, decimales)
+
+print(contenido_gc("CGT agc TAT cga"))
+print(contenido_gc("CGT agc TAT cga", decimales=0))
+```
+:::
+:::
+
+:::{.callout-tip title="Cuestión"}
+Escribe una función `media_sin_faltantes(valores, faltante=99)` que calcule la media de una lista ignorando los valores faltantes.
+
+```{pyodide-python}
+#| exercise: func_media
+alturas = [12.5, 99, 14.2, 13.1, 99, 15.0]
+```
+
+:::{.solution exercise="func_media"}
+```{pyodide-python}
+def media_sin_faltantes(valores, faltante=99):
+    validos = []
+    for valor in valores:
+        if valor != faltante:
+            validos.append(valor)
+    return sum(validos) / len(validos)
+
+alturas = [12.5, 99, 14.2, 13.1, 99, 15.0]
+print(media_sin_faltantes(alturas))
+```
+:::
+:::
+
+# Módulos y paquetes
+
+Python trae de serie unas pocas funciones básicas (`print`, `len`, `sum`...), pero la mayor parte de sus herramientas están organizadas en **módulos**: archivos de Python que agrupan funciones relacionadas. Un **paquete** es simplemente un conjunto de módulos. Hay dos tipos:
+
+- La **biblioteca estándar**: módulos que vienen instalados con Python, como `math`, `random`, `statistics`, `csv` o `json`.
+- **Paquetes externos**: los escribe la comunidad y hay que instalarlos, como `requests` (peticiones web), `pandas` (tablas de datos) o `biopython` (bioinformática).
+
+## Importar
+
+Para usar un módulo primero hay que **importarlo** con `import`. Después, sus funciones se llaman con la sintaxis `modulo.funcion()`:
+
+```{pyodide-python}
+import math
+
+print(math.sqrt(16))   # raíz cuadrada
+print(math.log2(8))    # logaritmo en base 2
+print(math.pi)         # los módulos también pueden contener variables
+```
+
+Hay otras formas de importar:
+
+```{pyodide-python}
+# Importar solo algunas funciones: se usan sin el prefijo del módulo
+from statistics import mean, stdev
+temperaturas = [37.1, 39.3, 38.1, 37.2]
+print(mean(temperaturas), stdev(temperaturas))
+
+# Importar con un alias (un nombre más corto)
+import statistics as st
+print(st.median(temperaturas))
+```
+
+Ya has visto `import random` en el módulo 8 y `import csv` en el módulo 10: era exactamente esto.
+
+Igual que con las cadenas, puedes explorar un módulo con `dir()` y consultar su documentación con `help()`:
+
+```{pyodide-python}
+import math
+print(dir(math))
+help(math.log)
+```
+
+:::{.callout-tip title="Cuestión"}
+Un cultivo de *E. coli* se duplica cada 20 minutos. Usa el módulo `math` para calcular cuántos minutos tarda en pasar de 1000 a 1 000 000 de células, sin usar bucles.
+
+```{pyodide-python}
+#| exercise: math_ecoli
+inicial = 1000
+final = 1_000_000
+tiempo_duplicacion = 20
+```
+
+:::{.hint exercise="math_ecoli"}
+El número de duplicaciones necesarias es el logaritmo en base 2 de `final / inicial`.
+:::
+
+:::{.solution exercise="math_ecoli"}
+```{pyodide-python}
+import math
+
+inicial = 1000
+final = 1_000_000
+tiempo_duplicacion = 20
+
+duplicaciones = math.log2(final / inicial)
+print(f"Hacen falta {duplicaciones:.2f} duplicaciones")
+print(f"Tiempo: {duplicaciones * tiempo_duplicacion:.0f} minutos")
+```
+:::
+:::
+
+## Instalar paquetes externos
+
+Los paquetes externos se instalan una sola vez desde la terminal con `pip`, el gestor de paquetes de Python:
+
+```
+~$ pip install requests
+```
+
+Una vez instalado, se importa como cualquier otro módulo. Si intentas importar un paquete que no está instalado, obtendrás un error `ModuleNotFoundError`.
+
+## Un ejemplo: `requests`
+
+`requests` es un paquete externo para hacer peticiones a páginas web desde Python. Su función más importante es `requests.get()`: recibe como argumento una dirección web (URL) y devuelve la respuesta del servidor.
+
+```python
+import requests
+
+respuesta = requests.get("https://rest.ensembl.org/info/ping?content-type=application/json")
+print(respuesta.status_code)
+print(respuesta.text)
+```
+
+```
+200
+{"ping":1}
+```
+
+Lo que devuelve `requests.get()` no es un número ni una cadena, sino un objeto de tipo `Response` que agrupa toda la información de la respuesta. Como con las cadenas y las listas, accedes a ella con un punto: `.status_code` es un valor (el código de estado, 200 si todo ha ido bien), `.text` es el contenido de la respuesta como cadena, y `.json()` es un método que convierte ese contenido en un diccionario. Puedes ver todo lo que ofrece con `dir(respuesta)`.
+
+Y como `requests.get()` es una función más, puedes combinarla con tus propias funciones:
+
+```python
+import requests
+
+def descargar_json(url):
+    """Descarga una URL y devuelve su contenido como diccionario, o None si falla."""
+    respuesta = requests.get(url)
+    if respuesta.status_code == 200:
+        return respuesta.json()
+    return None
+
+datos = descargar_json("https://rest.ensembl.org/info/ping?content-type=application/json")
+print(datos)
+```
+
+```
+{'ping': 1}
+```
+
+La dirección que le hemos pasado a `requests.get()` no es una página web normal, sino un servicio pensado para que lo consulten programas: una **API**. En el resto del tema veremos qué son y cómo sacarles partido.
 
 # ¿Qué es una API?
 
@@ -44,7 +284,7 @@ La URL tiene dos partes: la dirección base del *endpoint* (`.../efetch.fcgi`) y
 
 # Peticiones con Python: `requests`
 
-`curl` es cómodo para probar rápido, pero para procesar la respuesta necesitas Python. La librería `requests` hace lo mismo con una función:
+`curl` es cómodo para probar rápido, pero para procesar la respuesta necesitas Python. Con `requests`, que ya conoces de la sección anterior, la misma idea queda así:
 
 ```python
 import requests

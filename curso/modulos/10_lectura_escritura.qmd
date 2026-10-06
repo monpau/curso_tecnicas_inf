@@ -3,8 +3,12 @@ title: "Lectura, modificación y escritura de archivos"
 format:
   live-html:
     toc: true
+    include-after-body: ../toggle-solution.html
 ---
 
+Para este módulo vamos a dejar de funcionar con la ejecución en bloques ejecutables en web y pasar a trabajar con archivos de Python (`.py`) que ejecutaremos desde la terminal. 
+
+Necesitaremos por tanto escribir nuestros programas en archivos `.py` y ejecutarlos desde la terminal con `python3 nombre_del_archivo.py`.
 
 # Modos de apertura: lectura, escritura, añadido
 
