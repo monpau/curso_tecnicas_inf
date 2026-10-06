@@ -2,12 +2,9 @@
 title: "Expresiones regulares"
 ---
 
-Vamos a trabajar con varios archivos: [sequences.fasta](../datasets/sequences.fasta), [codigos_muestreo.csv](../datasets/codigos_muestreo.csv), [registro_campo_bruto.csv](../datasets/registro_campo_bruto.csv), [orfs.fasta](../datasets/orfs.fasta), [uniprot_headers.fasta](../datasets/uniprot_headers.fasta) y [anotacion.gff3](../datasets/anotacion.gff3)
-
-
 # ¿Por qué expresiones regulares?
 
-Imagina un listado de muestreos donde cada fila tiene un código de 5 caracteres seguido de la especie encontrada. El código sigue un formato fijo: **localidad** (1 letra) + **tipo de sustrato** (1 letra) + **época** (1 letra) + **altura** (2 dígitos, en cientos de metros):
+Imagina un listado de muestreos como [codigos_muestreo.csv](../datasets/codigos_muestreo.csv), donde cada fila tiene un código de 5 caracteres seguido de la especie encontrada. El código sigue un formato fijo: **localidad** (1 letra) + **tipo de sustrato** (1 letra) + **época** (1 letra) + **altura** (2 dígitos, en cientos de metros):
 
 ```
 PRA18,Erica arborea
@@ -100,7 +97,7 @@ Cuando lo que necesitas no es "cero o una vez" sino un número concreto de repet
 
 Hasta ahora usabas `sed` para sustituir texto por otro texto fijo. Pero también puedes **capturar** trozos del patrón que coincide, envolviéndolos entre paréntesis `(...)`, y reutilizarlos en el reemplazo con `\1`, `\2`... (el primer grupo capturado, el segundo...). Es la manera de reordenar o extraer partes de un texto sin tener que escribirlas a mano.
 
-Por ejemplo, cada cabecera de `sequences.fasta` tiene el formato `>seqN|Genero_especie|marcador`. Para quedarte solo con el género/especie y el marcador entre paréntesis, descartando el número de secuencia:
+Por ejemplo, cada cabecera de [sequences.fasta](../datasets/sequences.fasta) tiene el formato `>seqN|Genero_especie|marcador`. Para quedarte solo con el género/especie y el marcador entre paréntesis, descartando el número de secuencia:
 
 ```{.bash}
 ~$ grep '^>' sequences.fasta | sed -E 's/^>seq[0-9]+\|([A-Za-z_]+)\|([A-Za-z0-9]+)/\1 (\2)/'
@@ -135,8 +132,8 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
 
 1. En `sequences.fasta` selecciona en una sola orden las cabeceras de `Quercus_robur` y `Fragaria_vesca`.
 2. En `codigos_muestreo.csv`, selecciona con `grep` los muestreos realizados a 3000 m o más (altura `30` o superior en el código). Recuerda que el código son tres letras seguidas de dos dígitos.
-3. En `registro_campo_bruto.csv` la especie *Pinus sylvestris* aparece escrita de varias formas: con `i` o con `y`, y con uno o más espacios entre género y epíteto. Usa `sed` para que todas queden escritas como `Pinus sylvestris` y guarda el resultado en `registro_campo_limpio.csv`.
-4. ¿Cuántas observaciones de `species_observations.csv` se hicieron cada mes? Las fechas tienen el formato `AAAA-MM-DD`: usa `sed` para quitar el día y quedarte solo con el año y el mes. Recuerda que las líneas de cabecera empiezan por `#`.
+3. En [registro_campo_bruto.csv](../datasets/registro_campo_bruto.csv) la especie *Pinus sylvestris* aparece escrita de varias formas: con `i` o con `y`, y con uno o más espacios entre género y epíteto. Usa `sed` para que todas queden escritas como `Pinus sylvestris` y guarda el resultado en `registro_campo_limpio.csv`.
+4. ¿Cuántas observaciones de [species_observations.csv](../datasets/species_observations.csv) se hicieron cada mes? Las fechas tienen el formato `AAAA-MM-DD`: usa `sed` para quitar el día y quedarte solo con el año y el mes. Recuerda que las líneas de cabecera empiezan por `#`.
 5. En `species_observations.csv` las especies están escritas como `Genero_epiteto`. ¿Qué género tiene más observaciones y cuántas?
 6. Muestra las tres especies de `codigos_muestreo.csv` muestreadas a mayor altura, con su altura delante (por ejemplo `99,Saxifraga pyrenaica`). Usa `sed` para quitar las tres letras del principio del código.
 7. El [archivo](../datasets/contig.stats) tiene una serie de métricas para los diferentes *contigs* que se han producido tras un ensamblaje de un genoma. Esta información incluye el contig, el tamaño, el porcentaje en G+C, la profundidad de lectura, el grado de cobertura y el resultado de hacer un BLAST de unos contigs contra otros. Hemos detectado una serie de contigs que presentan profundidad y cobertura 0 y queremos filtrarlos.
