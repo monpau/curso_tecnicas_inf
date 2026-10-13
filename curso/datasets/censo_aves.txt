@@ -1,0 +1,997 @@
+# Censo primaveral de aves - Parque fluvial
+# Cada línea es un individuo observado en el transecto
+
+# Transecto 1 - 2026-04-06 - Observador: L. Martínez
+gorrión común
+paloma torcaz
+curruca capirotada  
+gorrión común
+carbonero común
+verdecillo
+estornino negro
+pinzón vulgar
+estornino negro
+gorrión común
+Carbonero común
+estornino negro
+gorrión común
+estornino negro
+estornino negro
+paloma torcaz
+mirlo común
+estornino negro
+paloma torcaz
+gorrión común
+gorrión común  
+abubilla  
+gorrión común
+ Jilguero europeo
+GORRIÓN COMÚN
+ mirlo común
+LAVANDERA BLANCA
+paloma torcaz
+colirrojo tizón
+gorrión común
+MIRLO COMÚN
+paloma torcaz  
+Paloma torcaz 
+mirlo común
+Gorrión común
+estornino negro
+carbonero común
+Mirlo común
+herrerillo común
+gorrión común
+jilguero europeo
+lavandera blanca
+paloma torcaz   
+estornino negro
+estornino negro
+gorrión común
+Gorrión común
+verdecillo
+mirlo común
+mirlo común
+lavandera blanca
+herrerillo común
+herrerillo común
+petirrojo europeo
+gorrión común
+paloma torcaz 
+Colirrojo tizón
+paloma torcaz
+carbonero común
+carbonero común
+ESTORNINO NEGRO
+gorrión común
+ESTORNINO NEGRO   
+ESTORNINO NEGRO
+verdecillo
+GORRIÓN COMÚN
+jilguero europeo
+mirlo común
+carbonero común   
+VERDECILLO
+carbonero común 
+mirlo común
+jilguero europeo
+GORRIÓN COMÚN
+ Paloma torcaz
+gorrión común
+mirlo común
+Gorrión común
+paloma torcaz
+paloma torcaz
+abubilla
+CARBONERO COMÚN
+curruca capirotada
+pinzón vulgar
+carbonero común
+Mirlo común
+mirlo común
+pinzón vulgar
+Mirlo común  
+petirrojo europeo
+carbonero común
+gorrión común
+mirlo común
+gorrión común
+mirlo común
+gorrión común
+MIRLO COMÚN
+
+# Transecto 2 - 2026-04-10 - Observador: A. Ruiz
+carbonero común   
+Mirlo común
+petirrojo europeo
+mirlo común
+Gorrión común
+mirlo común   
+carbonero común   
+petirrojo europeo  
+curruca capirotada
+Carbonero común
+herrerillo común
+gorrión común
+Estornino negro
+gorrión común
+mirlo común
+paloma torcaz
+GORRIÓN COMÚN
+Mirlo común
+mirlo común
+ESTORNINO NEGRO
+lavandera blanca
+Gorrión común
+ESTORNINO NEGRO
+paloma torcaz
+estornino negro
+lavandera blanca
+jilguero europeo
+urraca común
+gorrión común
+estornino negro
+gorrión común
+estornino negro
+jilguero europeo
+curruca capirotada
+gorrión común
+gorrión común
+estornino negro
+Pinzón vulgar
+MIRLO COMÚN   
+Mirlo común
+urraca común
+gorrión común   
+estornino negro
+herrerillo común
+petirrojo europeo
+estornino negro
+herrerillo común
+petirrojo europeo
+gorrión común
+Gorrión común
+paloma torcaz 
+carbonero común
+LAVANDERA BLANCA
+herrerillo común
+pinzón vulgar
+Paloma torcaz
+petirrojo europeo
+jilguero europeo
+Mirlo común
+estornino negro
+Urraca común
+herrerillo común
+Verdecillo
+paloma torcaz
+gorrión común   
+carbonero común
+gorrión común
+estornino negro
+pinzón vulgar
+gorrión común
+Pinzón vulgar
+gorrión común
+urraca común
+estornino negro
+Paloma torcaz
+
+# Transecto 3 - 2026-04-13 - Observador: L. Martínez
+verdecillo
+paloma torcaz
+Mirlo común
+PINZÓN VULGAR
+PINZÓN VULGAR
+paloma torcaz
+estornino negro
+Urraca común
+Urraca común
+paloma torcaz
+Gorrión común
+colirrojo tizón
+Paloma torcaz
+GORRIÓN COMÚN
+paloma torcaz
+Verdecillo  
+ verdecillo
+verdecillo
+gorrión común
+gorrión común
+jilguero europeo
+herrerillo común
+Petirrojo europeo
+estornino negro
+gorrión común
+Gorrión común
+petirrojo europeo
+paloma torcaz
+mirlo común
+gorrión común
+Gorrión común
+lavandera blanca
+gorrión común
+jilguero europeo
+MIRLO COMÚN
+gorrión común
+gorrión común 
+estornino negro
+GORRIÓN COMÚN
+Estornino negro
+jilguero europeo
+HERRERILLO COMÚN
+herrerillo común
+herrerillo común
+colirrojo tizón
+jilguero europeo
+abubilla 
+estornino negro
+jilguero europeo
+mirlo común
+gorrión común
+curruca capirotada
+carbonero común
+paloma torcaz
+Pinzón vulgar
+Colirrojo tizón
+estornino negro
+curruca capirotada
+gorrión común
+Mirlo común
+carbonero común 
+pinzón vulgar
+estornino negro
+mirlo común
+estornino negro  
+colirrojo tizón 
+petirrojo europeo
+petirrojo europeo
+estornino negro
+ urraca común
+gorrión común
+herrerillo común
+gorrión común
+VERDECILLO
+GORRIÓN COMÚN
+paloma torcaz
+gorrión común
+gorrión común
+gorrión común
+Colirrojo tizón
+paloma torcaz
+PALOMA TORCAZ
+Gorrión común
+Paloma torcaz
+gorrión común
+mirlo común
+estornino negro
+paloma torcaz
+estornino negro
+GORRIÓN COMÚN
+paloma torcaz
+estornino negro  
+CURRUCA CAPIROTADA
+gorrión común
+herrerillo común
+GORRIÓN COMÚN
+VERDECILLO
+estornino negro   
+verdecillo
+estornino negro
+estornino negro
+
+# Transecto 4 - 2026-04-15 - Observador: L. Martínez
+lavandera blanca
+Pinzón vulgar
+GORRIÓN COMÚN
+carbonero común
+mirlo común
+gorrión común
+estornino negro
+estornino negro
+gorrión común
+Pinzón vulgar
+carbonero común
+mirlo común   
+MIRLO COMÚN
+GORRIÓN COMÚN
+estornino negro
+estornino negro
+gorrión común
+mirlo común
+ESTORNINO NEGRO
+curruca capirotada
+mirlo común
+ Abubilla
+lavandera blanca
+ verdecillo 
+mirlo común
+gorrión común
+mirlo común
+petirrojo europeo
+GORRIÓN COMÚN
+herrerillo común
+estornino negro
+urraca común
+verdecillo
+ urraca común
+jilguero europeo
+Carbonero común
+jilguero europeo
+estornino negro
+gorrión común
+ carbonero común
+Estornino negro
+gorrión común
+mirlo común
+estornino negro
+verdecillo
+PINZÓN VULGAR
+gorrión común
+pinzón vulgar
+ESTORNINO NEGRO
+GORRIÓN COMÚN
+jilguero europeo
+mirlo común
+HERRERILLO COMÚN
+Colirrojo tizón
+mirlo común
+urraca común
+petirrojo europeo   
+carbonero común
+carbonero común
+paloma torcaz
+Paloma torcaz
+estornino negro
+PALOMA TORCAZ
+gorrión común
+pinzón vulgar
+ herrerillo común
+estornino negro
+gorrión común
+Pinzón vulgar
+estornino negro
+estornino negro
+
+# Transecto 5 - 2026-04-19 - Observador: L. Martínez
+gorrión común
+urraca común
+jilguero europeo
+pinzón vulgar
+gorrión común
+urraca común
+ gorrión común
+GORRIÓN COMÚN 
+Petirrojo europeo
+jilguero europeo
+carbonero común
+carbonero común
+CARBONERO COMÚN
+gorrión común
+paloma torcaz
+mirlo común
+gorrión común
+jilguero europeo
+herrerillo común
+jilguero europeo
+herrerillo común
+petirrojo europeo
+verdecillo
+lavandera blanca 
+Colirrojo tizón
+CARBONERO COMÚN
+gorrión común
+carbonero común
+Abubilla   
+jilguero europeo
+jilguero europeo
+estornino negro
+pinzón vulgar
+urraca común
+mirlo común
+paloma torcaz
+mirlo común
+verdecillo
+gorrión común
+estornino negro
+herrerillo común
+verdecillo
+gorrión común
+PINZÓN VULGAR 
+estornino negro
+petirrojo europeo  
+gorrión común
+MIRLO COMÚN
+carbonero común
+estornino negro
+Estornino negro
+estornino negro
+Carbonero común
+gorrión común 
+Gorrión común
+gorrión común
+jilguero europeo
+curruca capirotada
+Gorrión común
+gorrión común 
+gorrión común
+mirlo común 
+
+# Transecto 6 - 2026-04-22 - Observador: A. Ruiz
+paloma torcaz
+verdecillo
+Lavandera blanca
+mirlo común
+CARBONERO COMÚN
+jilguero europeo
+lavandera blanca
+ mirlo común
+gorrión común
+Lavandera blanca
+ESTORNINO NEGRO
+GORRIÓN COMÚN  
+Jilguero europeo   
+Curruca capirotada
+MIRLO COMÚN
+verdecillo   
+HERRERILLO COMÚN
+estornino negro
+gorrión común 
+PETIRROJO EUROPEO
+gorrión común
+JILGUERO EUROPEO
+carbonero común
+herrerillo común
+Jilguero europeo
+Gorrión común  
+ estornino negro
+Carbonero común
+paloma torcaz  
+herrerillo común
+gorrión común
+herrerillo común
+gorrión común
+Herrerillo común
+Urraca común
+ gorrión común
+carbonero común
+gorrión común
+ESTORNINO NEGRO
+colirrojo tizón
+gorrión común
+jilguero europeo
+paloma torcaz
+Gorrión común 
+ petirrojo europeo
+colirrojo tizón
+abubilla
+Herrerillo común   
+ estornino negro
+gorrión común
+CURRUCA CAPIROTADA
+gorrión común
+lavandera blanca  
+gorrión común
+MIRLO COMÚN
+GORRIÓN COMÚN
+ carbonero común
+
+# Transecto 7 - 2026-04-24 - Observador: C. Soler
+gorrión común
+Mirlo común
+Verdecillo
+gorrión común
+carbonero común
+gorrión común
+paloma torcaz
+ gorrión común
+Pinzón vulgar   
+mirlo común
+mirlo común
+Urraca común
+estornino negro
+estornino negro
+mirlo común
+paloma torcaz
+URRACA COMÚN
+gorrión común
+carbonero común
+mirlo común
+pinzón vulgar
+Herrerillo común
+jilguero europeo
+GORRIÓN COMÚN
+gorrión común
+Mirlo común
+urraca común
+gorrión común
+Verdecillo
+herrerillo común
+ESTORNINO NEGRO
+Carbonero común  
+Gorrión común 
+gorrión común
+estornino negro
+gorrión común
+petirrojo europeo
+Urraca común  
+verdecillo
+GORRIÓN COMÚN
+Paloma torcaz
+urraca común
+gorrión común  
+ gorrión común   
+mirlo común
+Urraca común
+colirrojo tizón
+colirrojo tizón
+petirrojo europeo 
+PALOMA TORCAZ
+paloma torcaz
+gorrión común
+paloma torcaz
+gorrión común
+gorrión común
+gorrión común
+gorrión común
+mirlo común
+mirlo común
+gorrión común
+Jilguero europeo
+Pinzón vulgar
+estornino negro
+estornino negro
+gorrión común
+Curruca capirotada
+Estornino negro
+gorrión común
+mirlo común
+PINZÓN VULGAR
+herrerillo común
+gorrión común
+verdecillo
+verdecillo
+jilguero europeo
+ curruca capirotada
+gorrión común
+gorrión común
+carbonero común
+jilguero europeo
+paloma torcaz
+ urraca común
+
+# Transecto 8 - 2026-04-27 - Observador: C. Soler
+lavandera blanca
+jilguero europeo
+Jilguero europeo
+abubilla
+Colirrojo tizón
+estornino negro
+gorrión común
+Gorrión común
+colirrojo tizón
+ESTORNINO NEGRO
+ Urraca común
+paloma torcaz
+abubilla
+gorrión común
+urraca común
+GORRIÓN COMÚN
+PALOMA TORCAZ
+petirrojo europeo   
+gorrión común
+estornino negro   
+gorrión común  
+herrerillo común
+petirrojo europeo  
+Carbonero común
+Pinzón vulgar
+ urraca común
+curruca capirotada
+jilguero europeo  
+estornino negro
+jilguero europeo
+Mirlo común
+pinzón vulgar
+Carbonero común
+carbonero común
+ urraca común
+gorrión común
+gorrión común
+mirlo común
+curruca capirotada
+verdecillo
+estornino negro
+petirrojo europeo
+jilguero europeo
+Curruca capirotada
+gorrión común  
+Curruca capirotada
+ABUBILLA
+paloma torcaz
+curruca capirotada
+curruca capirotada
+estornino negro
+gorrión común
+Verdecillo 
+petirrojo europeo
+PALOMA TORCAZ
+gorrión común   
+Petirrojo europeo
+mirlo común
+lavandera blanca
+CARBONERO COMÚN
+URRACA COMÚN
+carbonero común
+gorrión común
+verdecillo 
+pinzón vulgar
+paloma torcaz
+urraca común
+gorrión común
+gorrión común
+mirlo común
+ gorrión común
+abubilla
+estornino negro
+ gorrión común
+estornino negro   
+gorrión común
+gorrión común   
+ mirlo común
+gorrión común  
+Paloma torcaz
+ estornino negro 
+mirlo común
+mirlo común
+verdecillo
+jilguero europeo
+Paloma torcaz
+herrerillo común
+petirrojo europeo
+paloma torcaz
+GORRIÓN COMÚN
+ PINZÓN VULGAR
+Mirlo común
+carbonero común
+herrerillo común
+herrerillo común
+gorrión común
+colirrojo tizón  
+Mirlo común
+mirlo común
+ESTORNINO NEGRO
+PINZÓN VULGAR
+Urraca común
+Mirlo común
+mirlo común   
+Gorrión común
+verdecillo
+gorrión común
+
+# Transecto 9 - 2026-05-01 - Observador: L. Martínez
+mirlo común
+petirrojo europeo
+urraca común
+colirrojo tizón
+PALOMA TORCAZ
+carbonero común  
+carbonero común
+Estornino negro
+PETIRROJO EUROPEO
+estornino negro
+Estornino negro
+pinzón vulgar
+GORRIÓN COMÚN
+carbonero común 
+gorrión común
+jilguero europeo   
+Estornino negro
+carbonero común
+carbonero común
+estornino negro
+pinzón vulgar
+gorrión común
+ESTORNINO NEGRO
+ESTORNINO NEGRO
+carbonero común
+estornino negro 
+PINZÓN VULGAR
+Estornino negro  
+colirrojo tizón
+paloma torcaz
+estornino negro
+ herrerillo común
+JILGUERO EUROPEO
+mirlo común
+colirrojo tizón
+Colirrojo tizón
+jilguero europeo
+estornino negro
+GORRIÓN COMÚN
+carbonero común
+gorrión común
+ herrerillo común
+Estornino negro
+gorrión común 
+jilguero europeo 
+jilguero europeo
+verdecillo
+estornino negro
+estornino negro
+Gorrión común
+herrerillo común
+paloma torcaz 
+gorrión común  
+curruca capirotada
+paloma torcaz
+gorrión común 
+Mirlo común
+ lavandera blanca
+gorrión común
+Estornino negro  
+estornino negro
+herrerillo común
+gorrión común
+jilguero europeo
+mirlo común
+mirlo común
+Carbonero común  
+gorrión común 
+ jilguero europeo
+
+# Transecto 10 - 2026-05-03 - Observador: L. Martínez
+Gorrión común
+lavandera blanca
+gorrión común
+petirrojo europeo
+mirlo común
+colirrojo tizón
+lavandera blanca
+gorrión común
+Pinzón vulgar
+carbonero común
+pinzón vulgar
+urraca común
+jilguero europeo
+Gorrión común
+mirlo común
+verdecillo
+JILGUERO EUROPEO
+verdecillo  
+curruca capirotada
+urraca común
+ mirlo común
+Gorrión común
+pinzón vulgar
+verdecillo
+carbonero común
+gorrión común
+ herrerillo común  
+paloma torcaz
+GORRIÓN COMÚN
+gorrión común   
+VERDECILLO 
+estornino negro
+verdecillo
+gorrión común
+jilguero europeo
+Gorrión común
+gorrión común
+estornino negro
+Petirrojo europeo
+gorrión común  
+gorrión común
+gorrión común
+MIRLO COMÚN
+Jilguero europeo
+pinzón vulgar
+curruca capirotada   
+gorrión común
+HERRERILLO COMÚN
+Paloma torcaz
+paloma torcaz
+carbonero común
+ Gorrión común
+urraca común
+gorrión común
+pinzón vulgar
+urraca común
+gorrión común
+estornino negro
+pinzón vulgar
+Mirlo común
+verdecillo
+carbonero común
+gorrión común
+urraca común
+Mirlo común
+gorrión común
+jilguero europeo
+colirrojo tizón
+Jilguero europeo
+gorrión común
+Pinzón vulgar
+mirlo común
+verdecillo   
+jilguero europeo
+gorrión común
+Mirlo común 
+petirrojo europeo
+mirlo común  
+
+# Transecto 11 - 2026-05-05 - Observador: L. Martínez
+mirlo común
+herrerillo común
+gorrión común
+gorrión común
+Gorrión común
+GORRIÓN COMÚN  
+carbonero común   
+gorrión común   
+HERRERILLO COMÚN
+petirrojo europeo   
+verdecillo
+Carbonero común  
+GORRIÓN COMÚN
+carbonero común   
+mirlo común
+gorrión común
+mirlo común 
+gorrión común
+estornino negro  
+gorrión común
+ estornino negro
+LAVANDERA BLANCA   
+ Mirlo común  
+estornino negro
+paloma torcaz
+mirlo común
+jilguero europeo
+ mirlo común
+Curruca capirotada
+jilguero europeo
+PALOMA TORCAZ
+jilguero europeo
+herrerillo común
+mirlo común
+verdecillo
+carbonero común
+paloma torcaz
+ gorrión común
+mirlo común
+LAVANDERA BLANCA 
+Jilguero europeo
+gorrión común
+carbonero común
+ verdecillo
+petirrojo europeo
+gorrión común
+gorrión común
+PALOMA TORCAZ
+mirlo común
+mirlo común
+Carbonero común
+Lavandera blanca
+Gorrión común   
+estornino negro
+gorrión común
+carbonero común
+pinzón vulgar
+VERDECILLO
+paloma torcaz
+ gorrión común
+ verdecillo
+jilguero europeo  
+ GORRIÓN COMÚN 
+ gorrión común 
+estornino negro
+carbonero común
+herrerillo común
+ urraca común
+estornino negro
+herrerillo común
+mirlo común
+gorrión común
+urraca común
+Verdecillo   
+estornino negro
+verdecillo
+GORRIÓN COMÚN
+Verdecillo
+jilguero europeo
+colirrojo tizón  
+paloma torcaz
+urraca común
+estornino negro
+ carbonero común 
+estornino negro
+estornino negro
+gorrión común
+estornino negro
+Mirlo común
+GORRIÓN COMÚN
+pinzón vulgar
+paloma torcaz
+gorrión común 
+Paloma torcaz
+PALOMA TORCAZ
+
+# Transecto 12 - 2026-05-09 - Observador: L. Martínez
+urraca común 
+petirrojo europeo
+petirrojo europeo
+Mirlo común  
+Paloma torcaz
+Petirrojo europeo
+paloma torcaz
+mirlo común   
+verdecillo
+Gorrión común
+jilguero europeo
+estornino negro
+Carbonero común
+paloma torcaz
+Abubilla
+jilguero europeo
+mirlo común
+carbonero común
+lavandera blanca
+paloma torcaz
+carbonero común
+PINZÓN VULGAR
+estornino negro 
+Urraca común
+jilguero europeo
+GORRIÓN COMÚN
+jilguero europeo
+jilguero europeo
+petirrojo europeo
+Jilguero europeo
+lavandera blanca
+estornino negro
+Herrerillo común
+verdecillo
+gorrión común
+petirrojo europeo
+pinzón vulgar
+petirrojo europeo
+HERRERILLO COMÚN   
+gorrión común
+GORRIÓN COMÚN
+Abubilla
+MIRLO COMÚN
+gorrión común
+mirlo común   
+mirlo común  
+gorrión común
+carbonero común
+paloma torcaz
+gorrión común
+gorrión común
+gorrión común
+gorrión común
+gorrión común
+ABUBILLA
+Colirrojo tizón
+carbonero común
+gorrión común
+mirlo común
+gorrión común
+verdecillo
+mirlo común
+estornino negro
+curruca capirotada
+petirrojo europeo
+estornino negro
+verdecillo 
+carbonero común  
+CARBONERO COMÚN
+VERDECILLO
+mirlo común
+herrerillo común
+ paloma torcaz  
+PALOMA TORCAZ
+estornino negro
+estornino negro  
+ paloma torcaz

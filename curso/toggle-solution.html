@@ -36,4 +36,63 @@
   new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
   scan();
 })();
+
+// Pistas y soluciones sin editor interactivo: divs ::: {.pista} y ::: {.solucion}.
+// Se ocultan y se añade delante una barra con botones del mismo estilo que quarto-live.
+(function () {
+  const iconos = {
+    pista: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/></svg>',
+    solucion: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/></svg>',
+  };
+  const textos = { pista: "Hint", solucion: "Solution" };
+
+  function boton(tipo, caja) {
+    const btn = document.createElement("a");
+    btn.className = "d-flex align-items-center gap-1 btn btn-exercise-editor btn-outline-dark btn-sm text-nowrap";
+    btn.setAttribute("role", "button");
+    btn.setAttribute("tabindex", "0");
+    btn.innerHTML = iconos[tipo];
+    const label = document.createElement("span");
+    btn.appendChild(label);
+    const actualizar = () => {
+      const texto = (caja.classList.contains("d-none") ? "Show " : "Hide ") + textos[tipo];
+      label.innerText = texto;
+      btn.setAttribute("aria-label", texto);
+    };
+    const alternar = (ev) => {
+      if (ev.type === "keydown" && ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault();
+      caja.classList.toggle("d-none");
+      actualizar();
+    };
+    btn.onclick = alternar;
+    btn.onkeydown = alternar;
+    actualizar();
+    return btn;
+  }
+
+  const esCaja = (el) => el && (el.classList.contains("pista") || el.classList.contains("solucion"));
+
+  const cajas = document.querySelectorAll(".pista, .solucion");
+  cajas.forEach((caja) => caja.classList.add("caja-ejercicio", "d-none"));
+  cajas.forEach((caja) => {
+    // Una sola barra por grupo de cajas consecutivas
+    if (esCaja(caja.previousElementSibling)) return;
+    const barra = document.createElement("div");
+    barra.className = "d-flex gap-2 my-2";
+    for (let el = caja; esCaja(el); el = el.nextElementSibling) {
+      barra.appendChild(boton(el.classList.contains("pista") ? "pista" : "solucion", el));
+    }
+    caja.before(barra);
+  });
+})();
 </script>
+<style>
+.caja-ejercicio {
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.caja-ejercicio > :last-child { margin-bottom: 0; }
+</style>

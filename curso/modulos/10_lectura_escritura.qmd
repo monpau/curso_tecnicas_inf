@@ -1,18 +1,48 @@
 ---
-title: "Lectura, modificación y escritura de archivos"
-format:
-  live-html:
-    toc: true
-    include-after-body: ../toggle-solution.html
+title: "Lectura y escritura de archivos"
+
 ---
 
-Para este módulo vamos a dejar de funcionar con la ejecución en bloques ejecutables en web y pasar a trabajar con archivos de Python (`.py`) que ejecutaremos desde la terminal. 
+Para este módulo vamos a dejar de usar los bloques ejecutables de la web y pasaremos a trabajar con archivos de Python (`.py`) que ejecutaremos desde la terminal.
 
-Necesitaremos por tanto escribir nuestros programas en archivos `.py` y ejecutarlos desde la terminal con `python3 nombre_del_archivo.py`.
+Escribiremos nuestros programas en archivos `.py` con un editor de texto como **gedit** y los ejecutaremos desde la terminal con `python3 nombre_del_archivo.py`.
 
-# Modos de apertura: lectura, escritura, añadido
+:::{.callout-warning title="¡Atención!"}
+Por defecto Python busca los archivos de datos en el **directorio de trabajo**, que es la carpeta desde la que ejecutas `python3`. Si tus scripts y tus archivos de datos están en carpetas distintas, Python no encontrará los archivos y verás un error `FileNotFoundError`.
 
-`open(ruta, modo)` acepta un segundo argumento que dice qué vas a hacer con el archivo — el mismo concepto que `>` y `>>` de la terminal (módulo 5), ahora dentro de Python:
+Así que, o bien tienes los datos y scripts en la misma carpeta, o indicas la ruta completa al archivo.
+:::
+
+# Abrir y cerrar archivos
+
+La función `open()` abre un archivo y devuelve un **objeto archivo**, que podemos leer con sus métodos. Por ejemplo, `.read()` devuelve todo el contenido como una sola cadena. Cuando terminamos, hay que cerrarlo con `.close()`. Vamos a usar [muestras_suelo.tsv](../datasets/muestras_suelo.tsv), una tabla con el pH y la materia orgánica de 12 muestras de suelo:
+
+```python
+f = open("muestras_suelo.tsv", encoding="utf-8")
+contenido = f.read()
+f.close()
+
+print(contenido)
+```
+
+Cerrar el archivo es importante: mientras está abierto, el sistema operativo lo mantiene reservado. Además, al escribir, puede que parte de los datos no se guarden en el disco hasta que el archivo se cierra. El problema es que es fácil olvidarse del `.close()`. Y si el programa falla entre `open()` y `close()`, el archivo se queda abierto.
+
+## La forma recomendada: `with`
+
+El bloque `with` abre el archivo y lo **cierra automáticamente** al salir del bloque, incluso si se produce un error dentro. Todo lo que hagas con el archivo debe ir indentado dentro del `with`:
+
+```python
+with open("muestras_suelo.tsv", encoding="utf-8") as f:
+    contenido = f.read()
+
+print(contenido)
+```
+
+A partir de aquí abriremos siempre los archivos con `with`.
+
+## Modos de apertura y codificación
+
+`open()` acepta un segundo argumento, el **modo**, que indica qué vas a hacer con el archivo. Es el mismo concepto que `>` y `>>` de la terminal (módulo 5):
 
 | Modo | Significa | Equivalente en shell |
 |---|---|---|
@@ -20,184 +50,1126 @@ Necesitaremos por tanto escribir nuestros programas en archivos `.py` y ejecutar
 | `"w"` | escribir, **sobrescribiendo** si ya existe | `>` |
 | `"a"` | añadir al final, sin borrar lo que había | `>>` |
 
-```python
-with open("species_observations.csv") as f:
-    contenido = f.read()      # todo el archivo como una sola cadena
-print(contenido[:50])         # primeros 50 caracteres
-```
+:::{.callout-warning title="¡Atención!"}
+Abrir un archivo en modo `"w"` lo **vacía en ese mismo instante**, antes de que escribas nada. Si te equivocas de nombre y abres en `"w"` tu archivo de datos, lo pierdes.
+:::
 
-`f.read()` trae el archivo entero de una vez, como cadena; `f.readlines()` (módulo 7) lo trae como una lista de líneas; iterar con `for linea in f:` los lee uno a uno sin cargar el archivo entero en memoria — la opción más segura para archivos grandes.
+Para convertir los bytes del archivo en texto, Python necesita saber su **codificación**. Si el archivo tiene tildes o eñes y Python usa una codificación distinta de la del archivo (pasa a menudo en Windows), verás caracteres raros (`Ã±` en vez de `ñ`) o un `UnicodeDecodeError`. Para evitarlo, indica siempre `encoding="utf-8"`, como en los ejemplos de este módulo.
 
-# Escribir archivos con `.write()`
+# Recorrer un archivo línea a línea con `for`
 
-```python
-with open("species_observations.csv") as f:
-    lineas = f.readlines()
-
-with open("resumen.txt", "w") as f:
-    for linea in lineas[1:]:                 # nos saltamos la cabecera
-        campos = linea.strip().split(",")
-        sample_id, especie, count = campos[0], campos[5], campos[6]
-        f.write(f"{sample_id}: {especie} ({count} individuos)\n")
-```
-
-`.write()`, a diferencia de `print()`, **no** añade un salto de línea automáticamente — por eso el `\n` al final de la f-string es necesario; sin él, todas las líneas quedarían pegadas en una sola.
-
-Para añadir algo más sin borrar lo ya escrito, abre en modo `"a"`:
+Un objeto archivo se puede recorrer con un bucle `for`, igual que una lista: en cada vuelta, la variable toma el valor de la siguiente línea del archivo.
 
 ```python
-with open("resumen.txt", "a") as f:
-    f.write(f"Total de observaciones: {len(lineas) - 1}\n")
-```
-
-# Un problema real: por qué `split(",")` no basta
-
-Ya usas `.split(",")` desde el módulo 8 para trocear una línea CSV. Pruébalo sobre `muestras_con_comas.csv`:
-
-```python
-with open("muestras_con_comas.csv") as f:
+with open("muestras_suelo.tsv", encoding="utf-8") as f:
     for linea in f:
-        campos = linea.strip().split(",")
-        print(len(campos), campos)
+        print(linea)
 ```
 
-```
-3 ['sample_id', 'especie', 'notas']
-4 ['M01', 'Quercus robur', '"Ejemplar sano', ' sin danos visibles"']
-4 ['M02', 'Pinus sylvestris', '"Corteza danada', ' posible plaga"']
-3 ['M03', 'Fragaria vesca', '"Sin observaciones"']
-```
+:::{.callout-tip title="Cuestión"}
+¿Por qué aparece una línea en blanco entre cada línea? ¿Cómo podemos evitarlo?
 
-Las filas `M01` y `M02` dan **4** campos en vez de 3: `split(",")` no sabe que la coma de `"Ejemplar sano, sin danos visibles"` está protegida por las comillas, y la interpreta como un separador más. El resultado es una lista con el campo de notas partido por la mitad — un error silencioso que desplazaría todos los datos si intentaras acceder a `campos[2]` esperando la nota completa.
 
-La solución es no reinventar el analizador de CSV: Python trae uno en la librería estándar, el módulo `csv`, que sí entiende las comillas:
+:::{.solucion}
+```python
+with open("muestras_suelo.tsv", encoding="utf-8") as f:
+    for linea in f:
+        print(linea.strip())
+```
+:::
+
+:::
+
+:::{.callout-note}
+También existen `f.read()`, que lee el archivo entero como una cadena, y `f.readlines()`, que lo lee como una lista de líneas. Las dos cargan **todo** el archivo en memoria. En cambio, `for linea in f:` lee las líneas de una en una, así que funciona igual con un archivo de 1 KB que con uno de 50 GB.
+:::
+
+## Cabecera, campos y tipos
+
+Casi todos los archivos de datos tienen la misma estructura: una línea de cabecera y, después, una fila por registro con los campos separados por un carácter (tabulador `\t`, coma `,`...). El patrón para procesarlos es siempre el mismo:
 
 ```python
-import csv
-
-with open("muestras_con_comas.csv") as f:
-    lector = csv.reader(f)
-    for fila in lector:
-        print(len(fila), fila)
+with open("muestras_suelo.tsv", encoding="utf-8") as f:
+    for linea in f:
+        if linea.startswith("muestra"):   # saltamos la cabecera
+            continue
+        campos = linea.strip().split("\t")
+        muestra = campos[0]
+        ph = float(campos[2])        # todo lo que se lee es str
+        if ph < 6:
+            print(muestra, "es un suelo ácido:", ph)
 ```
 
-```
-3 ['sample_id', 'especie', 'notas']
-3 ['M01', 'Quercus robur', 'Ejemplar sano, sin danos visibles']
-3 ['M02', 'Pinus sylvestris', 'Corteza danada, posible plaga']
-3 ['M03', 'Fragaria vesca', 'Sin observaciones']
-```
+- `.strip().split("\t")` quita el salto de línea y trocea la línea en una lista de campos.
+- Todo lo que se lee de un archivo es texto (`str`). Para hacer cálculos, convierte los campos con `int()` o `float()`.
 
-Ahora sí: siempre 3 campos, con la coma de la nota intacta dentro del campo, sin comillas de sobra.
+## Acumular resultados
 
-# Leer y escribir filas como diccionarios, a mano
-
-`csv.reader` te da cada fila como una lista (accedes por posición, como con `.split(",")`). Para trabajar con cada fila como un diccionario — conectando con lo que aprendiste en el módulo 8 — no hace falta ninguna herramienta nueva: basta con trocear la cabecera igual que cualquier otra línea, y emparejar cada nombre de columna con su valor:
+Para resumir un archivo, crea las variables **antes** del bucle y actualízalas en cada vuelta. Puedes usar contadores, sumas o diccionarios que agrupan los valores por categoría:
 
 ```python
-with open("species_observations.csv") as f:
-    lineas = f.readlines()
+num_muestras = 0
+suma_ph = 0
+ph_por_parcela = {}
 
-cabecera = lineas[0].strip().split(",")
+with open("muestras_suelo.tsv", encoding="utf-8") as f:
+    f.readline()
+    for linea in f:
+        muestra, parcela, ph, materia_organica = linea.strip().split("\t")
+        ph = float(ph)
 
-for linea in lineas[1:]:
-    valores = linea.strip().split(",")
-    fila = dict(zip(cabecera, valores))
-    print(fila["species"])
+        num_muestras += 1
+        suma_ph += ph
+
+        if parcela in ph_por_parcela:
+            ph_por_parcela[parcela].append(ph)
+        else:
+            ph_por_parcela[parcela] = [ph]
+
+print(f"pH medio de {num_muestras} muestras: {suma_ph / num_muestras:.2f}")
+
+for parcela, valores in ph_por_parcela.items():
+    print(f"{parcela}: {sum(valores) / len(valores):.2f}")
 ```
 
-`zip(cabecera, valores)` empareja cada nombre de columna (`"species"`, `"count"`...) con el valor de esa misma posición en la fila; `dict(...)` convierte esos pares en un diccionario. Ten en cuenta que, al construirlo con `.split(",")` en vez de `csv.reader`, vuelves a estar expuesto al problema de las comas dentro de las notas que viste más arriba — aquí funciona porque `species_observations.csv` no tiene comas protegidas por comillas.
 
-Para escribir diccionarios de vuelta a un CSV, el proceso es el inverso: unes los valores con `",".join(...)`, en el mismo orden que la cabecera.
+Si sabes cuántos campos tiene cada línea, puedes desempaquetarlos directamente en variables: `muestra, parcela, ph, materia_organica = linea.strip().split("\t")`.
+
+## Saltar líneas
+
+Muchos formatos tienen líneas de comentario (que empiezan por `#`) o líneas vacías. Para saltarlas, usa `continue` (módulo 9):
 
 ```python
-with open("species_observations.csv") as f:
-    lineas = f.readlines()
-
-cabecera = lineas[0].strip().split(",")
-abundantes = []
-for linea in lineas[1:]:
-    valores = linea.strip().split(",")
-    fila = dict(zip(cabecera, valores))
-    if int(fila["count"]) > 3:
-        abundantes.append(fila)
-
-with open("solo_abundantes.csv", "w") as f:
-    f.write(",".join(cabecera) + "\n")
-    for fila in abundantes:
-        f.write(",".join(fila[campo] for campo in cabecera) + "\n")
+for linea in f:
+    linea = linea.strip()
+    if linea == "" or linea.startswith("#"):
+        continue
+    # ... aquí solo llegan las líneas con datos
 ```
 
-`int(fila["count"])` sigue siendo imprescindible: como viste en el módulo 8, todo lo que sale de un CSV es texto, y `"12" > 3` daría un error en Python (no se puede comparar texto con número). Al escribir, `fila[campo] for campo in cabecera` recorre las columnas en el mismo orden que la cabecera, así que cada valor cae en su columna correcta aunque el diccionario en sí no garantice ningún orden.
+
+:::{.callout-tip title="Cuestión"}
+
+¿Podrías procesar el archivo [sequences.fasta](../datasets/sequences.fasta) de manera que imprimiera el nombre de cada secuencia y su longitud? 
+
+:::{.pista}
+- Igual es conveniente guardar las secuencias en un diccionario `{nombre: secuencia}`.
+:::
+
+:::{.solucion}
+```python
+secuencias = {}
+nombre = None
+
+with open("sequences.fasta", encoding="utf-8") as f:
+    for linea in f:
+        linea = linea.strip()
+        if linea.startswith(">"):
+            nombre = linea[1:]            # sin el ">"
+            secuencias[nombre] = ""       # empieza un registro nuevo
+        else:
+            secuencias[nombre] += linea   # añade el trozo al registro actual
+
+for nombre, secuencia in secuencias.items():
+    print(nombre, len(secuencia))
+```
+:::
+
+:::
+
+# Escribir archivos
+
+Para escribir, abre el archivo en modo `"w"` (o `"a"`) y usa `.write()`. Hay dos diferencias importantes con `print()`:
+
+- `.write()` solo acepta cadenas: los números hay que convertirlos con `str()` o, más cómodo, con una f-string.
+- `.write()` **no** añade el salto de línea: tienes que escribir tú el `\n`.
+
+Lo más habitual es leer un archivo y escribir otro a la vez. Puedes abrir los dos en el mismo `with`, separados por una coma (la `\` final permite continuar la instrucción en la siguiente línea):
+
+```python
+with open("muestras_suelo.tsv", encoding="utf-8") as entrada, open("suelos_acidos.tsv", "w", encoding="utf-8") as salida:
+    salida.write(entrada.readline())          # copiamos la cabecera
+    for linea in entrada:
+        ph = float(linea.split("\t")[2])
+        if ph < 6:
+            salida.write(linea)               # la línea ya trae su "\n"
+
+```
+
+# Archivos comprimidos con `gzip`
+
+Muchos archivos biológicos se distribuyen comprimidos (`.fastq.gz`, `.vcf.gz`), porque así ocupan varias veces menos. No hace falta descomprimirlos: el módulo `gzip` de Python tiene su propia función `gzip.open()`, que se usa igual que `open()`. Para poder usarlo, hay que importarlo primero con `import gzip` (los módulos se ven en detalle en el módulo 11).
+
+La única diferencia es el modo: `gzip.open()` abre por defecto en modo **binario** (`"rb"`) y devuelve `bytes` en vez de cadenas. Para leer o escribir texto, añade una `t` al modo: `"rt"` para leer y `"wt"` para escribir.
+
+```python
+import gzip
+
+num_lineas = 0
+with gzip.open("lecturas_illumina.fastq.gz", "rt") as f:
+    for linea in f:
+        num_lineas += 1
+
+print(f"{num_lineas} líneas -> {num_lineas // 4} lecturas")
+```
+
+```
+20000 líneas -> 5000 lecturas
+```
+
+:::{.callout-note}
+La `t` (texto) y la `b` (binario) también existen en `open()`. Como el modo texto es el de por defecto, `open(ruta)`, `open(ruta, "r")` y `open(ruta, "rt")` son equivalentes. El modo binario solo lo necesitarás con archivos que no son texto, como imágenes o PDF.
+:::
 
 # Ejercicios
 
-1. Abre `species_observations.csv` en modo lectura y usa `.read()` para imprimir todo su contenido de una vez.
-2. Usa `.readlines()` y un bucle `for` para imprimir solo el `sample_id` (primera columna) de cada fila, saltándote la cabecera.
-3. Escribe un archivo nuevo `resumen.txt` con una línea por observación, con el formato `"<sample_id>: <especie> (<count> individuos)"`.
-4. Añade (modo `"a"`) una línea final a `resumen.txt` con el total de observaciones.
-5. Sobre `muestras_con_comas.csv`, trocea cada línea con `.split(",")` e imprime cuántos campos obtienes por fila. Comprueba que las filas con coma dentro de las notas dan 4 campos en vez de 3.
-6. Repite el ejercicio anterior con `csv.reader` y comprueba que ahora todas las filas dan exactamente 3 campos.
-7. Sin usar el módulo `csv`, abre `species_observations.csv`, trocea la cabecera y cada fila con `.split(",")`, construye cada fila como diccionario con `dict(zip(cabecera, valores))` e imprime `fila["species"]`.
-8. (Reto) A partir del ejercicio anterior, construye una lista `abundantes` con las filas donde `count` sea mayor que 3, y escribe `solo_abundantes.csv` a mano, uniendo cada fila con `",".join(...)` en el mismo orden que la cabecera.
+Los ejercicios están ordenados de menor a mayor dificultad. Todos los datos son simulados, pero tienen el formato y la estructura de los archivos reales. Es conveniente que antes de empezar a programar, lo abras con la terminal (`head` o `less`) para ver su formato antes de empezar a programar.
 
-# Soluciones
+## 1. Temperatura de una incubadora
 
-1.
-   ```python
-   with open("species_observations.csv") as f:
-       print(f.read())
-   ```
-2.
-   ```python
-   with open("species_observations.csv") as f:
-       lineas = f.readlines()
-   for linea in lineas[1:]:
-       print(linea.strip().split(",")[0])
-   ```
-3. Ver la sección "Escribir archivos con `.write()`".
-4. Ver la sección "Escribir archivos con `.write()`" (bloque con modo `"a"`).
-5.
-   ```python
-   with open("muestras_con_comas.csv") as f:
-       for linea in f:
-           campos = linea.strip().split(",")
-           print(len(campos), campos)
-   ```
-6.
-   ```python
-   import csv
-   with open("muestras_con_comas.csv") as f:
-       lector = csv.reader(f)
-       for fila in lector:
-           print(len(fila), fila)
-   ```
-7.
-   ```python
-   with open("species_observations.csv") as f:
-       lineas = f.readlines()
+Una incubadora de cultivos celulares registra su temperatura cada 15 minutos. Las células toleran bien entre 36,5 y 37,5 °C, pero fuera de ese rango sufren estrés. El archivo [incubadora_temperaturas.tsv](../datasets/incubadora_temperaturas.tsv) contiene el registro de un mes:
 
-   cabecera = lineas[0].strip().split(",")
-   for linea in lineas[1:]:
-       valores = linea.strip().split(",")
-       fila = dict(zip(cabecera, valores))
-       print(fila["species"])
-   ```
-8.
-   ```python
-   with open("species_observations.csv") as f:
-       lineas = f.readlines()
+```
+fecha_hora	temperatura_C
+2026-03-01 00:00	36.94
+2026-03-01 00:15	37.00
+2026-03-01 00:30	36.80
+```
 
-   cabecera = lineas[0].strip().split(",")
-   abundantes = []
-   for linea in lineas[1:]:
-       valores = linea.strip().split(",")
-       fila = dict(zip(cabecera, valores))
-       if int(fila["count"]) > 3:
-           abundantes.append(fila)
+1. ¿Cuántas lecturas hay?
+2. Calcula la temperatura media, la mínima y la máxima.
+3. ¿Cuántas lecturas están fuera del rango 36,5–37,5 °C? ¿Qué porcentaje del tiempo supone?
+4. Escribe las lecturas fuera de rango en un archivo `alertas_incubadora.tsv`, con la misma cabecera que el original.
 
-   with open("solo_abundantes.csv", "w") as f:
-       f.write(",".join(cabecera) + "\n")
-       for fila in abundantes:
-           f.write(",".join(fila[campo] for campo in cabecera) + "\n")
-   ```
+:::{.pista}
+Para el mínimo y el máximo, empieza con una variable a `None` y actualízala cuando la temperatura sea menor (o mayor) que la guardada, o cuando todavía valga `None`.
+:::
+
+:::{.solucion}
+```python
+num_lecturas = 0
+suma = 0
+minima = None
+maxima = None
+fuera_rango = 0
+
+with open("incubadora_temperaturas.tsv", encoding="utf-8") as entrada, \
+     open("alertas_incubadora.tsv", "w", encoding="utf-8") as alertas:
+    cabecera = entrada.readline()
+    alertas.write(cabecera)
+    for linea in entrada:
+        fecha_hora, temperatura = linea.strip().split("\t")
+        temperatura = float(temperatura)
+
+        num_lecturas += 1
+        suma += temperatura
+        if minima is None or temperatura < minima:
+            minima = temperatura
+        if maxima is None or temperatura > maxima:
+            maxima = temperatura
+
+        if temperatura < 36.5 or temperatura > 37.5:
+            fuera_rango += 1
+            alertas.write(linea)
+
+print(f"Lecturas: {num_lecturas}")
+print(f"Media: {suma / num_lecturas:.2f} °C  (mín. {minima}, máx. {maxima})")
+print(f"Fuera de rango: {fuera_rango} lecturas ({fuera_rango / num_lecturas * 100:.1f} %)")
+```
+
+```
+Lecturas: 2880
+Media: 36.98 °C  (mín. 35.23, máx. 38.29)
+Fuera de rango: 78 lecturas (2.7 %)
+```
+:::
+
+## 2. Censo de aves
+
+En un censo de aves, cada observador anota una línea por individuo visto en cada transecto. El archivo [censo_aves.txt](../datasets/censo_aves.txt) tiene líneas de comentario que empiezan por `#` (una al inicio de cada transecto), líneas vacías entre transectos y nombres escritos con mayúsculas y espacios inconsistentes:
+
+```
+# Censo primaveral de aves - Parque fluvial
+# Cada línea es un individuo observado en el transecto
+
+# Transecto 1 - 2026-04-06 - Observador: L. Martínez
+gorrión común
+paloma torcaz
+curruca capirotada  
+gorrión común
+```
+
+1. ¿Cuántos transectos se hicieron?
+2. Cuenta cuántos individuos se vieron de cada especie, sin que importen las mayúsculas ni los espacios sobrantes.
+3. Escribe el resultado en `conteo_aves.tsv`, con las columnas `especie` e `individuos`.
+4. ¿Cuál es la especie más abundante?
+
+:::{.pista}
+- `.strip()` y `.lower()` dejan todos los nombres en el mismo formato.
+- Para contar, usa un diccionario: si la especie ya está como clave, suma 1; si no, créala con valor 1.
+:::
+
+:::{.solucion}
+```python
+conteo = {}
+transectos = 0
+
+with open("censo_aves.txt", encoding="utf-8") as f:
+    for linea in f:
+        linea = linea.strip()
+        if linea.startswith("# Transecto"):
+            transectos += 1
+        if linea == "" or linea.startswith("#"):
+            continue
+        especie = linea.lower()
+        if especie in conteo:
+            conteo[especie] += 1
+        else:
+            conteo[especie] = 1
+
+total = 0
+mas_abundante = None
+with open("conteo_aves.tsv", "w", encoding="utf-8") as salida:
+    salida.write("especie\tindividuos\n")
+    for especie, n in conteo.items():
+        salida.write(f"{especie}\t{n}\n")
+        total += n
+        if mas_abundante is None or n > conteo[mas_abundante]:
+            mas_abundante = especie
+
+print(f"Transectos: {transectos}")
+print(f"Individuos: {total}, especies: {len(conteo)}")
+print(f"Más abundante: {mas_abundante} ({conteo[mas_abundante]})")
+```
+
+```
+Transectos: 12
+Individuos: 971, especies: 15
+Más abundante: gorrión común (226)
+```
+:::
+
+## 3. Glucemia en ayunas
+
+[glucemias_pacientes.csv](../datasets/glucemias_pacientes.csv) recoge la glucosa en ayunas (mg/dL) de los pacientes de un centro de salud. Según los criterios clínicos, una glucemia menor de 100 es **normal**, entre 100 y 125 indica **prediabetes** y a partir de 126, **diabetes**.
+
+```
+id_paciente,edad,sexo,glucosa_mg_dl
+P0001,36,M,84
+P0002,29,M,84
+P0003,90,M,87
+```
+
+1. Escribe un archivo `glucemias_clasificadas.csv` igual que el original, pero con una columna más, `clasificacion`.
+2. ¿Cuántos pacientes hay de cada clase y qué porcentaje representan?
+
+:::{.solucion}
+```python
+conteo = {"normal": 0, "prediabetes": 0, "diabetes": 0}
+total = 0
+
+with open("glucemias_pacientes.csv", encoding="utf-8") as entrada, \
+     open("glucemias_clasificadas.csv", "w", encoding="utf-8") as salida:
+    cabecera = entrada.readline().strip()
+    salida.write(cabecera + ",clasificacion\n")
+    for linea in entrada:
+        linea = linea.strip()
+        id_paciente, edad, sexo, glucosa = linea.split(",")
+        glucosa = int(glucosa)
+        if glucosa < 100:
+            clase = "normal"
+        elif glucosa < 126:
+            clase = "prediabetes"
+        else:
+            clase = "diabetes"
+        conteo[clase] += 1
+        total += 1
+        salida.write(f"{linea},{clase}\n")
+
+for clase, n in conteo.items():
+    print(f"{clase}: {n} ({n / total * 100:.1f} %)")
+```
+
+```
+normal: 449 (69.1 %)
+prediabetes: 138 (21.2 %)
+diabetes: 63 (9.7 %)
+```
+:::
+
+## 4. Fototrampeo
+
+En una sierra se han instalado 10 cámaras trampa durante dos meses. Cada fila de [fototrampeo_sierra.csv](../datasets/fototrampeo_sierra.csv) es una detección: la fecha, la hora, la cámara, la especie y el número de individuos fotografiados.
+
+```
+fecha,hora,camara,especie,individuos
+2026-05-01,00:06:23,CT04,zorro,2
+2026-05-01,00:14:31,CT10,zorro,1
+2026-05-01,00:18:22,CT07,jabalí,5
+```
+
+1. Para cada especie, calcula el número de detecciones y el total de individuos.
+2. Calcula qué porcentaje de las detecciones de cada especie es nocturno (entre las 21:00 y las 6:59).
+3. Escribe un archivo `resumen_fototrampeo.csv` con las columnas `especie,detecciones,individuos,porcentaje_nocturno`.
+4. ¿Qué especies son claramente nocturnas? ¿Y diurnas?
+
+:::{.pista}
+La hora es una cadena como `"21:43:05"`. Para quedarte con la hora como número, usa `int(hora.split(":")[0])`.
+:::
+
+:::{.solucion}
+```python
+detecciones = {}
+individuos = {}
+nocturnas = {}
+
+with open("fototrampeo_sierra.csv", encoding="utf-8") as f:
+    f.readline()
+    for linea in f:
+        fecha, hora, camara, especie, n = linea.strip().split(",")
+        h = int(hora.split(":")[0])
+        if especie not in detecciones:
+            detecciones[especie] = 0
+            individuos[especie] = 0
+            nocturnas[especie] = 0
+        detecciones[especie] += 1
+        individuos[especie] += int(n)
+        if h >= 21 or h < 7:
+            nocturnas[especie] += 1
+
+with open("resumen_fototrampeo.csv", "w", encoding="utf-8") as salida:
+    salida.write("especie,detecciones,individuos,porcentaje_nocturno\n")
+    for especie in detecciones:
+        porcentaje = nocturnas[especie] / detecciones[especie] * 100
+        salida.write(f"{especie},{detecciones[especie]},{individuos[especie]},{porcentaje:.1f}\n")
+        print(f"{especie:<14} {detecciones[especie]:>4} detecciones  {porcentaje:5.1f} % nocturnas")
+```
+
+```
+zorro           473 detecciones   85.6 % nocturnas
+jabalí          600 detecciones   93.3 % nocturnas
+tejón           199 detecciones   94.5 % nocturnas
+liebre          111 detecciones   70.3 % nocturnas
+garduña         174 detecciones   94.8 % nocturnas
+ciervo          241 detecciones   34.0 % nocturnas
+corzo           390 detecciones   34.1 % nocturnas
+ardilla roja    212 detecciones    3.3 % nocturnas
+```
+:::
+
+## 5. Sensores de un embalse
+
+Cuatro sondas miden cada hora la temperatura, el oxígeno disuelto, el pH y la conductividad del agua de un embalse. A veces una sonda falla: entonces el valor aparece como `NA` (sin dato) o como `-999` (error del sensor). Los datos están en [sensores_embalse.csv](../datasets/sensores_embalse.csv).
+
+```
+fecha_hora,estacion,temperatura_C,oxigeno_mg_l,ph,conductividad_uS
+2026-07-01 00:00,E1-Presa,20.56,6.82,7.51,449
+2026-07-01 00:00,E2-Centro,20.23,6.30,7.45,420
+2026-07-01 00:00,E3-Cola,21.29,3.91,7.66,416
+2026-07-01 00:00,E4-Afluente,20.74,8.64,7.55,395
+```
+
+1. Escribe un archivo `sensores_limpio.csv` solo con las filas en las que todos los valores son válidos. ¿Cuántas filas has descartado?
+2. Calcula la concentración media de oxígeno de cada estación.
+3. Por debajo de 4 mg/L de oxígeno, muchos peces empiezan a tener problemas. ¿Cuántas horas ha estado cada estación por debajo de ese umbral? ¿Hay alguna estación preocupante?
+
+:::{.pista}
+Una vez troceada la línea en la lista `campos`, puedes usar `"NA" in campos` para saber si falta algún valor.
+:::
+
+:::{.solucion}
+```python
+descartadas = 0
+validas = 0
+suma_oxigeno = {}
+lecturas = {}
+hipoxia = {}
+
+with open("sensores_embalse.csv", encoding="utf-8") as entrada, \
+     open("sensores_limpio.csv", "w", encoding="utf-8") as salida:
+    salida.write(entrada.readline())
+    for linea in entrada:
+        campos = linea.strip().split(",")
+        estacion = campos[1]
+        if "NA" in campos or "-999" in campos:
+            descartadas += 1
+            continue
+        validas += 1
+        salida.write(linea)
+        oxigeno = float(campos[3])
+        if estacion not in lecturas:
+            suma_oxigeno[estacion] = 0
+            lecturas[estacion] = 0
+            hipoxia[estacion] = 0
+        suma_oxigeno[estacion] += oxigeno
+        lecturas[estacion] += 1
+        if oxigeno < 4:
+            hipoxia[estacion] += 1
+
+print(f"Filas válidas: {validas}; descartadas: {descartadas}")
+for estacion in lecturas:
+    media = suma_oxigeno[estacion] / lecturas[estacion]
+    print(f"{estacion}: O2 medio {media:.2f} mg/L, {hipoxia[estacion]} h con O2 < 4 mg/L")
+```
+
+```
+Filas válidas: 2639; descartadas: 337
+E1-Presa: O2 medio 8.55 mg/L, 0 h con O2 < 4 mg/L
+E2-Centro: O2 medio 7.76 mg/L, 1 h con O2 < 4 mg/L
+E3-Cola: O2 medio 4.62 mg/L, 295 h con O2 < 4 mg/L
+E4-Afluente: O2 medio 9.14 mg/L, 0 h con O2 < 4 mg/L
+```
+:::
+
+## 6. Inventario forestal
+
+En un inventario forestal se han medido todos los árboles de 40 parcelas circulares de 0,1 ha. En [inventario_forestal.csv](../datasets/inventario_forestal.csv) las especies aparecen con un código de cuatro letras. La equivalencia entre códigos y nombres científicos está en otro archivo, [codigos_especies.tsv](../datasets/codigos_especies.tsv).
+
+```
+~$ head -4 inventario_forestal.csv
+parcela,arbol,especie,diametro_cm,altura_m,estado
+P01,1,PIHA,22.4,10.7,vivo
+P01,2,JUTH,16.9,8.0,vivo
+P01,3,PIHA,29.2,9.2,vivo
+~$ head -4 codigos_especies.tsv
+codigo	nombre_cientifico
+PIHA	Pinus halepensis
+PINI	Pinus nigra
+PISY	Pinus sylvestris
+```
+
+1. Lee `codigos_especies.tsv` y guarda la equivalencia en un diccionario `{codigo: nombre_cientifico}`.
+2. Para cada especie (con su nombre científico), calcula el número de árboles vivos y su diámetro medio.
+3. El **área basal** de un árbol es la superficie de la sección de su tronco: $\pi \cdot r^2$, con el radio en metros (el diámetro está en cm, así que $r = d / 200$). Calcula el área basal de los árboles vivos de cada especie por hectárea (en total se han muestreado 4 ha).
+4. Calcula el porcentaje de árboles muertos de cada especie.
+5. Escribe el resumen en `resumen_inventario.tsv`.
+
+:::{.solucion}
+```python
+PI = 3.1416
+SUPERFICIE_HA = 40 * 0.1          # 40 parcelas de 0,1 ha
+
+nombres = {}
+with open("codigos_especies.tsv", encoding="utf-8") as f:
+    f.readline()
+    for linea in f:
+        codigo, nombre = linea.strip().split("\t")
+        nombres[codigo] = nombre
+
+vivos = {}
+muertos = {}
+suma_diametros = {}
+area_basal = {}
+with open("inventario_forestal.csv", encoding="utf-8") as f:
+    f.readline()
+    for linea in f:
+        parcela, arbol, codigo, diametro, altura, estado = linea.strip().split(",")
+        especie = nombres[codigo]
+        if especie not in vivos:
+            vivos[especie] = 0
+            muertos[especie] = 0
+            suma_diametros[especie] = 0
+            area_basal[especie] = 0
+        if estado == "muerto":
+            muertos[especie] += 1
+            continue
+        d = float(diametro)
+        vivos[especie] += 1
+        suma_diametros[especie] += d
+        area_basal[especie] += PI * (d / 200) ** 2      # d en cm -> radio en m
+
+with open("resumen_inventario.tsv", "w", encoding="utf-8") as salida:
+    salida.write("especie\tpies_vivos\tdiametro_medio_cm\tarea_basal_m2_ha\tmortalidad_pct\n")
+    for especie in vivos:
+        diam_medio = suma_diametros[especie] / vivos[especie]
+        ab_ha = area_basal[especie] / SUPERFICIE_HA
+        mortalidad = muertos[especie] / (vivos[especie] + muertos[especie]) * 100
+        salida.write(f"{especie}\t{vivos[especie]}\t{diam_medio:.1f}\t{ab_ha:.2f}\t{mortalidad:.1f}\n")
+```
+
+```
+~$ cat resumen_inventario.tsv
+especie	pies_vivos	diametro_medio_cm	area_basal_m2_ha	mortalidad_pct
+Pinus halepensis	1187	28.3	20.52	5.6
+Juniperus thurifera	239	18.0	1.69	5.2
+Quercus ilex	596	22.0	6.21	7.3
+Pinus sylvestris	586	30.0	11.05	5.8
+Pinus nigra	751	32.1	16.36	6.4
+Quercus faginea	349	19.6	2.85	4.6
+Fraxinus angustifolia	62	23.5	0.73	10.1
+Arbutus unedo	136	10.3	0.30	8.7
+```
+:::
+
+## 7. Identificación de bacterias por BLAST
+
+Se han secuenciado amplicones del gen 16S ARNr de una muestra de suelo y cada secuencia única (ASV) se ha comparado con una base de datos de referencia. [blast_amplicones_16S.tsv](../datasets/blast_amplicones_16S.tsv) es el resultado de BLAST en formato tabular (`-outfmt 6`, separado por tabuladores). Cada ASV puede tener varios *hits*, ordenados del mejor al peor.
+
+```
+ASV_0001	NR_186971.1|Nitrosomonas_europaea	99.84	243	0	0	1	243	504	746	6.18e-113	448.8
+ASV_0001	NR_189862.1|Streptomyces_griseus	97.83	238	5	2	1	238	475	712	3.66e-103	409.7
+ASV_0001	NR_157657.1|Pseudomonas_fluorescens	95.28	242	11	1	1	242	584	825	2.29e-98	390.6
+ASV_0001	NR_139738.1|Pseudomonas_putida	93.31	240	16	0	1	240	493	732	2.69e-92	366.3
+ASV_0002	NR_70761.1|Arthrobacter_globiformis	97.47	237	6	0	1	237	512	748	4.53e-103	409.4
+```
+
+Las columnas son: consulta, referencia, % de identidad, longitud del alineamiento, desapareamientos, huecos, inicio y fin en la consulta, inicio y fin en la referencia, *e-value* y *bitscore*.
+
+1. Quédate solo con el **mejor hit** de cada ASV (la primera línea en que aparece).
+2. Asigna una especie a la ASV solo si el mejor hit tiene una identidad ≥ 97 % y un *e-value* ≤ 1e-50. Escribe las asignaciones en `asignaciones_16S.tsv` (columnas `asv`, `especie`, `identidad`, `evalue`).
+3. ¿Cuántas ASV se han podido asignar y cuántas no?
+4. ¿Cuántas ASV se han asignado a cada género?
+
+:::{.pista}
+- Guarda en una variable la consulta de la línea anterior: si la consulta actual es la misma, no es el mejor hit.
+- `float("6.18e-113")` convierte sin problema la notación científica.
+:::
+
+:::{.solucion}
+```python
+consulta_anterior = None
+asignadas = 0
+sin_asignar = 0
+por_genero = {}
+
+with open("blast_amplicones_16S.tsv", encoding="utf-8") as entrada, \
+     open("asignaciones_16S.tsv", "w", encoding="utf-8") as salida:
+    salida.write("asv\tespecie\tidentidad\tevalue\n")
+    for linea in entrada:
+        campos = linea.strip().split("\t")
+        consulta = campos[0]
+        if consulta == consulta_anterior:
+            continue                       # no es el mejor hit: lo saltamos
+        consulta_anterior = consulta
+
+        especie = campos[1].split("|")[1]
+        identidad = float(campos[2])
+        evalue = float(campos[10])
+        if identidad >= 97 and evalue <= 1e-50:
+            asignadas += 1
+            salida.write(f"{consulta}\t{especie}\t{identidad}\t{evalue}\n")
+            genero = especie.split("_")[0]
+            if genero in por_genero:
+                por_genero[genero] += 1
+            else:
+                por_genero[genero] = 1
+        else:
+            sin_asignar += 1
+
+print(f"ASVs asignadas: {asignadas}; sin asignar: {sin_asignar}")
+for genero, n in por_genero.items():
+    print(genero, n)
+```
+
+```
+ASVs asignadas: 565; sin asignar: 135
+Nitrosomonas 33
+Arthrobacter 24
+Mycobacterium 45
+Escherichia 37
+Flavobacterium 34
+Burkholderia 37
+Clostridium 41
+Pseudomonas 70
+Bacillus 63
+Streptomyces 37
+Sphingomonas 38
+Lactobacillus 35
+Rhizobium 41
+Acinetobacter 30
+```
+:::
+
+## 8. Respuesta al frío (RNA-seq)
+
+Se ha medido la expresión de 3000 genes de *Arabidopsis thaliana* en plantas control (22 °C) y en plantas expuestas a 4 °C durante 6 horas, con tres réplicas de cada condición. [expresion_rnaseq.tsv](../datasets/expresion_rnaseq.tsv) contiene los recuentos normalizados:
+
+```
+# Recuentos normalizados (CPM). Control: plantas a 22 °C. Tratamiento: 6 h a 4 °C
+gen	ctrl_1	ctrl_2	ctrl_3	frio_1	frio_2	frio_3
+AT3G00010	28.0	33.7	34.4	28.4	28.0	28.5
+AT5G00020	4.5	8.4	8.5	7.7	9.9	6.4
+```
+
+1. Para cada gen, calcula la expresión media en control y en frío.
+2. Calcula el *fold change* como `(media_frio + 1) / (media_control + 1)`. Sumamos 1 para evitar divisiones entre cero.
+3. Escribe los genes con *fold change* ≥ 2 (inducidos por el frío) en `genes_inducidos_frio.tsv`, y los genes con *fold change* ≤ 0,5 (reprimidos) en `genes_reprimidos_frio.tsv`, con las columnas `gen`, `media_control`, `media_frio` y `fold_change`.
+4. ¿Cuántos genes hay en cada grupo? ¿Cuántos genes no se expresan en ninguna muestra?
+
+:::{.pista}
+Puedes abrir a la vez el archivo de entrada y los dos de salida en el mismo `with`.
+:::
+
+:::{.solucion}
+```python
+inducidos = 0
+reprimidos = 0
+sin_expresion = 0
+
+with open("expresion_rnaseq.tsv", encoding="utf-8") as entrada, \
+     open("genes_inducidos_frio.tsv", "w", encoding="utf-8") as sal_ind, \
+     open("genes_reprimidos_frio.tsv", "w", encoding="utf-8") as sal_rep:
+    cabecera_salida = "gen\tmedia_control\tmedia_frio\tfold_change\n"
+    sal_ind.write(cabecera_salida)
+    sal_rep.write(cabecera_salida)
+    for linea in entrada:
+        if linea.startswith("#") or linea.startswith("gen\t"):
+            continue
+        campos = linea.strip().split("\t")
+        gen = campos[0]
+        valores = []
+        for v in campos[1:]:
+            valores.append(float(v))
+        media_ctrl = sum(valores[:3]) / 3
+        media_frio = sum(valores[3:]) / 3
+        if sum(valores) == 0:
+            sin_expresion += 1
+            continue
+        fold_change = (media_frio + 1) / (media_ctrl + 1)
+        fila = f"{gen}\t{media_ctrl:.1f}\t{media_frio:.1f}\t{fold_change:.2f}\n"
+        if fold_change >= 2:
+            sal_ind.write(fila)
+            inducidos += 1
+        elif fold_change <= 0.5:
+            sal_rep.write(fila)
+            reprimidos += 1
+
+print(f"Inducidos por frío: {inducidos}; reprimidos: {reprimidos}; sin expresión: {sin_expresion}")
+```
+
+```
+Inducidos por frío: 158; reprimidos: 154; sin expresión: 153
+```
+:::
+
+## 9. Anotación de un genoma (GFF3)
+
+[anotacion_genes.gff3](../datasets/anotacion_genes.gff3) contiene la anotación de un genoma vegetal en formato GFF3. Es un archivo de 9 columnas separadas por tabuladores: cromosoma, fuente, tipo de elemento (`gene`, `mRNA`, `exon`, `CDS`), inicio, fin, puntuación, hebra, fase y atributos. Las líneas que empiezan por `#` son comentarios.
+
+```
+##gff-version 3
+##sequence-region chr1 1 3000000
+chr1	CursoAnnot	gene	5161	8038	.	+	.	ID=gen0001;Name=WRK3
+chr1	CursoAnnot	mRNA	5161	8038	.	+	.	ID=gen0001.t1;Parent=gen0001
+chr1	CursoAnnot	exon	5161	5601	.	+	.	ID=gen0001.t1.exon1;Parent=gen0001.t1
+chr1	CursoAnnot	exon	5776	5917	.	+	.	ID=gen0001.t1.exon2;Parent=gen0001.t1
+```
+
+1. Cuenta cuántos elementos hay de cada tipo.
+2. ¿Cuántos genes hay en cada cromosoma?
+3. ¿Cuál es la longitud media de los genes (`fin - inicio + 1`)? ¿Cuántos exones tiene un gen, de media?
+4. Escribe un archivo `genes.tsv` con una fila por gen y las columnas `id`, `nombre`, `cromosoma`, `inicio`, `fin`, `hebra` y `longitud`. El identificador y el nombre del gen están en la columna de atributos (`ID=gen0001;Name=WRK3`).
+
+:::{.pista}
+Para leer los atributos, trocea la columna por `;` y cada trozo por `=`, y guarda los pares en un diccionario.
+:::
+
+:::{.solucion}
+```python
+tipos = {}
+genes_por_cromosoma = {}
+suma_longitudes = 0
+num_genes = 0
+
+with open("anotacion_genes.gff3", encoding="utf-8") as entrada, \
+     open("genes.tsv", "w", encoding="utf-8") as salida:
+    salida.write("id\tnombre\tcromosoma\tinicio\tfin\thebra\tlongitud\n")
+    for linea in entrada:
+        if linea.startswith("#"):
+            continue
+        campos = linea.strip().split("\t")
+        cromosoma, tipo = campos[0], campos[2]
+        inicio, fin, hebra = int(campos[3]), int(campos[4]), campos[6]
+
+        if tipo in tipos:
+            tipos[tipo] += 1
+        else:
+            tipos[tipo] = 1
+
+        if tipo == "gene":
+            atributos = {}
+            for par in campos[8].split(";"):
+                clave, valor = par.split("=")
+                atributos[clave] = valor
+            longitud = fin - inicio + 1
+            num_genes += 1
+            suma_longitudes += longitud
+            if cromosoma in genes_por_cromosoma:
+                genes_por_cromosoma[cromosoma] += 1
+            else:
+                genes_por_cromosoma[cromosoma] = 1
+            salida.write(f"{atributos['ID']}\t{atributos['Name']}\t{cromosoma}\t"
+                         f"{inicio}\t{fin}\t{hebra}\t{longitud}\n")
+
+print(f"Elementos por tipo: {tipos}")
+print(f"Genes por cromosoma: {genes_por_cromosoma}")
+print(f"Longitud media de los genes: {suma_longitudes / num_genes:.0f} pb")
+print(f"Exones por gen: {tipos['exon'] / tipos['gene']:.2f}")
+```
+
+```
+Elementos por tipo: {'gene': 562, 'mRNA': 562, 'exon': 2025, 'CDS': 2025}
+Genes por cromosoma: {'chr1': 185, 'chr2': 139, 'chr3': 103, 'chr4': 83, 'chr5': 52}
+Longitud media de los genes: 2492 pb
+Exones por gen: 3.60
+```
+:::
+
+## 10. Proteoma de *Bacillus subtilis*
+
+[proteoma_parcial.fasta](../datasets/proteoma_parcial.fasta) contiene 360 proteínas en formato FASTA, con las secuencias repartidas en líneas de 60 aminoácidos. Las cabeceras siguen el formato de UniProt:
+
+```
+>sp|Q57532|PRT001_BACSU ABC transporter permease OS=Bacillus subtilis OX=1423
+MYSTFHFHPLNCYCTTMWPLAFPQTYRDSLSNPLQDEEGGTFVEFHTSHLQRGKTCHPAG
+IDEADFVKNKTLSSYPFHDPGIYYYYCAPVNCWEVICLSCKATNITLGQCHMERCWGHTF
+TQSQGRQDYHEFSWIDGCGQLTDVWQWKVQQVQPGQKYSEDQWPHNVQWMSRCDPWPGLT
+```
+
+1. Calcula la longitud de cada proteína y escribe un archivo `longitudes_proteinas.tsv` con las columnas `proteina` (por ejemplo, `PRT001_BACSU`) y `longitud`.
+2. ¿Cuál es la longitud media?
+3. ¿Cuál es la proteína más larga? ¿Y la más corta?
+
+:::{.pista}
+Usa un diccionario `{proteina: longitud}`. Cuando encuentres una cabecera, crea la entrada con valor 0. En las líneas de secuencia, suma su longitud a la entrada de la proteína actual.
+:::
+
+:::{.solucion}
+```python
+longitudes = {}
+nombre = None
+
+with open("proteoma_parcial.fasta", encoding="utf-8") as f:
+    for linea in f:
+        linea = linea.strip()
+        if linea.startswith(">"):
+            # >sp|Q57532|PRT001_BACSU ABC transporter... -> PRT001_BACSU
+            nombre = linea.split("|")[2].split(" ")[0]
+            longitudes[nombre] = 0
+        else:
+            longitudes[nombre] += len(linea)   # sumamos cada trozo de secuencia
+
+mas_larga = None
+mas_corta = None
+with open("longitudes_proteinas.tsv", "w", encoding="utf-8") as salida:
+    salida.write("proteina\tlongitud\n")
+    for nombre, longitud in longitudes.items():
+        salida.write(f"{nombre}\t{longitud}\n")
+        if mas_larga is None or longitud > longitudes[mas_larga]:
+            mas_larga = nombre
+        if mas_corta is None or longitud < longitudes[mas_corta]:
+            mas_corta = nombre
+
+media = sum(longitudes.values()) / len(longitudes)
+print(f"Proteínas: {len(longitudes)}")
+print(f"Longitud media: {media:.1f} aa")
+print(f"Más larga: {mas_larga} ({longitudes[mas_larga]} aa)")
+print(f"Más corta: {mas_corta} ({longitudes[mas_corta]} aa)")
+```
+
+```
+Proteínas: 360
+Longitud media: 385.0 aa
+Más larga: PRT209_BACSU (2072 aa)
+Más corta: PRT026_BACSU (76 aa)
+```
+:::
+
+## 11. Ensamblaje de un genoma
+
+Tras ensamblar el genoma de una bacteria, obtenemos [contigs_ensamblaje.fasta](../datasets/contigs_ensamblaje.fasta): 300 fragmentos (contigs) de longitudes muy distintas, con la secuencia repartida en líneas de 80 bases. Las `N` son posiciones de base desconocida.
+
+```
+>contig_0001 len=3014 cov=61.8
+TAAAAGTTAAGATTCCCGCCTCATTTTTTTTTAAAGATGAAAGATTTGGGAGTAAATTCTGTATCACGTATAATAGCCAG
+CTTCAGAGATCTCGGTAATAAATTGATCATCTACAAGGTAGATTCTTAATACGAAACAAATTTTACCACAGATCCTTATC
+```
+
+1. ¿Cuántos contigs hay y cuál es la longitud total del ensamblaje?
+2. Calcula el contenido en GC del genoma. Excluye las `N` del total de bases.
+3. Los contigs muy cortos suelen ser poco fiables. Escribe en `contigs_1kb.fasta` solo los contigs de 1000 pb o más, con la cabecera reducida al nombre (`>contig_0001`) y la secuencia en líneas de 80 bases.
+4. (Reto) Calcula el **N50**: ordena las longitudes de mayor a menor y ve sumándolas. El N50 es la longitud del contig con el que la suma alcanza la mitad de la longitud total del ensamblaje.
+
+:::{.pista}
+- Lee primero todo el archivo en un diccionario `{nombre: secuencia}`, como en el ejemplo de la teoría, y procésalo después.
+- Para escribir la secuencia en líneas de 80 bases, recorre `range(0, len(secuencia), 80)` y escribe en cada vuelta el trozo `secuencia[i:i + 80]`.
+:::
+
+:::{.solucion}
+```python
+# Primero leemos todos los contigs en un diccionario {nombre: secuencia}
+contigs = {}
+nombre = None
+with open("contigs_ensamblaje.fasta", encoding="utf-8") as f:
+    for linea in f:
+        linea = linea.strip()
+        if linea.startswith(">"):
+            nombre = linea[1:].split(" ")[0]
+            contigs[nombre] = ""
+        else:
+            contigs[nombre] += linea
+
+longitud_total = 0
+gc = 0
+bases_validas = 0
+longitudes = []
+with open("contigs_1kb.fasta", "w", encoding="utf-8") as salida:
+    for nombre, secuencia in contigs.items():
+        longitud_total += len(secuencia)
+        longitudes.append(len(secuencia))
+        gc += secuencia.count("G") + secuencia.count("C")
+        bases_validas += len(secuencia) - secuencia.count("N")
+        if len(secuencia) >= 1000:
+            salida.write(f">{nombre}\n")
+            for i in range(0, len(secuencia), 80):
+                salida.write(secuencia[i:i + 80] + "\n")
+
+print(f"Contigs: {len(contigs)}; longitud total: {longitud_total} pb")
+print(f"GC: {gc / bases_validas * 100:.2f} %")
+
+# Reto: N50
+acumulado = 0
+for longitud in sorted(longitudes, reverse=True):
+    acumulado += longitud
+    if acumulado >= longitud_total / 2:
+        print(f"N50: {longitud} pb")
+        break
+```
+
+```
+Contigs: 300; longitud total: 670043 pb
+GC: 41.71 %
+N50: 3360 pb
+```
+:::
+
+## 12. Curvas de crecimiento en microplaca
+
+Un lector de microplacas ha medido la densidad óptica (DO a 600 nm) de una placa de 96 pocillos cada 2 horas durante 24 horas. Cada fila de la placa (A–H) corresponde a una cepa de *E. coli*; la columna 1 contiene solo medio de cultivo (el **blanco**) y las columnas 2–12 son réplicas. El archivo [lector_placas.txt](../datasets/lector_placas.txt) tiene el formato de exportación del aparato: unas líneas de descripción y, para cada lectura, un bloque como este:
+
+```
+Lectura: 1
+Tiempo (h): 0
+	1	2	3	4	5	6	7	8	9	10	11	12
+A	0.050	0.078	0.071	0.045	0.052	0.063	0.055	0.080	0.079	0.063	0.072	0.067
+B	0.050	0.035	0.083	0.034	0.049	0.066	0.062	0.042	0.057	0.077	0.026	0.057
+C	0.047	0.064	0.076	0.068	0.059	0.079	0.025	0.033	0.054	0.071	0.098	0.058
+D	0.047	0.047	0.042	0.053	0.064	0.061	0.063	0.063	0.089	0.045	0.047	0.048
+E	0.047	0.059	0.045	0.050	0.073	0.061	0.071	0.065	0.047	0.067	0.062	0.071
+F	0.040	0.057	0.018	0.058	0.038	0.047	0.040	0.051	0.028	0.022	0.033	0.052
+G	0.046	0.068	0.053	0.054	0.063	0.048	0.042	0.068	0.066	0.049	0.028	0.062
+H	0.044	0.063	0.042	0.037	0.041	0.024	0.030	0.058	0.077	0.065	0.030	0.086
+```
+
+1. Para cada lectura, calcula la DO media de cada cepa restando a cada réplica el blanco de su fila.
+2. Escribe `curvas_crecimiento.tsv` con una fila por tiempo y una columna por cepa (`tiempo_h`, `A`, `B`, ..., `H`). Así podrás abrirlo en una hoja de cálculo y representar las curvas de crecimiento.
+
+:::{.pista}
+- Guarda el tiempo en una variable cuando encuentres la línea que empieza por `Tiempo (h):`.
+- Las líneas de datos empiezan por una letra de la `A` a la `H` seguida de un tabulador. Cuando llegues a la fila `H`, la placa está completa y puedes escribir la fila del archivo de salida.
+:::
+
+:::{.solucion}
+```python
+filas = "ABCDEFGH"
+
+with open("lector_placas.txt", encoding="utf-8") as entrada, \
+     open("curvas_crecimiento.tsv", "w", encoding="utf-8") as salida:
+    salida.write("tiempo_h\t" + "\t".join(filas) + "\n")
+    tiempo = None
+    medias = []
+    for linea in entrada:
+        linea = linea.strip()
+        if linea.startswith("Tiempo (h):"):
+            tiempo = linea.split(":")[1].strip()
+            medias = []
+        elif linea[:1] in filas and linea[1:2] == "\t":
+            valores = linea.split("\t")
+            blanco = float(valores[1])
+            suma = 0
+            for valor in valores[2:]:
+                suma += float(valor) - blanco
+            medias.append(suma / len(valores[2:]))
+            if linea[0] == "H":                     # última fila de la placa
+                salida.write(tiempo)
+                for media in medias:
+                    salida.write(f"\t{media:.3f}")
+                salida.write("\n")
+```
+
+```
+~$ cat curvas_crecimiento.tsv
+tiempo_h	A	B	C	D	E	F	G	H
+0	0.016	0.003	0.015	0.010	0.014	0.000	0.009	0.006
+2	0.063	0.058	0.067	0.029	0.040	0.068	0.052	0.074
+4	0.158	0.169	0.146	0.059	0.085	0.165	0.144	0.183
+6	0.351	0.326	0.249	0.087	0.136	0.287	0.376	0.359
+8	0.626	0.537	0.355	0.106	0.180	0.447	0.697	0.568
+10	0.890	0.746	0.456	0.137	0.241	0.601	1.029	0.788
+12	1.078	0.929	0.558	0.153	0.283	0.711	1.247	0.964
+14	1.170	1.017	0.645	0.178	0.314	0.808	1.344	1.075
+16	1.225	1.068	0.701	0.205	0.354	0.868	1.387	1.137
+18	1.245	1.085	0.738	0.229	0.401	0.904	1.400	1.163
+20	1.250	1.108	0.768	0.247	0.422	0.941	1.403	1.195
+22	1.254	1.109	0.780	0.264	0.436	0.944	1.420	1.202
+24	1.258	1.104	0.799	0.279	0.468	0.954	1.399	1.197
+```
+:::
+
+## 13. Lecturas de secuenciación (FASTQ comprimido)
+
+[lecturas_illumina.fastq.gz](../datasets/lecturas_illumina.fastq.gz) contiene 5000 lecturas de una secuenciación Illumina en formato FASTQ, comprimido con gzip. Cada lectura ocupa **4 líneas**: cabecera (empieza por `@`), secuencia, un `+` y la calidad de cada base codificada como un carácter.
+
+```
+~$ zcat lecturas_illumina.fastq.gz | head -4
+@M04512:88:000000000-KX2P7:1:1101:13147:13252 1:N:0:7
+CTTGTTCAACAATCGCATGCGCGGGAATCTCCCACGGCGGTATTGGAGGGAACGTATCTAGAACTACACTGAACAATCGTTGAGAGAAAGAGTCGTGCACGCTACAACTCATGTCAGGATCCAACCGTTGTGTTT
++
+=?FJJIEAAEECJGEB>?GHHE=@BD;BC@ECA=>DCAECE=BCFG>?>>ECFE?FA?A>C:JBA@<AC;?8E=9F<?9CA=>;9C?AB;<=><@;?:AA=<BC;<8;99==;=68>E?>?>3<6<@95=:>:87
+```
+
+1. ¿Cuántas lecturas hay y cuál es su longitud media?
+2. Algunas lecturas contienen restos del adaptador de secuenciación (`AGATCGGAAGAGC`). ¿Cuántas?
+3. Escribe un archivo **comprimido** `lecturas_filtradas.fastq.gz` con las lecturas que no contienen el adaptador y miden al menos 50 bases.
+4. (Reto) La calidad de cada base se obtiene a partir de su carácter con `ord(caracter) - 33`. ¿Cuántas lecturas tienen una calidad media de al menos 30?
+
+:::{.pista}
+Lleva la cuenta del número de línea con un contador. El resto de dividirlo entre 4 (`num_linea % 4`) te dice qué línea del registro estás leyendo: 1 es la cabecera, 2 la secuencia, 3 el `+` y 0 la calidad. Al llegar a la de calidad, el registro está completo.
+:::
+
+:::{.solucion}
+```python
+import gzip
+
+adaptador = "AGATCGGAAGAGC"
+num_lecturas = 0
+suma_longitudes = 0
+con_adaptador = 0
+conservadas = 0
+num_linea = 0
+
+with gzip.open("lecturas_illumina.fastq.gz", "rt") as entrada, \
+     gzip.open("lecturas_filtradas.fastq.gz", "wt") as salida:
+    for linea in entrada:
+        num_linea += 1
+        linea = linea.strip()
+        if num_linea % 4 == 1:
+            cabecera = linea
+        elif num_linea % 4 == 2:
+            secuencia = linea
+        elif num_linea % 4 == 0:            # 4.ª línea: el registro está completo
+            calidad = linea
+            num_lecturas += 1
+            suma_longitudes += len(secuencia)
+            if adaptador in secuencia:
+                con_adaptador += 1
+            elif len(secuencia) >= 50:
+                salida.write(f"{cabecera}\n{secuencia}\n+\n{calidad}\n")
+                conservadas += 1
+
+print(f"Lecturas: {num_lecturas}; longitud media: {suma_longitudes / num_lecturas:.1f}")
+print(f"Con adaptador: {con_adaptador}")
+print(f"Conservadas tras el filtro: {conservadas}")
+```
+
+```
+Lecturas: 5000; longitud media: 141.5
+Con adaptador: 383
+Conservadas tras el filtro: 4494
+```
+
+Reto:
+
+```python
+import gzip
+
+num_linea = 0
+buenas = 0
+total = 0
+with gzip.open("lecturas_illumina.fastq.gz", "rt") as f:
+    for linea in f:
+        num_linea += 1
+        if num_linea % 4 == 0:
+            calidad = linea.strip()
+            suma = 0
+            for caracter in calidad:
+                suma += ord(caracter) - 33
+            total += 1
+            if suma / len(calidad) >= 30:
+                buenas += 1
+print(f"Lecturas con calidad media ≥ 30: {buenas} de {total}")
+```
+
+```
+Lecturas con calidad media ≥ 30: 3952 de 5000
+```
+:::
+
+## 14. Variantes genéticas (VCF comprimido)
+
+[variantes_cohorte.vcf.gz](../datasets/variantes_cohorte.vcf.gz) contiene las variantes genéticas detectadas en 8 individuos, en formato VCF comprimido. Las líneas que empiezan por `##` describen el archivo; la que empieza por `#CHROM` es la cabecera de la tabla; el resto son variantes:
+
+```
+~$ zcat variantes_cohorte.vcf.gz | head -12
+##fileformat=VCFv4.2
+##source=SimuladorCurso
+##contig=<ID=chr1,length=2500000>
+##contig=<ID=chr2,length=1800000>
+##contig=<ID=chr3,length=1200000>
+##FILTER=<ID=LowQual,Description="Calidad baja">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Profundidad total">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Frecuencia alélica">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotipo">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	IND01	IND02	IND03	IND04	IND05	IND06	IND07	IND08
+chr1	4065	.	A	C	75.9	LowQual	DP=337;AF=0.500	GT	1/1	0/1	0/1	1/1	0/0	0/1	0/0	0/1
+chr1	5690	.	C	G	1.8	LowQual	DP=75;AF=0.312	GT	0/0	0/1	0/0	0/0	0/1	0/1	1/1	0/0
+```
+
+1. ¿Cuántas variantes hay en total y en cada cromosoma?
+2. ¿Cuántas son SNPs (`REF` y `ALT` de una sola base) y cuántas indels?
+3. Escribe un archivo **comprimido** `variantes_filtradas.vcf.gz` que conserve todas las líneas de cabecera (las que empiezan por `#`) y solo las variantes con `FILTER` igual a `PASS` y `QUAL` ≥ 30. ¿Cuántas variantes superan el filtro?
+
+:::{.solucion}
+```python
+import gzip
+
+total = 0
+snps = 0
+indels = 0
+pasan = 0
+por_cromosoma = {}
+
+with gzip.open("variantes_cohorte.vcf.gz", "rt") as entrada, \
+     gzip.open("variantes_filtradas.vcf.gz", "wt") as salida:
+    for linea in entrada:
+        if linea.startswith("#"):
+            salida.write(linea)            # conservamos toda la cabecera
+            continue
+        campos = linea.strip().split("\t")
+        cromosoma, ref, alt = campos[0], campos[3], campos[4]
+        calidad, filtro = float(campos[5]), campos[6]
+
+        total += 1
+        if cromosoma in por_cromosoma:
+            por_cromosoma[cromosoma] += 1
+        else:
+            por_cromosoma[cromosoma] = 1
+        if len(ref) == 1 and len(alt) == 1:
+            snps += 1
+        else:
+            indels += 1
+        if filtro == "PASS" and calidad >= 30:
+            salida.write(linea)
+            pasan += 1
+
+print(f"Variantes: {total} (SNPs: {snps}, indels: {indels})")
+print(f"Por cromosoma: {por_cromosoma}")
+print(f"Superan el filtro: {pasan}")
+```
+
+```
+Variantes: 2598 (SNPs: 2095, indels: 503)
+Por cromosoma: {'chr1': 1181, 'chr2': 850, 'chr3': 567}
+Superan el filtro: 1530
+```
+:::
