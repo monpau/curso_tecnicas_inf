@@ -925,3 +925,4 @@ print(f"La edad media es: {sum(diccionario.values()) / len(diccionario)}")
 ```
 
 :::
+:::
