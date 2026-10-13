@@ -216,6 +216,8 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
    >orf1|posible_ORF_largo
    CCGGCCATGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGTAACCGGCC
    ```
+   (TAA|TAG|TGA) hace uso del capturing group para introducir alternativas.
+
 :::
 
 :::{.callout-note title="9" collapse="true"}
@@ -240,4 +242,18 @@ Si te atascas con un patrón, prototípalo primero en [regex101.com](https://reg
    MATK1,chr2,305-1890,Maturase K
    TRNL1,chr2,4400-4950,Transfer RNA-Leu
    ```
+   Esta solución hace uso de la negación: [^\t] son todos los caracteres menos tabulador.
+
+   Una solución más sencilla podría ser:
+   
+   ```{.bash}
+   ~$ echo "gen,cromosoma,posicion,funcion"
+   ~$ grep -P '\tgene\t' anotacion.gff3 | sed -E 's/^(.+)\t.+\tgene\t([0-9]+)\t([0-9]+)\t.+Name=([a-zA-Z0-9]+);function=(.+)$/\4,\1,\2-\3,\5/'
+   gen,cromosoma,posicion,funcion
+   RBCS1,chr1,1001-5000,Ribulose bisphosphate carboxylase small chain
+   PSBA1,chr1,8200-9100,Photosystem II protein D1
+   MATK1,chr2,305-1890,Maturase K
+   TRNL1,chr2,4400-4950,Transfer RNA-Leu
+   ```
+
 :::
