@@ -156,8 +156,6 @@ import statistics as st
 print(st.median(temperaturas))
 ```
 
-Ya has visto `import random` en el módulo 8 y `import csv` en el módulo 10: era exactamente esto.
-
 Igual que con las cadenas, puedes explorar un módulo con `dir()` y consultar su documentación con `help()`:
 
 ```{pyodide-python}
@@ -268,29 +266,59 @@ JSON representa datos con la misma forma que ya conoces de Python: objetos como 
 
 ... se convierte en Python, prácticamente sin cambios, en el diccionario `{"id": "ENSG00000139618", "display_name": "BRCA2", "species": "homo_sapiens", "start": 32315086, "end": 32400268}`. Por eso, en cuanto tengas una respuesta JSON en Python, la tratarás exactamente como los diccionarios del módulo 8: `respuesta["display_name"]`, `respuesta.get(...)`, `for clave, valor in respuesta.items():`.
 
-# Peticiones con `curl`
+# Anatomía de una petición: descargar un FASTA de NCBI
 
-`curl` hace una petición HTTP desde la terminal. Por defecto imprime la respuesta en pantalla; con `-o archivo` la guarda directamente (parecido a la redirección `>` del módulo 5, pero como opción propia de `curl`):
+Las APIs no siempre devuelven JSON. El servicio *E-utilities* de NCBI, por ejemplo, puede devolver directamente una secuencia en formato FASTA. Fíjate en la URL que usaríamos para pedir los primeros 200 pares de bases del genoma de *E. coli*:
 
 ```
-~$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=fasta&retmode=text&seq_stop=200" -o genoma_ecoli.fasta
-~$ head -3 genoma_ecoli.fasta
->NC_000913.3 Escherichia coli str. K-12 substr. MG1655, complete genome
-AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGT
-CTGATAGCAGCTTCTGAACTGGTTACCTGCCGTGAGTAAATTAAAATTTTATTGACTTA
+https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=fasta&retmode=text&seq_stop=200
 ```
 
-La URL tiene dos partes: la dirección base del *endpoint* (`.../efetch.fcgi`) y, tras el `?`, los parámetros separados por `&` — aquí, qué base de datos (`db=nuccore`), qué accession (`id=...`), y en qué formato quieres la respuesta (`rettype=fasta&retmode=text`). `seq_stop=200` limita la descarga a los primeros 200 pares de bases, para no traer un genoma completo en un ejercicio de clase.
+La URL tiene dos partes: la dirección base del *endpoint* (`.../efetch.fcgi`) y, tras el `?`, los **parámetros** separados por `&`: qué base de datos (`db=nuccore`), qué accession (`id=...`), en qué formato quieres la respuesta (`rettype=fasta&retmode=text`) y `seq_stop=200`, que limita la descarga a los primeros 200 pares de bases para no traer un genoma completo en un ejercicio de clase.
 
-# Peticiones con Python: `requests`
-
-`curl` es cómodo para probar rápido, pero para procesar la respuesta necesitas Python. Con `requests`, que ya conoces de la sección anterior, la misma idea queda así:
+Escribir todos esos parámetros a mano es incómodo y fácil de equivocar. `requests` permite pasarlos como un diccionario con el argumento `params`, y se encarga de construir la URL por ti:
 
 ```python
 import requests
 
-url = "https://rest.ensembl.org/lookup/id/ENSG00000139618?content-type=application/json"
-respuesta = requests.get(url)
+url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+parametros = {
+    "db": "nuccore",
+    "id": "NC_000913.3",
+    "rettype": "fasta",
+    "retmode": "text",
+    "seq_stop": 200,
+}
+respuesta = requests.get(url, params=parametros)
+
+print(respuesta.url)    # la URL completa que ha construido requests
+print(respuesta.text)
+```
+
+```
+https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=fasta&retmode=text&seq_stop=200
+>NC_000913.3:1-200 Escherichia coli str. K-12 substr. MG1655, complete genome
+AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC
+TTCTGAACTGGTTACCTGCCGTGAGTAAATTAAAATTTTATTGACTTAGGTCACTAAATACTTTAACCAA
+TATAGGCATAGCGCACAGACAGATAAAAATTACAGAGTACACAACATCCATGAAACGCAT
+```
+
+Como la respuesta es texto (no JSON), usamos `.text` en lugar de `.json()`. Y como `.text` es una cadena normal, puedes guardarla en un archivo tal como viste en el módulo 10:
+
+```python
+with open("genoma_ecoli.fasta", "w") as f:
+    f.write(respuesta.text)
+```
+
+# Consultar una API JSON: Ensembl
+
+La mayoría de APIs modernas responden en JSON. Ensembl, por ejemplo, devuelve la información de un gen a partir de su identificador:
+
+```python
+import requests
+
+url = "https://rest.ensembl.org/lookup/id/ENSG00000139618"
+respuesta = requests.get(url, params={"content-type": "application/json"})
 
 print(respuesta.status_code)
 datos = respuesta.json()
@@ -302,7 +330,7 @@ print(datos["display_name"])
 BRCA2
 ```
 
-`requests.get(url)` hace la petición. `.status_code` es el código de estado HTTP: `200` significa "todo correcto"; `404` significa "no encontrado" (p. ej. un ID mal escrito); hay más códigos, pero estos dos cubren la mayoría de casos en este curso. `.json()` convierte el texto de la respuesta directamente en un diccionario de Python, listo para usar como cualquier otro.
+`requests.get()` hace la petición. `.status_code` es el código de estado HTTP: `200` significa "todo correcto"; los códigos que empiezan por 4 indican un problema con tu petición, como `404` ("no encontrado") o `400` ("petición incorrecta", que es lo que devuelve Ensembl si el ID no existe). Los que empiezan por 5, como `500`, indican un problema del servidor: no es culpa tuya, y suele bastar con volver a intentarlo más tarde. `.json()` convierte el texto de la respuesta directamente en un diccionario de Python, listo para usar como cualquier otro.
 
 # Comprueba siempre el `status_code`
 
@@ -316,7 +344,11 @@ else:
     print(f"Error {respuesta.status_code}: no se pudo obtener el gen")
 ```
 
-Si intentas `.json()` sobre una respuesta de error, el programa puede fallar con una excepción confusa; comprobar `status_code` primero da un mensaje claro sobre qué ha ido mal.
+Si la petición falla, la respuesta no contiene los datos que esperas: intentar acceder a `datos["display_name"]` provocaría un error confuso. Comprobar `status_code` primero te da un mensaje claro sobre qué ha ido mal. Prueba, por ejemplo, con el ID inexistente `ENSG00000000000`:
+
+```
+Error 400: no se pudo obtener el gen
+```
 
 # Guardar la respuesta en un archivo
 
@@ -346,38 +378,84 @@ if respuesta.status_code == 200:
     datos = respuesta.json()
     print(f"Registros totales encontrados: {datos['count']}")
     for registro in datos["results"]:
-        print(registro.get("locality"), registro.get("eventDate"))
+        print(registro.get("stateProvince"), registro.get("eventDate"))
 ```
 
-Aquí `requests` construye la URL con parámetros por ti (`params=parametros`), en vez de escribirlos a mano tras un `?` — más legible y menos propenso a errores al combinar varios parámetros.
+Como no todos los registros tienen todos los campos, usamos `registro.get("stateProvince")` en vez de `registro["stateProvince"]`: si la clave no existe, `.get()` devuelve `None` en lugar de dar un error.
 
 # Ejercicios
 
-1. Usa `curl` para descargar los primeros 200 pares de bases del genoma de *E. coli* (`NC_000913.3`) desde NCBI, guardándolos en `genoma_ecoli.fasta`.
-2. Escribe un script Python con `requests` que consulte Ensembl para el gen `ENSG00000139618`, compruebe el `status_code`, y muestre su `display_name` y su `species`.
-3. Amplía el script anterior para que guarde la respuesta completa en `gene_ENSG00000139618.json` usando el módulo `json` (con indentación).
-4. Escribe un script que consulte GBIF con `scientificName="Pinus sylvestris"` y `country="ES"`, y muestre cuántos registros totales hay (`datos["count"]`) y la localidad (`"locality"`) de los 5 primeros resultados.
+Para estos ejercicios necesitas conexión a internet y ejecutarlos en tu ordenador (no en el navegador).
+
+1. Haz una petición a `https://rest.ensembl.org/info/ping` con el parámetro `content-type` igual a `application/json`. Imprime el `status_code` y el contenido de la respuesta como texto.
+2. Descarga con `requests` los primeros 200 pares de bases del genoma de *E. coli* (`NC_000913.3`) desde NCBI, pasando los parámetros con `params`. Guárdalos en `genoma_ecoli.fasta` e imprime solo la primera línea (la cabecera).
+3. Modifica el ejercicio anterior para descargar los primeros 500 pares de bases. Sin guardar el archivo, calcula cuántas bases tiene la secuencia descargada (sin contar la cabecera ni los saltos de línea) y su contenido en GC.
+4. Consulta Ensembl para el gen `ENSG00000139618`, comprueba el `status_code` y muestra su `display_name`, su `species` y su longitud en pares de bases (`end - start + 1`).
+5. Amplía el ejercicio anterior para que guarde la respuesta completa en `gene_ENSG00000139618.json` usando el módulo `json` (con indentación).
+6. Escribe una función `nombre_gen(id_gen)` que consulte Ensembl y devuelva el `display_name` del gen, o `None` si la petición falla. Úsala en un bucle sobre la lista `["ENSG00000139618", "ENSG00000141510", "ENSG00000000000"]` e imprime, para cada ID, su nombre o un mensaje de error.
+7. Consulta GBIF con `scientificName="Pinus sylvestris"` y `country="ES"`, y muestra cuántos registros totales hay (`datos["count"]`) y la comunidad autónoma (`"stateProvince"`) de los 5 primeros resultados.
+8. (Reto) Para cada especie de la lista `["Pinus sylvestris", "Quercus ilex", "Lynx pardinus", "Aquila adalberti"]`, consulta en GBIF cuántos registros hay en España y guarda el resultado en un diccionario `{especie: número_de_registros}`. Después, imprime la especie con más registros. Pista: con `"limit": 0` GBIF devuelve el `count` sin descargar ningún registro.
 
 # Soluciones
 
 1.
-   ```
-   ~$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=fasta&retmode=text&seq_stop=200" -o genoma_ecoli.fasta
+   ```python
+   import requests
+
+   respuesta = requests.get("https://rest.ensembl.org/info/ping",
+                            params={"content-type": "application/json"})
+   print(respuesta.status_code)
+   print(respuesta.text)
    ```
 2.
    ```python
    import requests
 
-   url = "https://rest.ensembl.org/lookup/id/ENSG00000139618?content-type=application/json"
-   respuesta = requests.get(url)
+   url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+   parametros = {"db": "nuccore", "id": "NC_000913.3",
+                 "rettype": "fasta", "retmode": "text", "seq_stop": 200}
+   respuesta = requests.get(url, params=parametros)
 
    if respuesta.status_code == 200:
-       datos = respuesta.json()
-       print(datos["display_name"], datos["species"])
+       with open("genoma_ecoli.fasta", "w") as f:
+           f.write(respuesta.text)
+       print(respuesta.text.split("\n")[0])
    else:
        print(f"Error {respuesta.status_code}")
    ```
 3.
+   ```python
+   import requests
+
+   url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+   parametros = {"db": "nuccore", "id": "NC_000913.3",
+                 "rettype": "fasta", "retmode": "text", "seq_stop": 500}
+   respuesta = requests.get(url, params=parametros)
+
+   secuencia = ""
+   for linea in respuesta.text.split("\n"):
+       if not linea.startswith(">"):
+           secuencia += linea.strip()
+
+   num_gc = secuencia.count("G") + secuencia.count("C")
+   print(f"Longitud: {len(secuencia)} pb")
+   print(f"Contenido GC: {num_gc / len(secuencia) * 100:.2f} %")
+   ```
+4.
+   ```python
+   import requests
+
+   url = "https://rest.ensembl.org/lookup/id/ENSG00000139618"
+   respuesta = requests.get(url, params={"content-type": "application/json"})
+
+   if respuesta.status_code == 200:
+       datos = respuesta.json()
+       longitud = datos["end"] - datos["start"] + 1
+       print(datos["display_name"], datos["species"], f"{longitud} pb")
+   else:
+       print(f"Error {respuesta.status_code}")
+   ```
+5.
    ```python
    import json
 
@@ -385,7 +463,26 @@ Aquí `requests` construye la URL con parámetros por ti (`params=parametros`), 
        with open(f"gene_{datos['id']}.json", "w") as f:
            json.dump(datos, f, indent=2)
    ```
-4.
+6.
+   ```python
+   import requests
+
+   def nombre_gen(id_gen):
+       """Devuelve el display_name de un gen de Ensembl, o None si falla."""
+       url = f"https://rest.ensembl.org/lookup/id/{id_gen}"
+       respuesta = requests.get(url, params={"content-type": "application/json"})
+       if respuesta.status_code == 200:
+           return respuesta.json()["display_name"]
+       return None
+
+   for id_gen in ["ENSG00000139618", "ENSG00000141510", "ENSG00000000000"]:
+       nombre = nombre_gen(id_gen)
+       if nombre is None:
+           print(f"{id_gen}: no encontrado")
+       else:
+           print(f"{id_gen}: {nombre}")
+   ```
+7.
    ```python
    import requests
 
@@ -397,5 +494,27 @@ Aquí `requests` construye la URL con parámetros por ti (`params=parametros`), 
        datos = respuesta.json()
        print(f"Registros totales encontrados: {datos['count']}")
        for registro in datos["results"]:
-           print(registro.get("locality"))
+           print(registro.get("stateProvince"))
+   ```
+8.
+   ```python
+   import requests
+
+   url = "https://api.gbif.org/v1/occurrence/search"
+   especies = ["Pinus sylvestris", "Quercus ilex", "Lynx pardinus", "Aquila adalberti"]
+
+   registros = {}
+   for especie in especies:
+       parametros = {"scientificName": especie, "country": "ES", "limit": 0}
+       respuesta = requests.get(url, params=parametros)
+       if respuesta.status_code == 200:
+           registros[especie] = respuesta.json()["count"]
+
+   print(registros)
+
+   especie_max = None
+   for especie, n in registros.items():
+       if especie_max is None or n > registros[especie_max]:
+           especie_max = especie
+   print(f"Especie con más registros: {especie_max} ({registros[especie_max]})")
    ```
