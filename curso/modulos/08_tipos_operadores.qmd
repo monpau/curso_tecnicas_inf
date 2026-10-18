@@ -926,3 +926,436 @@ print(f"La edad media es: {sum(diccionario.values()) / len(diccionario)}")
 
 :::
 :::
+
+
+# Ejercicios
+
+Para resolver estos ejercicios solo necesitas lo visto en este tema: variables, operadores, cadenas de texto, listas y diccionarios. Todavía no hacen falta bucles ni condicionales.
+
+## 1. Índice de masa corporal
+
+El índice de masa corporal (IMC) se calcula como el peso (kg) dividido entre la altura (m) al cuadrado. Calcula el IMC de la paciente e imprime un mensaje como `El IMC de Lucía es ...`. Después, guarda en una variable `sobrepeso` si su IMC es mayor o igual a 25 e imprímela.
+
+```{pyodide-python}
+#| exercise: imc
+nombre = "Lucía"
+peso = 63.5
+altura = 1.70
+```
+
+:::{.hint exercise="imc"}
+- El operador de potencia es `**`.
+- Una comparación como `imc >= 25` devuelve directamente `True` o `False`, así que puedes guardar su resultado en una variable.
+:::
+
+:::{.solution exercise="imc"}
+```{pyodide-python}
+nombre = "Lucía"
+peso = 63.5
+altura = 1.70
+
+imc = peso / altura ** 2
+print(f"El IMC de {nombre} es {imc}")
+
+sobrepeso = imc >= 25
+print(f"¿Tiene sobrepeso? {sobrepeso}")
+```
+:::
+
+## 2. Conversión de temperaturas
+
+Un termómetro antiguo envía sus lecturas como texto. Convierte la lectura a número, calcula su equivalente en grados Fahrenheit (°F = °C × 9 / 5 + 32) e imprime ambos valores. Comprueba con `type()` el tipo de la variable antes y después de convertirla.
+
+```{pyodide-python}
+#| exercise: temperaturas_texto
+lectura = "37.8"
+```
+
+:::{.hint exercise="temperaturas_texto"}
+- ¿Qué pasa si intentas hacer `lectura * 9`? ¿Y `lectura + 32`?
+- La lectura tiene decimales: ¿qué función de conversión necesitas, `int()` o `float()`?
+:::
+
+:::{.solution exercise="temperaturas_texto"}
+```{pyodide-python}
+lectura = "37.8"
+print(type(lectura))
+
+celsius = float(lectura)
+print(type(celsius))
+
+fahrenheit = celsius * 9 / 5 + 32
+print(f"{celsius} °C equivalen a {fahrenheit} °F")
+```
+:::
+
+## 3. Crecimiento de un cultivo bacteriano
+
+Un cultivo de *E. coli* se ha mantenido en la estufa durante 437 minutos. Sabiendo que en esas condiciones las bacterias se dividen cada 20 minutos:
+
+- Expresa el tiempo de incubación en horas y minutos (por ejemplo, `7 h y 17 min`).
+- Calcula cuántas generaciones **completas** han tenido lugar.
+- Si el cultivo empezó con 1000 células, ¿cuántas células habrá al final? (en cada generación el número de células se duplica)
+
+```{pyodide-python}
+#| exercise: ecoli
+minutos = 437
+tiempo_generacion = 20
+celulas_iniciales = 1000
+```
+
+:::{.hint exercise="ecoli"}
+- La división entera `//` te da las horas completas; el resto `%`, los minutos que sobran.
+- Tras `n` generaciones, el número de células es el inicial multiplicado por `2 ** n`.
+:::
+
+:::{.solution exercise="ecoli"}
+```{pyodide-python}
+minutos = 437
+tiempo_generacion = 20
+celulas_iniciales = 1000
+
+horas = minutos // 60
+minutos_restantes = minutos % 60
+print(f"Tiempo de incubación: {horas} h y {minutos_restantes} min")
+
+generaciones = minutos // tiempo_generacion
+print(f"Generaciones completas: {generaciones}")
+
+celulas_finales = celulas_iniciales * 2 ** generaciones
+print(f"Células al final: {celulas_finales}")
+```
+:::
+
+## 4. ¿Puede donar sangre?
+
+Para donar sangre una persona debe cumplir **todos** estos requisitos:
+
+- tener entre 18 y 65 años (ambos incluidos),
+- pesar al menos 50 kg,
+- tener una hemoglobina de al menos 12.5 g/dL,
+- no tener fiebre.
+
+Guarda en la variable `puede_donar` si el donante cumple los requisitos e imprímela. Después cambia los datos del donante para comprobar que funciona en otros casos.
+
+```{pyodide-python}
+#| exercise: donar_sangre
+edad = 34
+peso = 58.5
+hemoglobina = 12.1
+tiene_fiebre = False
+```
+
+:::{.hint exercise="donar_sangre"}
+- Escribe primero cada requisito como una comparación por separado.
+- Para que se cumplan todas a la vez, combínalas con `and`.
+- `not` invierte un valor booleano.
+:::
+
+:::{.solution exercise="donar_sangre"}
+```{pyodide-python}
+edad = 34
+peso = 58.5
+hemoglobina = 12.1
+tiene_fiebre = False
+
+edad_valida = edad >= 18 and edad <= 65
+peso_valido = peso >= 50
+hemoglobina_valida = hemoglobina >= 12.5
+
+puede_donar = edad_valida and peso_valido and hemoglobina_valida and not tiene_fiebre
+print(f"¿Puede donar? {puede_donar}")
+```
+
+Con estos datos el donante no puede donar porque su hemoglobina es demasiado baja.
+:::
+
+## 5. Limpiar un nombre científico
+
+Al pasar a limpio una hoja de campo, un nombre científico ha quedado mal escrito. A partir de `nombre`, consigue:
+
+1. `"Pinus sylvestris"`: sin espacios sobrantes, con el género en mayúscula y el epíteto en minúscula.
+2. `"P. sylvestris"`: la forma abreviada.
+3. `"Pinus_sylvestris"`: el formato que usamos en las tablas de datos.
+
+```{pyodide-python}
+#| exercise: nombre_cientifico
+nombre = "   pinus SYLVESTRIS  "
+```
+
+:::{.hint exercise="nombre_cientifico"}
+- `.strip()` quita los espacios de los extremos y `.lower()` pasa todo a minúsculas.
+- Con slicing puedes separar la primera letra (`[0]`) del resto (`[1:]`) y poner solo esa en mayúscula.
+- Para la forma abreviada, `.split()` separa el género del epíteto.
+:::
+
+:::{.solution exercise="nombre_cientifico"}
+```{pyodide-python}
+nombre = "   pinus SYLVESTRIS  "
+
+# 1. Nombre limpio
+limpio = nombre.strip().lower()
+limpio = limpio[0].upper() + limpio[1:]
+print(limpio)
+
+# 2. Forma abreviada
+partes = limpio.split(" ")
+genero = partes[0]
+epiteto = partes[1]
+abreviado = genero[0] + ". " + epiteto
+print(abreviado)
+
+# 3. Formato de tabla
+print(limpio.replace(" ", "_"))
+```
+:::
+
+## 6. ¿Es un marco abierto de lectura?
+
+Un marco abierto de lectura (ORF) es un fragmento de ADN que empieza por el codón de inicio `ATG`, termina en uno de los codones de parada (`TAA`, `TAG` o `TGA`) y tiene una longitud múltiplo de 3. Para la secuencia `seq`:
+
+- Comprueba por separado cada una de las tres condiciones y guarda en `es_orf` si se cumplen todas.
+- Calcula cuántos codones tiene.
+- Imprime el segundo codón.
+- Obtén la secuencia de ARN correspondiente (cambiando `T` por `U`).
+
+```{pyodide-python}
+#| exercise: orf
+seq = "ATGGCTTCAGGTAAACGTTAA"
+codones_parada = ["TAA", "TAG", "TGA"]
+```
+
+:::{.hint exercise="orf"}
+- Las cadenas tienen un método para comprobar cómo empiezan.
+- Con `seq[-3:]` obtienes los tres últimos caracteres; `in` te dice si están en la lista `codones_parada`.
+- Un número es múltiplo de 3 si el resto de dividirlo entre 3 es 0.
+- El segundo codón va de la posición 3 a la 5 (ambas incluidas).
+:::
+
+:::{.solution exercise="orf"}
+```{pyodide-python}
+seq = "ATGGCTTCAGGTAAACGTTAA"
+codones_parada = ["TAA", "TAG", "TGA"]
+
+empieza_bien = seq.startswith("ATG")
+termina_bien = seq[-3:] in codones_parada
+longitud_valida = len(seq) % 3 == 0
+es_orf = empieza_bien and termina_bien and longitud_valida
+print(f"¿Es un ORF? {es_orf}")
+
+num_codones = len(seq) // 3
+print(f"Número de codones: {num_codones}")
+
+print(f"Segundo codón: {seq[3:6]}")
+
+arn = seq.replace("T", "U")
+print(f"ARN: {arn}")
+```
+:::
+
+## 7. Identificador de una muestra
+
+En el laboratorio cada muestra se etiqueta con un identificador que contiene la fecha (año-mes-día), el sitio, el individuo y el tejido. A partir de `id_muestra`:
+
+- Extrae cada dato en una variable distinta.
+- Imprime el mensaje `Muestra de hoja del individuo Q017, tomada en SiteB el 14/03/2026`.
+- Obtén el número del individuo como entero (`17`) y súmale 1 para conocer el número del siguiente individuo.
+
+```{pyodide-python}
+#| exercise: id_muestra
+id_muestra = "2026-03-14_SiteB_Q017_hoja"
+```
+
+:::{.hint exercise="id_muestra"}
+- Usa `.split()` dos veces: una para separar los campos y otra para separar la fecha.
+- `"/".join(lista)` une los elementos de una lista de cadenas poniendo `/` entre ellos.
+- El número del individuo son los caracteres de `"Q017"` a partir del segundo. `int("017")` da `17`.
+:::
+
+:::{.solution exercise="id_muestra"}
+```{pyodide-python}
+id_muestra = "2026-03-14_SiteB_Q017_hoja"
+
+campos = id_muestra.split("_")
+fecha = campos[0]
+sitio = campos[1]
+individuo = campos[2]
+tejido = campos[3]
+
+partes_fecha = fecha.split("-")
+anio = partes_fecha[0]
+mes = partes_fecha[1]
+dia = partes_fecha[2]
+fecha_es = "/".join([dia, mes, anio])
+
+print(f"Muestra de {tejido} del individuo {individuo}, tomada en {sitio} el {fecha_es}")
+
+numero = int(individuo[1:])
+print(f"Siguiente individuo: {numero + 1}")
+```
+:::
+
+## 8. Pesos de ratones
+
+Tenemos los pesos (g) de los ratones de un experimento, pero el último valor tiene un error al teclear: debería ser `24.0` y no `240.0`.
+
+1. Elimina el valor erróneo y añade el correcto.
+2. Ha llegado un ratón nuevo que pesa `30.2` g: añádelo.
+3. Imprime cuántos ratones hay, el peso mínimo, el máximo, el rango (máximo − mínimo) y la media.
+4. Calcula la **mediana**: el valor que queda en el centro cuando la lista está ordenada (con un número impar de valores).
+5. ¿Hay algún ratón que pese exactamente `25.0` g?
+
+```{pyodide-python}
+#| exercise: pesos_ratones
+pesos = [22.1, 26.4, 25.0, 19.8, 28.3, 240.0]
+```
+
+:::{.hint exercise="pesos_ratones"}
+- `.pop()` sin argumentos elimina el último elemento.
+- La media es la suma de los valores entre el número de valores.
+- En una lista ordenada de `n` elementos, con `n` impar, el elemento central está en la posición `n // 2`.
+:::
+
+:::{.solution exercise="pesos_ratones"}
+```{pyodide-python}
+pesos = [22.1, 26.4, 25.0, 19.8, 28.3, 240.0]
+
+# 1. Corregir el error
+pesos.pop()
+pesos.append(24.0)
+
+# 2. Ratón nuevo
+pesos.append(30.2)
+print(pesos)
+
+# 3. Resumen
+n = len(pesos)
+minimo = min(pesos)
+maximo = max(pesos)
+print(f"Ratones: {n}")
+print(f"Mínimo: {minimo} g, máximo: {maximo} g, rango: {maximo - minimo} g")
+print(f"Media: {sum(pesos) / n} g")
+
+# 4. Mediana
+ordenados = sorted(pesos)
+print(f"Mediana: {ordenados[n // 2]} g")
+
+# 5. ¿Hay algún ratón de 25 g?
+print(f"¿Algún ratón de 25.0 g? {25.0 in pesos}")
+```
+:::
+
+## 9. Equilibrio de Hardy-Weinberg
+
+En una población en equilibrio de Hardy-Weinberg, si `p` es la frecuencia del alelo `A` y `q` la del alelo `a` (con `p + q = 1`), las frecuencias de los genotipos son `AA = p²`, `Aa = 2pq` y `aa = q²`.
+
+1. Añade al diccionario `alelos` la frecuencia del alelo `"a"`.
+2. Crea un diccionario `genotipos` con las frecuencias esperadas de `"AA"`, `"Aa"` y `"aa"`.
+3. Comprueba si las tres frecuencias suman 1.
+4. En una población de 500 individuos, ¿cuántos heterocigotos se esperan?
+
+```{pyodide-python}
+#| exercise: hardy_weinberg
+alelos = {"A": 0.7}
+poblacion = 500
+```
+
+:::{.hint exercise="hardy_weinberg"}
+- Puedes añadir una clave nueva a un diccionario con `alelos["a"] = ...`.
+- Guarda `p` y `q` en variables para que las fórmulas sean más fáciles de leer.
+- Para sumar todas las frecuencias, `sum()` funciona con `genotipos.values()`.
+- Si la suma no da exactamente 1, recuerda lo que vimos sobre los `float`.
+:::
+
+:::{.solution exercise="hardy_weinberg"}
+```{pyodide-python}
+alelos = {"A": 0.7}
+poblacion = 500
+
+# 1. Frecuencia del alelo a
+alelos["a"] = 1 - alelos["A"]
+print(alelos)
+
+# 2. Frecuencias genotípicas
+p = alelos["A"]
+q = alelos["a"]
+genotipos = {"AA": p ** 2, "Aa": 2 * p * q, "aa": q ** 2}
+print(genotipos)
+
+# 3. ¿Suman 1?
+total = sum(genotipos.values())
+print(f"Suma: {total}, ¿es 1? {total == 1}")
+
+# 4. Heterocigotos esperados
+print(f"Heterocigotos esperados: {genotipos['Aa'] * poblacion}")
+```
+
+Fíjate en que `1 - 0.7` no da exactamente `0.3` por la forma en que se representan los `float`.
+:::
+
+## 10. Expresión génica
+
+Se ha medido la expresión de varios genes en células control y en células tratadas con un fármaco.
+
+1. Crea los diccionarios `control` y `tratamiento` a partir de las listas, con el nombre del gen como clave.
+2. Se ha medido un gen más, `"EGFR"`, con una expresión de 3.2 en control y 9.6 en tratamiento: añádelo a ambos diccionarios.
+3. Crea un diccionario `fold_change` con el cociente tratamiento / control de cada gen.
+4. Guarda en un diccionario `sobreexpresado` si el fold change de cada gen es mayor o igual a 2.
+5. Imprime la lista de genes ordenada alfabéticamente y el fold change medio.
+6. ¿Se ha medido el gen `"GAPDH"`?
+
+```{pyodide-python}
+#| exercise: expresion_genica
+genes = ["BRCA1", "TP53", "MYC"]
+expresion_control = [12.0, 8.5, 4.0]
+expresion_tratamiento = [6.0, 17.0, 6.0]
+```
+
+:::{.hint exercise="expresion_genica"}
+- `dict(zip(claves, valores))` crea un diccionario a partir de dos listas.
+- Sin bucles, tendrás que calcular el fold change de cada gen accediendo a cada clave por separado.
+- `sorted()` funciona también con `.keys()`.
+:::
+
+:::{.solution exercise="expresion_genica"}
+```{pyodide-python}
+genes = ["BRCA1", "TP53", "MYC"]
+expresion_control = [12.0, 8.5, 4.0]
+expresion_tratamiento = [6.0, 17.0, 6.0]
+
+# 1. Diccionarios
+control = dict(zip(genes, expresion_control))
+tratamiento = dict(zip(genes, expresion_tratamiento))
+
+# 2. Nuevo gen
+control["EGFR"] = 3.2
+tratamiento["EGFR"] = 9.6
+
+# 3. Fold change
+fold_change = {
+    "BRCA1": tratamiento["BRCA1"] / control["BRCA1"],
+    "TP53": tratamiento["TP53"] / control["TP53"],
+    "MYC": tratamiento["MYC"] / control["MYC"],
+    "EGFR": tratamiento["EGFR"] / control["EGFR"],
+}
+print(fold_change)
+
+# 4. Sobreexpresados
+sobreexpresado = {
+    "BRCA1": fold_change["BRCA1"] >= 2,
+    "TP53": fold_change["TP53"] >= 2,
+    "MYC": fold_change["MYC"] >= 2,
+    "EGFR": fold_change["EGFR"] >= 2,
+}
+print(sobreexpresado)
+
+# 5. Genes ordenados y fold change medio
+print(sorted(fold_change.keys()))
+print(f"Fold change medio: {sum(fold_change.values()) / len(fold_change)}")
+
+# 6. ¿Se ha medido GAPDH?
+print(f"¿Se ha medido GAPDH? {'GAPDH' in control}")
+```
+
+Escribir lo mismo para cada gen es repetitivo y poco práctico si tuviéramos cientos de genes. En el siguiente tema veremos cómo los **bucles** resuelven este problema.
+:::
