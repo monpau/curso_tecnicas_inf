@@ -28,11 +28,11 @@ Queremos generar un script que funcione así:
 
 contar_seqs.sh sequences.fasta
 
-Pista: para que un script tome el argumento que pasamos luego (sequences.fasta en este caso) se hace llamando `$1`
+:::{.pista}
+Para que un script tome el argumento que pasamos luego (sequences.fasta en este caso) se hace llamando `$1`
 :::
 
-
-::: {.callout-note collapse="true"}
+:::{.solucion}
 
 ```bash
 #!/bin/bash
@@ -40,6 +40,8 @@ grep "^>" "$1" | wc -l
 ```
 
 Las comillas dobles alrededor de `"$1"` no son decoración: si el argumento tuviera espacios (como los nombres de archivo mal escritos que viste en el módulo 2, del tipo `"Muestra 01.fastq"`), sin comillas el script lo trocearía en varios argumentos. Poner siempre `"$1"` entre comillas es un hábito que te evitará errores difíciles de depurar.
+:::
+
 :::
 
 ## Variables
@@ -84,10 +86,10 @@ done
 ```
 
 :::{.callout-tip title=Cuestión}
-¿Podrías contar cuántas observaciones hay de cada `site` en `species_observations.csv` sin escribir los nombres de sitio a mano?
-:::
 
-:::{.callout-note collapse="true"}
+¿Podrías contar cuántas observaciones hay de cada `site` en `species_observations.csv` sin escribir los nombres de sitio a mano?
+
+:::{.solucion}
 ```bash
 #!/bin/bash
 for site in $(cut -d',' -f3 species_observations.csv | tail -n +2 | sort -u);
@@ -96,6 +98,7 @@ do
   echo "$site: $n observaciones"
 done
 ```
+:::
 :::
 
 ## Renombrar archivos en bloque
@@ -116,9 +119,9 @@ Y quieres renombrarlos solo con el nombre de la muestra y la dirección de la le
 - ¿Podrías con las herramientas que conoces extraer del nombre del archivo la información que te interesa?
 - ¿Podrías guardarlo en una variable en un script?
 - ¿Podrías incluirlo en un `for`? ¿Sobre qué hacemos el `for`?
-:::
 
-:::{.callout-note collapse="true"}
+:::{.solucion}
+
 ```{.bash}
 #!/bin/bash
 
@@ -131,6 +134,7 @@ do
    mv "$file" "$new_file"
 done
 ``` 
+:::
 :::
 
 :::{.callout-warning title=¡Cuidado!}
