@@ -6,6 +6,9 @@ flatly-revealjs.scss
 presentacion.html
 presentacion.qmd
 presentacion_files/
+tutoria_variables.qmd
+tutoria_variables_files/
+tutoria_variables.html
 
 
 # Archivos internos de Quarto
