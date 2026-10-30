@@ -175,11 +175,13 @@ print(categoria)
 
 :::{.callout-tip title='Cuestión'}
 Crea un código que a partir de un valor de A260 y A280 calcule la relación A260/A280 y clasifique la pureza del ADN según los siguientes criterios:
+
 - Relación menor a 1.8: "Contaminación proteica"
 - Relación aproximadamente 1.8: "ADN puro"
 - Relación mayor a 2: "Contaminación de RNA"
 
 Téstalo para los siguientes valores:
+
 - A260 = 0.8, A280 = 0.5
 - A260 = 1.5, A280 = 0.7
 - A260 = 1.0, A280 = 0
